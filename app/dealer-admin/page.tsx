@@ -1,12 +1,13 @@
 import { createClient } from "@/lib/supabase/server"
-import { redirect } from "next/navigation"
+import { redirect } from 'next/navigation'
 import DashboardHeader from "@/components/dashboard/dashboard-header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import { Settings, Crown, Database, Filter, Plus, ExternalLink } from "lucide-react"
+import { Settings, Crown, Database, Filter, Plus, ExternalLink, ArrowLeft } from 'lucide-react'
+import Link from "next/link"
 
 export default async function DealerAdminPage() {
   const supabase = createClient()
@@ -73,6 +74,15 @@ export default async function DealerAdminPage() {
       <DashboardHeader user={user} dealer={dealer} />
 
       <main className="container mx-auto px-4 py-8 max-w-7xl">
+        <div className="mb-4">
+          <Button variant="ghost" size="sm" asChild>
+            <Link href="/dashboard">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Dashboard
+            </Link>
+          </Button>
+        </div>
+
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">Account Management</h1>
           <p className="text-muted-foreground">Manage your subscription, filters, and auction sources.</p>

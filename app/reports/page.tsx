@@ -1,9 +1,11 @@
 import { createClient } from "@/lib/supabase/server"
-import { redirect } from "next/navigation"
+import { redirect } from 'next/navigation'
 import DashboardHeader from "@/components/dashboard/dashboard-header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { TrendingUp, TrendingDown, Car, DollarSign, Calendar, Target } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { TrendingUp, TrendingDown, Car, DollarSign, Calendar, Target, ArrowLeft } from 'lucide-react'
+import Link from "next/link"
 
 export default async function ReportsPage() {
   const supabase = createClient()
@@ -31,6 +33,15 @@ export default async function ReportsPage() {
       <DashboardHeader user={user} dealer={dealer} />
 
       <main className="container mx-auto px-4 py-8 max-w-7xl">
+        <div className="mb-4">
+          <Button variant="ghost" size="sm" asChild>
+            <Link href="/dashboard">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Dashboard
+            </Link>
+          </Button>
+        </div>
+        
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">Reports & Analytics</h1>
           <p className="text-muted-foreground">Track your performance and analyze healthy car opportunities.</p>

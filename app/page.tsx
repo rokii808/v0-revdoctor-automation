@@ -1,19 +1,5 @@
 import { Button } from "@/components/ui/button"
-import {
-  Car,
-  ArrowRight,
-  Shield,
-  Clock,
-  Target,
-  Plus,
-  CheckCircle2,
-  TrendingUp,
-  Users,
-  Zap,
-  Mail,
-  Filter,
-  BarChart3,
-} from "lucide-react"
+import { Car, ArrowRight, Shield, Clock, Target, Plus, CheckCircle2, TrendingUp, Users, Zap, Mail, Filter, BarChart3 } from 'lucide-react'
 
 export default function HomePage() {
   return (
@@ -92,45 +78,53 @@ export default function HomePage() {
               take hours.
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Dealers waste time filtering auction sites, chasing leads, and analyzing cars that don't meet their
-              criteria. RevDoctor removes that manual work so you can focus on deals that actually convert.
+              Dealers waste time filtering auction sites, chasing leads and analyzing cars that don&#39;t meet their criteria. RevvDoctor removes that manual work so you can focus on deals that actually convert.
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 mb-20">
-            <div className="text-center p-10 rounded-3xl border-2 border-red-200 bg-red-50/50 shadow-lg">
-              <div className="w-20 h-20 bg-red-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                <Clock className="w-10 h-10 text-red-600" />
+            <div className="group relative text-center p-10 rounded-3xl border-2 border-gray-200 bg-gradient-to-br from-gray-50 to-white shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10">
+                <div className="w-20 h-20 bg-gradient-to-br from-red-100 to-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-md">
+                  <Clock className="w-10 h-10 text-red-600" />
+                </div>
+                <h3 className="text-2xl font-serif font-bold text-gray-900 mb-4">Wasting hours scrolling auctions</h3>
+                <p className="text-gray-600 leading-relaxed text-lg">
+                  Manually checking multiple sites daily eats up valuable selling time
+                </p>
               </div>
-              <h3 className="text-2xl font-serif font-bold text-gray-900 mb-4">Wasting hours scrolling auctions</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Manually checking multiple sites daily eats up valuable selling time
-              </p>
             </div>
 
-            <div className="text-center p-10 rounded-3xl border-2 border-red-200 bg-red-50/50 shadow-lg">
-              <div className="w-20 h-20 bg-red-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                <Target className="w-10 h-10 text-red-600" />
+            <div className="group relative text-center p-10 rounded-3xl border-2 border-gray-200 bg-gradient-to-br from-gray-50 to-white shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10">
+                <div className="w-20 h-20 bg-gradient-to-br from-amber-100 to-yellow-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-md">
+                  <Target className="w-10 h-10 text-amber-600" />
+                </div>
+                <h3 className="text-2xl font-serif font-bold text-gray-900 mb-4">Missing good vehicles</h3>
+                <p className="text-gray-600 leading-relaxed text-lg">
+                  Quality cars slip through while you're busy with other tasks
+                </p>
               </div>
-              <h3 className="text-2xl font-serif font-bold text-gray-900 mb-4">Missing good vehicles</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Quality cars slip through while you're busy with other tasks
-              </p>
             </div>
 
-            <div className="text-center p-10 rounded-3xl border-2 border-red-200 bg-red-50/50 shadow-lg">
-              <div className="w-20 h-20 bg-red-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                <Shield className="w-10 h-10 text-red-600" />
+            <div className="group relative text-center p-10 rounded-3xl border-2 border-gray-200 bg-gradient-to-br from-gray-50 to-white shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10">
+                <div className="w-20 h-20 bg-gradient-to-br from-orange-100 to-red-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-md">
+                  <Shield className="w-10 h-10 text-orange-600" />
+                </div>
+                <h3 className="text-2xl font-serif font-bold text-gray-900 mb-4">Unreliable condition data</h3>
+                <p className="text-gray-600 leading-relaxed text-lg">Risky purchases from incomplete or misleading information</p>
               </div>
-              <h3 className="text-2xl font-serif font-bold text-gray-900 mb-4">Unreliable condition data</h3>
-              <p className="text-gray-600 leading-relaxed">Risky purchases from incomplete or misleading information</p>
             </div>
           </div>
 
           <div className="bg-gradient-to-br from-pink-50 via-purple-50/50 to-pink-50 border-2 border-pink-300 p-12 rounded-3xl shadow-2xl text-center">
             <h3 className="text-3xl font-serif font-bold text-gray-900 mb-6">The Solution</h3>
             <p className="text-xl text-gray-700 leading-relaxed max-w-3xl mx-auto">
-              RevDoctor uses automation and data to filter, validate, and deliver the cars you actually want  directly to your inbox, twice a day.
+              RevvDoctor uses automation and data to filter, validate and deliver the cars you actually want  directly to your inbox, twice a day.
             </p>
           </div>
         </div>
@@ -144,7 +138,7 @@ export default function HomePage() {
             not weeks.
           </h2>
           <p className="text-xl text-gray-600 mb-20 max-w-2xl mx-auto leading-relaxed">
-            Get your AI-powered screening up and running in just four simple steps.
+            Get your AI powered screening up and running in just four simple steps.
           </p>
 
           <div className="grid md:grid-cols-4 gap-6">
@@ -154,7 +148,7 @@ export default function HomePage() {
               </div>
               <h3 className="text-2xl font-serif font-bold text-gray-900 mb-4">Set your preferences</h3>
               <p className="text-gray-600 leading-relaxed text-base">
-                Tell us what you're looking for — make, model, mileage, budget, and more.
+                Tell us what you&#39;re looking for  make, model, mileage, budget and more.
               </p>
             </div>
 
@@ -174,7 +168,7 @@ export default function HomePage() {
               </div>
               <h3 className="text-2xl font-serif font-bold text-gray-900 mb-4">Receive healthy cars</h3>
               <p className="text-gray-600 leading-relaxed text-base">
-                You'll get clean, pre-filtered car lists in your inbox twice a day.
+                You&#39;ll get clean, pre filtered car lists in your inbox twice a day.
               </p>
             </div>
 
@@ -254,7 +248,7 @@ export default function HomePage() {
                 <div>
                   <h4 className="text-xl font-bold text-gray-900 mb-2">Mileage & price</h4>
                   <p className="text-gray-600 leading-relaxed">
-                    Clear pricing and mileage data for quick decision-making
+                    Clear pricing and mileage data for quick decision making
                   </p>
                 </div>
               </div>
@@ -265,7 +259,7 @@ export default function HomePage() {
                 </div>
                 <div>
                   <h4 className="text-xl font-bold text-gray-900 mb-2">Condition validation</h4>
-                  <p className="text-gray-600 leading-relaxed">AI-verified condition ratings to minimize risk</p>
+                  <p className="text-gray-600 leading-relaxed">AI verified condition ratings to minimize risk</p>
                 </div>
               </div>
 
@@ -276,7 +270,7 @@ export default function HomePage() {
                 <div>
                   <h4 className="text-xl font-bold text-gray-900 mb-2">Direct source links</h4>
                   <p className="text-gray-600 leading-relaxed">
-                    One-click access to auction listings for immediate action
+                    One click access to auction listings for immediate action
                   </p>
                 </div>
               </div>
@@ -309,7 +303,7 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6">
                 <Filter className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">AI-powered filtering</h3>
+              <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">AI powered filtering</h3>
               <p className="text-gray-600 leading-relaxed text-lg">
                 Only see cars that match your exact criteria. No more wasting time on unsuitable vehicles.
               </p>
@@ -351,7 +345,7 @@ export default function HomePage() {
               </div>
               <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Zero manual work</h3>
               <p className="text-gray-600 leading-relaxed text-lg">
-                Save 30+ hours per week on sourcing. Focus on what matters — closing deals.
+                Save 30+ hours per week on sourcing. Focus on what matters  closing deals.
               </p>
             </div>
 
@@ -569,7 +563,7 @@ export default function HomePage() {
               </ul>
             </div>
 
-            <div className="bg-gradient-to-br from-pink-50 via-purple-50/50 to-pink-50 border-2 border-pink-400 p-10 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 relative">
+            <div className="bg-gradient-to-br from-pink-50 via-purple-50/50 to-pink-50 border-2 border-pink-400 p-10 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 relative shadow-xl">
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-pink-500 via-pink-600 to-purple-600 text-white rounded-full text-sm font-bold shadow-xl shadow-pink-500/40 px-8 py-2">
                 MOST POPULAR
               </div>
@@ -710,7 +704,7 @@ export default function HomePage() {
             cars today.
           </h2>
           <p className="text-xl text-gray-600 mb-14 max-w-2xl mx-auto leading-relaxed">
-            Join dealerships already saving time and increasing margins with RevDoctor.
+            Join dealerships already saving time and increasing margins with RevvDoctor.
           </p>
           <Button
             size="lg"

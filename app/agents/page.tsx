@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import { Bot, Play, Square, Activity, Clock, CheckCircle, AlertCircle, Settings, BarChart3, Zap } from "lucide-react"
+import { Bot, Play, Square, Activity, Clock, CheckCircle, AlertCircle, Settings, BarChart3, Zap, ArrowLeft } from 'lucide-react'
 import Link from "next/link"
 
 interface AgentStatus {
@@ -136,12 +136,19 @@ export default function AgentsPage() {
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link
-            href="/dashboard"
-            className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
-          >
-            Revvdoctor
-          </Link>
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/dashboard">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+              </Link>
+            </Button>
+            <Link
+              href="/dashboard"
+              className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+            >
+              Revvdoctor
+            </Link>
+          </div>
           <div className="flex items-center gap-4">
             <Link href="/dashboard" className="text-slate-600 hover:text-slate-900 transition-colors">
               Dashboard

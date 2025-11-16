@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
-import { redirect } from "next/navigation"
+import { redirect } from 'next/navigation'
 import DashboardHeader from "@/components/dashboard/dashboard-header"
 import DashboardStats from "@/components/dashboard/dashboard-stats"
 import PreferencesCard from "@/components/dashboard/preferences-card"
@@ -19,6 +19,17 @@ export default async function DashboardPage() {
 
   if (!user) {
     redirect("/auth/login")
+  }
+
+  const { data: subscription } = await supabase
+    .from('subscriptions')
+    .select('status, plan')
+    .eq('user_id', user.id)
+    .single()
+
+  // If no active subscription, redirect to pricing
+  if (!subscription || subscription.status !== 'active') {
+    redirect("/pricing?required=true")
   }
 
   // Get or create dealer profile

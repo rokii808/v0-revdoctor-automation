@@ -1,10 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useSearchParams } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Check, ArrowRight, Zap, Shield, Clock, Lock, TrendingUp, Users, Smartphone } from "lucide-react"
+import { Check, ArrowRight, Zap, Shield, Clock, Lock, TrendingUp, Users, Smartphone, ArrowLeft, AlertCircle } from 'lucide-react'
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import Link from "next/link"
 
 const pricingPlans = [
@@ -94,6 +96,11 @@ const pricingPlans = [
 
 export default function PricingPage() {
   const [isLoading, setIsLoading] = useState<string | null>(null)
+  const searchParams = useSearchParams()
+  
+  const isNewUser = searchParams.get('new_user') === 'true'
+  const isRequired = searchParams.get('required') === 'true'
+  const isTrial = searchParams.get('trial') === 'true'
 
   const handleSubscribe = async (plan: string) => {
     if (plan === "enterprise") {
@@ -133,12 +140,19 @@ export default function PricingPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link
-            href="/"
-            className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
-          >
-            Revvdoctor
-          </Link>
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+              </Link>
+            </Button>
+            <Link
+              href="/"
+              className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+            >
+              Revvdoctor
+            </Link>
+          </div>
           <div className="flex items-center gap-4">
             <Badge variant="destructive" className="hidden md:flex">
               Limited Time: 7-Day Free Trial
@@ -154,6 +168,24 @@ export default function PricingPage() {
       </header>
 
       <main className="container mx-auto px-4 py-16">
+        {isNewUser && (
+          <Alert className="mb-8 max-w-4xl mx-auto border-pink-200 bg-gradient-to-r from-pink-50 to-purple-50">
+            <AlertCircle className="h-4 w-4 text-pink-600" />
+            <AlertDescription className="text-pink-900">
+              <strong>Welcome to RevvDoctor!</strong> Please select a plan to start finding profitable deals. All plans include a 7-day free trial.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {isRequired && (
+          <Alert className="mb-8 max-w-4xl mx-auto border-red-200 bg-red-50">
+            <AlertCircle className="h-4 w-4 text-red-600" />
+            <AlertDescription className="text-red-900">
+              <strong>Subscription Required:</strong> An active subscription is needed to access the dashboard and start screening vehicles.
+            </AlertDescription>
+          </Alert>
+        )}
+
         <div className="text-center mb-16">
           <Badge variant="secondary" className="mb-4">
             <TrendingUp className="w-3 h-3 mr-1" />

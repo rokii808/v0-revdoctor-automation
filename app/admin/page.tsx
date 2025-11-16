@@ -1,9 +1,12 @@
 import { createClient } from "@/lib/supabase/server"
-import { redirect } from "next/navigation"
+import { redirect } from 'next/navigation'
 import AdminHeader from "@/components/admin/admin-header"
 import AdminStats from "@/components/admin/admin-stats"
 import DealersList from "@/components/admin/dealers-list"
 import SystemHealth from "@/components/admin/system-health"
+import { Button } from "@/components/ui/button"
+import { ArrowLeft } from 'lucide-react'
+import Link from "next/link"
 
 export default async function AdminPage() {
   const supabase = createClient()
@@ -42,6 +45,15 @@ export default async function AdminPage() {
       <AdminHeader user={user} />
 
       <main className="container mx-auto px-4 py-8 max-w-7xl">
+        <div className="mb-4">
+          <Button variant="ghost" size="sm" asChild>
+            <Link href="/">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Home
+            </Link>
+          </Button>
+        </div>
+
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">Revvdoctor Admin Panel</h1>
           <p className="text-muted-foreground">Monitor and manage the Revvdoctor platform</p>
