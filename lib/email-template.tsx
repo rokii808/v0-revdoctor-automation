@@ -1,4 +1,5 @@
 export interface CarItem {
+  id?: string
   title: string
   price: string
   verdict: string
@@ -6,6 +7,7 @@ export interface CarItem {
   risk: number
   reason: string
   url: string
+  source_url?: string
 }
 
 export interface EmailTemplateProps {
@@ -17,8 +19,12 @@ export interface EmailTemplateProps {
 
 export function generateEmailHTML({ items, date, dealerName, variant = "daily" }: EmailTemplateProps): string {
   const carCards = items
-    .map(
-      (car) => `
+    .map((car) => {
+      const detailUrl = car.id
+        ? `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/vehicle/${car.id}`
+        : car.url
+
+      return `
     <div style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
       <h3 style="margin: 0 0 12px 0; font-size: 18px; font-weight: 600; color: #1a1a1a;">
         ${car.title}
@@ -42,12 +48,12 @@ export function generateEmailHTML({ items, date, dealerName, variant = "daily" }
       <p style="color: #666; font-size: 14px; line-height: 1.6; margin: 0 0 16px 0;">
         ${car.reason}
       </p>
-      <a href="${car.url}" style="display: inline-block; background: linear-gradient(135deg, #FF007A 0%, #8A2EFF 100%); color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;">
-        View Details →
+      <a href="${detailUrl}" style="display: inline-block; background: linear-gradient(135deg, #FF007A 0%, #8A2EFF 100%); color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;">
+        ${car.id ? "View Full Details →" : "View on Auction Site →"}
       </a>
     </div>
-  `,
-    )
+  `
+    })
     .join("")
 
   return `
