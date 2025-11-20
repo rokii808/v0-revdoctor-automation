@@ -1,8 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { stripe, STRIPE_PRICE_IDS } from "@/lib/stripe"
-import { createClient } from "@supabase/supabase-js"
-
-const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+import { createAdminClient } from "@/lib/supabase/admin"
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,6 +9,8 @@ export async function POST(req: NextRequest) {
     if (!userId || !plan) {
       return NextResponse.json({ error: "Missing userId or plan" }, { status: 400 })
     }
+
+    const supabase = createAdminClient()
 
     // Get user email from Supabase
     const { data: profile } = await supabase.from("profiles").select("email").eq("id", userId).single()

@@ -1,9 +1,7 @@
 "use server"
 
-import { createClient } from "@supabase/supabase-js"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { revalidatePath } from "next/cache"
-
-const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 
 export async function savePrefs(
   userId: string,
@@ -17,6 +15,8 @@ export async function savePrefs(
   },
 ) {
   try {
+    const supabase = createAdminClient()
+
     // Update dealer preferences in database
     const { error } = await supabase.from("dealers_v2").upsert({
       id: userId,
@@ -57,6 +57,8 @@ export async function savePrefs(
 
 export async function getPrefs(userId: string) {
   try {
+    const supabase = createAdminClient()
+
     const { data, error } = await supabase.from("dealers_v2").select("prefs").eq("id", userId).single()
 
     if (error && error.code !== "PGRST116") {
