@@ -22,12 +22,14 @@ interface HealthyCar {
   created_at: string
 }
 
-interface TodaysHealthyCarsProps {
-  dealer: any
+import type { TodaysHealthyCarsProps } from "@/lib/types"
+
+interface TodaysHealthyCarsPropsWithCars extends Omit<TodaysHealthyCarsProps, 'dealer'> {
+  dealer: TodaysHealthyCarsProps['dealer']
   healthyCars: HealthyCar[]
 }
 
-export default function TodaysHealthyCars({ dealer, healthyCars }: TodaysHealthyCarsProps) {
+export default function TodaysHealthyCars({ dealer, healthyCars }: TodaysHealthyCarsPropsWithCars) {
   const [filteredCars, setFilteredCars] = useState(healthyCars)
   const [filters, setFilters] = useState({
     search: "",

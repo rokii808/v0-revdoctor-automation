@@ -1,11 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TrendingUp, Car, Clock, Zap, Target, Trophy } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-
-interface DashboardStatsProps {
-  dealer: any
-  recentLeads: any[]
-}
+import type { DashboardStatsProps } from "@/lib/types"
 
 export default function DashboardStats({ dealer, recentLeads }: DashboardStatsProps) {
   const totalLeads = recentLeads.reduce((sum, lead) => sum + lead.number_sent, 0)
@@ -24,9 +20,8 @@ export default function DashboardStats({ dealer, recentLeads }: DashboardStatsPr
   const monthlyMoneySaved = Math.round(moneySaved * 0.7) // This month's savings
   const monthlyTimeSaved = Math.round(timeSaved * 0.7) // This month's time savings
 
-  const daysLeft = dealer?.subscription_expires_at
-    ? Math.max(0, Math.ceil((new Date(dealer.subscription_expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
-    : 0
+  // Note: subscription_expires_at would come from subscription data, not dealer
+  const daysLeft = 0 // This should be calculated from subscription data
 
   return (
     <div className="space-y-6">

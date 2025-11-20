@@ -1,10 +1,10 @@
-import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { NextResponse } from "next/server"
 
 // GET /api/workflow/status - Get workflow status for all dealers
 export async function GET() {
   try {
-    const supabase = createClient()
+    const supabase = createAdminClient()
 
     // Get workflow status summary
     const { data: dealers, error } = await supabase

@@ -11,10 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
-interface AdminHeaderProps {
-  user: any
-}
+import type { AdminHeaderProps } from "@/lib/types"
 
 export default function AdminHeader({ user }: AdminHeaderProps) {
   const router = useRouter()

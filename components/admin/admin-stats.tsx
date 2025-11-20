@@ -1,16 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Users, Car, TrendingUp, Mail, Activity } from "lucide-react"
-
-interface AdminStatsProps {
-  dealers: any[]
-  recentLeads: any[]
-  systemStats: any[]
-}
+import type { AdminStatsProps } from "@/lib/types"
 
 export default function AdminStats({ dealers, recentLeads, systemStats }: AdminStatsProps) {
   const totalDealers = dealers.length
   const activeDealers = dealers.filter(
-    (d) => d.subscription_status === "active" || d.subscription_status === "trial",
+    (d) => d.status === "active" || d.plan === "trial",
   ).length
   const totalLeads = recentLeads.reduce((sum, lead) => sum + lead.number_sent, 0)
   const todayLeads = recentLeads
@@ -21,7 +16,7 @@ export default function AdminStats({ dealers, recentLeads, systemStats }: AdminS
     })
     .reduce((sum, lead) => sum + lead.number_sent, 0)
 
-  const trialDealers = dealers.filter((d) => d.subscription_status === "trial").length
+  const trialDealers = dealers.filter((d) => d.plan === "trial").length
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">

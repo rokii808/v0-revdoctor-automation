@@ -7,10 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Mail, Clock, Bell } from "lucide-react"
-
-interface EmailSettingsProps {
-  dealer: any
-}
+import type { EmailSettingsProps } from "@/lib/types"
 
 export default function EmailSettings({ dealer }: EmailSettingsProps) {
   const [settings, setSettings] = useState({

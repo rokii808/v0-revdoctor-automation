@@ -2,10 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Users, Mail, Settings } from "lucide-react"
-
-interface DealersListProps {
-  dealers: any[]
-}
+import type { DealersListProps } from "@/lib/types"
 
 export default function DealersList({ dealers }: DealersListProps) {
   const getStatusColor = (status: string) => {
@@ -37,20 +34,19 @@ export default function DealersList({ dealers }: DealersListProps) {
               <div key={dealer.id} className="border border-border rounded-lg p-4">
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <h4 className="font-semibold text-foreground">{dealer.dealer_name}</h4>
-                    <p className="text-sm text-muted-foreground">{dealer.email}</p>
+                    <h4 className="font-semibold text-foreground">{dealer.company_name || 'Unnamed Dealer'}</h4>
                   </div>
-                  <Badge variant={getStatusColor(dealer.subscription_status)}>{dealer.subscription_status}</Badge>
+                  <Badge variant={getStatusColor(dealer.status || dealer.plan || 'inactive')}>{dealer.status || dealer.plan || 'inactive'}</Badge>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <span className="text-muted-foreground">Joined:</span>
-                    <span className="ml-2">{new Date(dealer.created_at).toLocaleDateString()}</span>
+                    <span className="text-muted-foreground">Plan:</span>
+                    <span className="ml-2">{dealer.plan || 'trial'}</span>
                   </div>
                   <div>
                     <span className="text-muted-foreground">Max Budget:</span>
-                    <span className="ml-2">{dealer.max_bid ? `£${dealer.max_bid.toLocaleString()}` : "Not set"}</span>
+                    <span className="ml-2">{dealer.prefs?.max_bid ? `£${dealer.prefs.max_bid.toLocaleString()}` : "Not set"}</span>
                   </div>
                 </div>
 
@@ -63,11 +59,6 @@ export default function DealersList({ dealers }: DealersListProps) {
                     <Settings className="w-3 h-3 mr-1" />
                     Manage
                   </Button>
-                  {dealer.subscription_expires_at && (
-                    <span className="text-xs text-muted-foreground ml-auto">
-                      Expires: {new Date(dealer.subscription_expires_at).toLocaleDateString()}
-                    </span>
-                  )}
                 </div>
               </div>
             ))

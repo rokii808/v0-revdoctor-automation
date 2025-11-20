@@ -3,10 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Download, FileText, Table } from "lucide-react"
-
-interface ExportOptionsProps {
-  dealer: any
-}
+import type { ExportOptionsProps } from "@/lib/types"
 
 export default function ExportOptions({ dealer }: ExportOptionsProps) {
   const handleExport = async (format: "csv" | "pdf") => {

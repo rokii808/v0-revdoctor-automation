@@ -1,7 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@supabase/supabase-js"
-
-const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+import { createAdminClient } from "@/lib/supabase/admin"
+import type { Insight } from "@/lib/types"
 
 export async function GET(req: NextRequest) {
   try {
@@ -13,6 +12,8 @@ export async function GET(req: NextRequest) {
     if (!userId) {
       return NextResponse.json({ error: "Missing userId" }, { status: 400 })
     }
+
+    const supabase = createAdminClient()
 
     // Get user's insights with pagination
     const { data: insights, error } = await supabase
@@ -28,7 +29,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      data: insights || [],
+      data: (insights || []) as Insight[],
     })
   } catch (error) {
     console.error("Insights API error:", error)
@@ -44,6 +45,8 @@ export async function POST(req: NextRequest) {
     if (!userId) {
       return NextResponse.json({ error: "Missing userId" }, { status: 400 })
     }
+
+    const supabase = createAdminClient()
 
     // Insert new insight
     const { data, error } = await supabase.from("insights").insert({

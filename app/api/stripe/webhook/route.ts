@@ -1,16 +1,18 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { stripe } from "@/lib/stripe"
-import { createClient } from "@supabase/supabase-js"
+import { createAdminClient } from "@/lib/supabase/admin"
 import type Stripe from "stripe"
-
-const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.text()
-    const signature = req.headers.get("stripe-signature")!
+    const signature = req.headers.get("stripe-signature")
+
+    if (!signature) {
+      return NextResponse.json({ error: "Missing signature" }, { status: 400 })
+    }
 
     let event: Stripe.Event
 
@@ -21,6 +23,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 400 })
     }
 
+    const supabase = createAdminClient()
+
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session
@@ -28,8 +32,8 @@ export async function POST(req: NextRequest) {
         const customerId = session.customer as string
         const subscriptionId = session.subscription as string
 
-        if (!userId) {
-          console.error("No userId in session metadata")
+        if (!userId || !subscriptionId) {
+          console.error("No userId or subscriptionId in session")
           break
         }
 

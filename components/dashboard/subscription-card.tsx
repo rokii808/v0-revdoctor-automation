@@ -2,17 +2,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Crown, Calendar } from "lucide-react"
-
-interface SubscriptionCardProps {
-  dealer: any
-}
+import type { SubscriptionCardProps } from "@/lib/types"
 
 export default function SubscriptionCard({ dealer }: SubscriptionCardProps) {
-  const isTrialActive = dealer?.subscription_status === "trial"
-  const expiresAt = dealer?.subscription_expires_at ? new Date(dealer.subscription_expires_at) : null
-  const daysLeft = expiresAt ? Math.max(0, Math.ceil((expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : 0
-
-  const currentPlan = dealer?.subscription_plan || "trial"
+  const isTrialActive = dealer?.plan === "trial"
+  const currentPlan = dealer?.plan || "trial"
   const planDetails = {
     trial: { name: "Free Trial", price: 0 },
     starter: { name: "Starter", price: 97 },

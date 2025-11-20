@@ -21,12 +21,14 @@ interface SavedSearch {
   created_at: string
 }
 
-interface SavedSearchesProps {
-  dealer: any
+import type { SavedSearchesProps } from "@/lib/types"
+
+interface SavedSearchesPropsWithSearches extends Omit<SavedSearchesProps, 'dealer'> {
+  dealer: SavedSearchesProps['dealer']
   savedSearches: SavedSearch[]
 }
 
-export default function SavedSearches({ dealer, savedSearches }: SavedSearchesProps) {
+export default function SavedSearches({ dealer, savedSearches }: SavedSearchesPropsWithSearches) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [newSearch, setNewSearch] = useState({
     name: "",

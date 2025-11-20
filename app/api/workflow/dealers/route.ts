@@ -1,10 +1,10 @@
-import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { NextResponse } from "next/server"
 
 // GET /api/workflow/dealers - Returns dealer preferences for n8n workflow
 export async function GET() {
   try {
-    const supabase = createClient()
+    const supabase = createAdminClient()
 
     // Get all active dealers with their preferences
     const { data: dealers, error } = await supabase

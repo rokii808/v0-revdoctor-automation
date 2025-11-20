@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { stripe } from "@/lib/stripe"
+import type { Subscription } from "@/lib/types"
 
 export async function GET(req: NextRequest) {
   try {
@@ -33,14 +34,16 @@ export async function GET(req: NextRequest) {
       }
     }
 
+    const typedSubscription = subscription as Subscription | null
+
     return NextResponse.json({
       success: true,
       data: {
-        subscription: subscription || null,
+        subscription: typedSubscription,
         stripeSubscription,
-        isActive: subscription?.status === "active",
-        plan: subscription?.plan || "trial",
-        currentPeriodEnd: subscription?.current_period_end || null,
+        isActive: typedSubscription?.status === "active",
+        plan: typedSubscription?.plan || "trial",
+        currentPeriodEnd: typedSubscription?.current_period_end || null,
       },
     })
   } catch (error) {

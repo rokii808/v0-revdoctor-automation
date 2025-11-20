@@ -1,10 +1,10 @@
-import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { NextResponse } from "next/server"
 
 // POST /api/workflow/digest - Log email digest sent from n8n
 export async function POST(request: Request) {
   try {
-    const supabase = createClient()
+    const supabase = createAdminClient()
     const body = await request.json()
 
     const { dealer_id, email, car_count, cars_data, sent_at } = body

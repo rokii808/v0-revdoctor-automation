@@ -1,10 +1,10 @@
-import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { NextResponse } from "next/server"
 
 // POST /api/workflow/insights - Store AI-analyzed car insights from n8n
 export async function POST(request: Request) {
   try {
-    const supabase = createClient()
+    const supabase = createAdminClient()
     const body = await request.json()
 
     const { dealer_id, title, make, year, price, url, verdict, minor_type, reason, risk, condition_html, mileage } =

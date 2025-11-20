@@ -18,12 +18,14 @@ interface Alert {
   is_read: boolean
 }
 
-interface AlertsFeedProps {
-  dealer: any
+import type { AlertsFeedProps } from "@/lib/types"
+
+interface AlertsFeedPropsWithAlerts extends Omit<AlertsFeedProps, 'dealer'> {
+  dealer: AlertsFeedProps['dealer']
   alerts: Alert[]
 }
 
-export default function AlertsFeed({ dealer, alerts }: AlertsFeedProps) {
+export default function AlertsFeed({ dealer, alerts }: AlertsFeedPropsWithAlerts) {
   const markAsRead = async (alertId: string) => {
     // In real app, this would call API to mark alert as read
     console.log("Marking alert as read:", alertId)

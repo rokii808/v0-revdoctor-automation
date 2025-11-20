@@ -1,10 +1,10 @@
-import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { NextResponse } from "next/server"
 
 // POST /api/workflow/webhook - General webhook endpoint for n8n workflow events
 export async function POST(request: Request) {
   try {
-    const supabase = createClient()
+    const supabase = createAdminClient()
     const body = await request.json()
 
     const { event_type, dealer_id, data, timestamp } = body

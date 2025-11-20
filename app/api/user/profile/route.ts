@@ -1,7 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@supabase/supabase-js"
-
-const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+import { createClient } from "@/lib/supabase/server"
+import type { ProfileData } from "@/lib/types"
 
 export async function GET(req: NextRequest) {
   try {
@@ -11,6 +10,8 @@ export async function GET(req: NextRequest) {
     if (!userId) {
       return NextResponse.json({ error: "Missing userId" }, { status: 400 })
     }
+
+    const supabase = await createClient()
 
     // Get user profile
     const { data: profile, error: profileError } = await supabase.from("profiles").select("*").eq("id", userId).single()
@@ -25,13 +26,15 @@ export async function GET(req: NextRequest) {
       .eq("user_id", userId)
       .single()
 
+    const data: ProfileData = {
+      profile: profile || null,
+      dealer: dealer || null,
+      subscription: subscription || null,
+    }
+
     return NextResponse.json({
       success: true,
-      data: {
-        profile: profile || null,
-        dealer: dealer || null,
-        subscription: subscription || null,
-      },
+      data,
     })
   } catch (error) {
     console.error("Profile API error:", error)
@@ -47,6 +50,8 @@ export async function PUT(req: NextRequest) {
     if (!userId) {
       return NextResponse.json({ error: "Missing userId" }, { status: 400 })
     }
+
+    const supabase = await createClient()
 
     // Update profile
     const { error: profileError } = await supabase.from("profiles").upsert({

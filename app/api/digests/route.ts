@@ -1,7 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@supabase/supabase-js"
-
-const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+import { createAdminClient } from "@/lib/supabase/admin"
+import type { Digest } from "@/lib/types"
 
 export async function GET(req: NextRequest) {
   try {
@@ -12,6 +11,8 @@ export async function GET(req: NextRequest) {
     if (!userId) {
       return NextResponse.json({ error: "Missing userId" }, { status: 400 })
     }
+
+    const supabase = createAdminClient()
 
     // Get user's digests
     const { data: digests, error } = await supabase
@@ -27,7 +28,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      data: digests || [],
+      data: (digests || []) as Digest[],
     })
   } catch (error) {
     console.error("Digests API error:", error)
@@ -43,6 +44,8 @@ export async function POST(req: NextRequest) {
     if (!userId) {
       return NextResponse.json({ error: "Missing userId" }, { status: 400 })
     }
+
+    const supabase = createAdminClient()
 
     // Insert new digest record
     const { data, error } = await supabase.from("digests").insert({

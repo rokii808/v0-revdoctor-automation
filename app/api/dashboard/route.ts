@@ -1,7 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@supabase/supabase-js"
-
-const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+import { createClient } from "@/lib/supabase/server"
+import type { DashboardData, Insight, Digest } from "@/lib/types"
 
 export async function GET(req: NextRequest) {
   try {
@@ -11,6 +10,8 @@ export async function GET(req: NextRequest) {
     if (!userId) {
       return NextResponse.json({ error: "Missing userId" }, { status: 400 })
     }
+
+    const supabase = await createClient()
 
     // Get user's recent insights
     const { data: insights, error: insightsError } = await supabase
@@ -37,29 +38,32 @@ export async function GET(req: NextRequest) {
     }
 
     // Calculate stats
-    const totalCarsFound = insights?.length || 0
-    const healthyCars = insights?.filter((car) => car.verdict === "HEALTHY").length || 0
-    const totalDigests = digests?.length || 0
-    const carsThisWeek =
-      insights?.filter((car) => {
-        const carDate = new Date(car.created_at)
-        const weekAgo = new Date()
-        weekAgo.setDate(weekAgo.getDate() - 7)
-        return carDate >= weekAgo
-      }).length || 0
+    const typedInsights = (insights || []) as Insight[]
+    const typedDigests = (digests || []) as Digest[]
+    const totalCarsFound = typedInsights.length
+    const healthyCars = typedInsights.filter((car) => car.verdict === "HEALTHY").length
+    const totalDigests = typedDigests.length
+    const carsThisWeek = typedInsights.filter((car) => {
+      const carDate = new Date(car.created_at)
+      const weekAgo = new Date()
+      weekAgo.setDate(weekAgo.getDate() - 7)
+      return carDate >= weekAgo
+    }).length
+
+    const data: DashboardData = {
+      stats: {
+        totalCarsFound,
+        healthyCars,
+        totalDigests,
+        carsThisWeek,
+      },
+      recentInsights: typedInsights,
+      recentDigests: typedDigests,
+    }
 
     return NextResponse.json({
       success: true,
-      data: {
-        stats: {
-          totalCarsFound,
-          healthyCars,
-          totalDigests,
-          carsThisWeek,
-        },
-        recentInsights: insights || [],
-        recentDigests: digests || [],
-      },
+      data,
     })
   } catch (error) {
     console.error("Dashboard API error:", error)

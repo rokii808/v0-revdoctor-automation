@@ -1,11 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Activity, AlertCircle, CheckCircle, Clock } from "lucide-react"
-
-interface SystemHealthProps {
-  dealers: any[]
-  recentLeads: any[]
-}
+import type { SystemHealthProps } from "@/lib/types"
 
 export default function SystemHealth({ dealers, recentLeads }: SystemHealthProps) {
   const systemStatus = "operational" // This would come from actual health checks

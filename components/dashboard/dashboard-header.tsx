@@ -11,11 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
-interface DashboardHeaderProps {
-  user: any
-  dealer: any
-}
+import type { DashboardHeaderProps } from "@/lib/types"
 
 export default function DashboardHeader({ user, dealer }: DashboardHeaderProps) {
   const router = useRouter()
@@ -56,7 +52,7 @@ export default function DashboardHeader({ user, dealer }: DashboardHeaderProps) 
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm" className="flex items-center gap-2">
               <User className="w-4 h-4" />
-              <span className="hidden sm:inline">{dealer?.dealer_name}</span>
+              <span className="hidden sm:inline">{dealer?.company_name || 'User'}</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">

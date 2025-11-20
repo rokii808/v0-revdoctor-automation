@@ -2,10 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Trophy, Target, Zap, Users } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
-
-interface AchievementsCardProps {
-  dealer: any
-}
+import type { AchievementsCardProps } from "@/lib/types"
 
 export default function AchievementsCard({ dealer }: AchievementsCardProps) {
   const achievements = [

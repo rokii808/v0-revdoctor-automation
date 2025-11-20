@@ -3,11 +3,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ExternalLink, Calendar, TrendingUp, Star, Clock } from "lucide-react"
 import { Car } from "lucide-react"
-
-interface RecentPicksProps {
-  dealer: any
-  recentLeads: any[]
-}
+import type { RecentPicksProps } from "@/lib/types"
 
 const mockHealthyCars = [
   {
