@@ -1,12 +1,12 @@
 import { createClient } from "@/lib/supabase/server"
-import { redirect } from 'next/navigation'
+import { redirect } from "next/navigation"
 import SignUpForm from "@/components/auth/signup-form"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
 export default async function SignUpPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -39,7 +39,7 @@ export default async function SignUpPage() {
               </Link>
             </Button>
           </div>
-          
+
           <div className="text-center mb-8">
             <h1 className="text-4xl font-serif font-bold text-gray-900 mb-2">Revvdoctor</h1>
             <p className="text-gray-600">AI-powered car auction screening</p>

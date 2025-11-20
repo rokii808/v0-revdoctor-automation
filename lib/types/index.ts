@@ -184,4 +184,3 @@ export interface ProfileData {
   dealer: Dealer | null
   subscription: Subscription | null
 }
-
