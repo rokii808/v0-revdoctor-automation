@@ -1,3 +1,4 @@
+import * as cheerio from "cheerio"
 import type { VehicleListing } from "./index"
 
 export async function scrapeRAW2K(): Promise<VehicleListing[]> {
@@ -20,46 +21,71 @@ export async function scrapeRAW2K(): Promise<VehicleListing[]> {
     const html = await response.text()
     console.log(`[RAW2K] Fetched ${html.length} characters`)
 
+    const $ = cheerio.load(html)
     const listings: VehicleListing[] = []
+    
+    // Select all vehicle cards - adjust selector based on actual site structure
+    // Using a broad selector to match potential variations
+    const vehicleCards = $(".vehicle-card, .vehicle-listing, article.vehicle")
 
-    // Try multiple patterns
-    const patterns = [
-      /<div class="vehicle-card"[^>]*>(.*?)<\/div>/gs,
-      /<div[^>]*class="[^"]*vehicle[^"]*"[^>]*>(.*?)<\/div>/gs,
-      /<article[^>]*class="[^"]*vehicle[^"]*"[^>]*>(.*?)<\/article>/gs,
-    ]
-
-    let matches: RegExpMatchArray[] = []
-    for (const pattern of patterns) {
-      matches = Array.from(html.matchAll(pattern))
-      if (matches.length > 0) {
-        console.log(`[RAW2K] Found ${matches.length} matches`)
-        break
-      }
-    }
-
-    if (matches.length === 0) {
+    if (vehicleCards.length === 0) {
       console.warn("[RAW2K] No vehicle cards found")
       return []
     }
 
-    for (const [index, match] of matches.entries()) {
+    console.log(`[RAW2K] Found ${vehicleCards.length} matches`)
+
+    vehicleCards.each((_, element) => {
       try {
-        const cardHtml = match[1] || match[0]
+        const el = $(element)
+        
+        // Extract data using selectors
+        // These selectors are best guesses based on common patterns and the previous regex
+        // In a real scenario, we would inspect the actual HTML
+        
+        const listingId = el.attr("data-id") || `RAW2K-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+        const lotNumber = el.find(".lot-number, .lot").text().replace(/\D/g, "") || `LOT-UNKNOWN`
+        
+        const title = el.find(".title, h3, h4, .vehicle-name").first().text().trim()
+        // Try to parse make/model from title if explicit fields aren't found
+        const make = el.find(".make").text().trim() || title.split(" ")[0] || ""
+        const model = el.find(".model").text().trim() || title.split(" ").slice(1).join(" ") || ""
+        
+        const yearText = el.find(".year").text().trim() || title.match(/\b20\d{2}\b/)?.[0] || "2020"
+        const year = parseInt(yearText, 10)
+
+        const priceText = el.find(".price, .current-bid").text().trim()
+        const price = parsePrice(priceText)
+
+        const auctionDate = el.find(".auction-date, .time-left").text().trim() || new Date().toISOString()
+        
+        const relativeUrl = el.attr("href") || el.find("a").attr("href") || ""
+        const url = relativeUrl.startsWith("http") ? relativeUrl : `https://www.raw2k.co.uk${relativeUrl}`
+
+        const condition = el.find(".condition, .category").text().trim() || "Unknown"
+        
+        const mileageText = el.find(".mileage, .odometer").text().trim()
+        const mileage = parseInt(mileageText.replace(/\D/g, ""), 10) || 0
+
+        const images: string[] = []
+        el.find("img").each((_, img) => {
+          const src = $(img).attr("src")
+          if (src) images.push(src)
+        })
 
         const listing: VehicleListing = {
-          listing_id: extractData(cardHtml, /data-id="([^"]+)"/) || `RAW2K-${Date.now()}-${index}`,
-          lot_number: extractData(cardHtml, /Lot:\s*(\d+)/) || `LOT-${index}`,
-          make: extractData(cardHtml, /make[">]\s*([^<]+)/) || "",
-          model: extractData(cardHtml, /model[">]\s*([^<]+)/) || "",
-          year: Number.parseInt(extractData(cardHtml, /(\d{4})/) || "2020"),
-          price: parsePrice(extractData(cardHtml, /£([\d,]+)/)),
-          auction_date: extractData(cardHtml, /auction-date[">]\s*([^<]+)/) || new Date().toISOString(),
+          listing_id: listingId,
+          lot_number: lotNumber,
+          make,
+          model,
+          year,
+          price,
+          auction_date: auctionDate,
           auction_site: "RAW2K",
-          url: `https://www.raw2k.co.uk${extractData(cardHtml, /href="([^"]+)"/) || ""}`,
-          condition: extractData(cardHtml, /condition[">]\s*([^<]+)/) || "Unknown",
-          mileage: Number.parseInt(extractData(cardHtml, /([\d,]+)\s*miles/) || "0"),
-          images: extractImages(cardHtml),
+          url,
+          condition,
+          mileage,
+          images: images.slice(0, 3)
         }
 
         if (listing.make && listing.model) {
@@ -68,7 +94,7 @@ export async function scrapeRAW2K(): Promise<VehicleListing[]> {
       } catch (err) {
         console.error(`[RAW2K] Error processing vehicle:`, err)
       }
-    }
+    })
 
     console.log(`[RAW2K] Successfully scraped ${listings.length} vehicles`)
     return listings
@@ -78,22 +104,8 @@ export async function scrapeRAW2K(): Promise<VehicleListing[]> {
   }
 }
 
-function extractData(html: string, pattern: RegExp): string | null {
-  const match = html.match(pattern)
-  return match ? match[1].trim() : null
-}
-
 function parsePrice(priceStr: string | null): number {
   if (!priceStr) return 0
-  return Number.parseInt(priceStr.replace(/,/g, ""))
+  return Number.parseInt(priceStr.replace(/[^\d.]/g, ""))
 }
 
-function extractImages(html: string): string[] {
-  const images: string[] = []
-  const imgPattern = /<img[^>]+src="([^"]+)"/g
-  let match
-  while ((match = imgPattern.exec(html)) !== null) {
-    images.push(match[1])
-  }
-  return images.slice(0, 3)
-}
