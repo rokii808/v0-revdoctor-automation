@@ -1,8 +1,21 @@
 import { NextResponse } from "next/server"
 
-export async function GET() {
+export async function GET(request: Request) {
+  // Validate environment variables
+  const cronSecret = process.env.CRON_SECRET
+  if (!cronSecret) {
+    console.error("[CRON] CRON_SECRET environment variable not set")
+    return NextResponse.json({ error: "Server configuration error" }, { status: 500 })
+  }
+
+  // Verify authorization for this test endpoint
+  const authHeader = request.headers.get("authorization")
+  if (authHeader !== `Bearer ${cronSecret}`) {
+    console.warn("[CRON] Unauthorized test cron attempt")
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-  const cronSecret = process.env.CRON_SECRET || "dev-secret"
 
   try {
     console.log("[v0] Triggering test scrape...")

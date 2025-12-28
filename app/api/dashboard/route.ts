@@ -4,14 +4,19 @@ import type { DashboardData, Insight, Digest } from "@/lib/types"
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url)
-    const userId = searchParams.get("userId")
+    const supabase = await createClient()
 
-    if (!userId) {
-      return NextResponse.json({ error: "Missing userId" }, { status: 400 })
+    // SECURITY: Verify authentication first
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      console.warn("[Dashboard] Unauthorized access attempt")
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const supabase = await createClient()
+    // SECURITY FIX: Use authenticated user's ID instead of query param
+    // This prevents IDOR (Insecure Direct Object Reference) vulnerability
+    const userId = user.id
 
     // Get user's recent insights
     const { data: insights, error: insightsError } = await supabase

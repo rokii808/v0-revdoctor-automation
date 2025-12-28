@@ -3,14 +3,20 @@ import { stripe } from "@/lib/stripe"
 import { createAdminClient } from "@/lib/supabase/admin"
 import type Stripe from "stripe"
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
-
 export async function POST(req: NextRequest) {
   try {
+    // SECURITY: Validate webhook secret is configured
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
+    if (!webhookSecret) {
+      console.error("[Stripe] STRIPE_WEBHOOK_SECRET environment variable not set")
+      return NextResponse.json({ error: "Server configuration error" }, { status: 500 })
+    }
+
     const body = await req.text()
     const signature = req.headers.get("stripe-signature")
 
     if (!signature) {
+      console.warn("[Stripe] Webhook request missing signature")
       return NextResponse.json({ error: "Missing signature" }, { status: 400 })
     }
 
