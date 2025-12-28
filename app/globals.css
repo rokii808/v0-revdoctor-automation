@@ -1,0 +1,370 @@
+@import "tailwindcss";
+/* Removed tw-animate-css import that was causing CSS parsing error */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  /* Updated color palette to red-orange flow-state design */
+  --background: #ffffff; /* Main background color */
+  --foreground: #374151; /* Primary text color */
+  --card: #fef2f2; /* Card background */
+  --card-foreground: #374151; /* Card text color */
+  --popover: #ffffff; /* Popover background */
+  --popover-foreground: #374151; /* Popover text color */
+  --primary: #dc2626; /* Primary actions - red */
+  --primary-foreground: #ffffff; /* Text on primary actions */
+  --secondary: #f59e0b; /* Secondary actions - orange */
+  --secondary-foreground: #ffffff; /* Text on secondary actions */
+  --muted: #fef2f2; /* Muted elements */
+  --muted-foreground: #374151; /* Text on muted elements */
+  --accent: #f59e0b; /* Accent color - orange */
+  --accent-foreground: #374151; /* Text on accents */
+  --destructive: #dc2626; /* Destructive actions */
+  --destructive-foreground: #ffffff; /* Text on destructive actions */
+  --border: #e5e7eb; /* Borders */
+  --input: #f9fafb; /* Input fields */
+  --ring: rgba(220, 38, 38, 0.5); /* Focus ring */
+  --chart-1: #ef4444; /* Chart color 1 */
+  --chart-2: #f97316; /* Chart color 2 */
+  --chart-3: #eab308; /* Chart color 3 */
+  --chart-4: #34d399; /* Chart color 4 */
+  --chart-5: #3b82f6; /* Chart color 5 */
+  --radius: 0.5rem; /* Corner rounding */
+  --sidebar: #ffffff; /* Sidebar background */
+  --sidebar-foreground: #374151; /* Sidebar text color */
+  --sidebar-primary: #fef2f2; /* Sidebar primary color */
+  --sidebar-primary-foreground: #374151; /* Sidebar primary text */
+  --sidebar-accent: #f59e0b; /* Sidebar accent color */
+  --sidebar-accent-foreground: #ffffff; /* Sidebar accent text */
+  --sidebar-border: #e5e7eb; /* Sidebar border */
+  --sidebar-ring: rgba(220, 38, 38, 0.5); /* Sidebar focus ring */
+  --font-playfair: "Playfair Display", serif; /* Playfair Display font */
+  --font-inter: "Inter", sans-serif; /* Inter font */
+}
+
+.dark {
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+  --card: #1e293b;
+  --card-foreground: #f1f5f9;
+  --popover: #0f172a;
+  --popover-foreground: #f1f5f9;
+  --primary: #ef4444;
+  --primary-foreground: #ffffff;
+  --secondary: #fb923c;
+  --secondary-foreground: #ffffff;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --accent: #fb923c;
+  --accent-foreground: #0f172a;
+  --destructive: #ef4444;
+  --destructive-foreground: #f1f5f9;
+  --border: #334155;
+  --input: #1e293b;
+  --ring: rgba(239, 68, 68, 0.5);
+  --chart-1: #ef4444;
+  --chart-2: #f97316;
+  --chart-3: #eab308;
+  --chart-4: #34d399;
+  --chart-5: #3b82f6;
+  --sidebar: #1e293b;
+  --sidebar-foreground: #f1f5f9;
+  --sidebar-primary: #0f172a;
+  --sidebar-primary-foreground: #f1f5f9;
+  --sidebar-accent: #334155;
+  --sidebar-accent-foreground: #f1f5f9;
+  --sidebar-border: #334155;
+  --sidebar-ring: rgba(239, 68, 68, 0.5);
+}
+
+@theme inline {
+  /* Updated theme tokens to match new color system */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  /* Updated font variables to use Playfair Display for serif and Inter for sans */
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  /* Updated gradient buttons to use red-orange theme */
+  .btn-gradient {
+    @apply bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105;
+  }
+
+  .btn-morphing {
+    @apply relative overflow-hidden bg-gradient-to-r from-red-500 to-orange-500 text-white border-0 shadow-lg transition-all duration-500 transform hover:shadow-2xl;
+  }
+
+  .btn-morphing::before {
+    content: "";
+    @apply absolute inset-0 bg-gradient-to-r from-orange-500 to-red-500 opacity-0 transition-opacity duration-500;
+  }
+
+  .btn-morphing:hover::before {
+    @apply opacity-100;
+  }
+
+  .btn-morphing > * {
+    @apply relative z-10;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent;
+  }
+
+  /* Enhanced card hover effects with more dynamic animations */
+  .card-hover {
+    @apply transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 hover:border-red-200 hover:bg-gradient-to-br hover:from-white hover:to-red-50/30;
+  }
+
+  .card-float {
+    @apply transition-all duration-700 hover:shadow-2xl hover:-translate-y-3 hover:rotate-1 hover:scale-105;
+  }
+
+  .hero-gradient {
+    @apply bg-gradient-to-br from-red-50 via-white to-orange-50;
+  }
+
+  .section-gradient {
+    @apply bg-gradient-to-br from-slate-50 to-red-50;
+  }
+
+  /* Added new flow-state interactive elements */
+  .interactive-glow {
+    @apply relative overflow-hidden;
+  }
+
+  .interactive-glow::before {
+    content: "";
+    @apply absolute -inset-1 bg-gradient-to-r from-red-500 to-orange-500 rounded-lg opacity-0 blur transition-opacity duration-500;
+  }
+
+  .interactive-glow:hover::before {
+    @apply opacity-20;
+  }
+
+  .pulse-ring {
+    @apply relative;
+  }
+
+  .pulse-ring::before {
+    content: "";
+    @apply absolute inset-0 rounded-full border-2 border-red-400 animate-ping;
+  }
+
+  .floating-element {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .morphing-bg {
+    @apply bg-gradient-to-br from-red-50 to-orange-50 transition-all duration-1000 hover:from-orange-50 hover:to-red-50;
+  }
+
+  /* Added Aset template dark theme styles with geometric grid and orange gradient */
+  .aset-dark-bg {
+    @apply bg-gray-900 relative overflow-hidden;
+  }
+
+  .aset-grid-pattern {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  .aset-gradient-circle {
+    @apply absolute top-0 right-0 w-96 h-96 rounded-full;
+    background: linear-gradient(135deg, #f97316 0%, #dc2626 100%);
+    filter: blur(100px);
+    opacity: 0.8;
+  }
+
+  .aset-nav-link {
+    @apply text-white/80 hover:text-white transition-colors duration-300 font-medium;
+  }
+
+  .aset-btn-primary {
+    @apply bg-white text-gray-900 hover:bg-gray-100 px-6 py-3 rounded-full font-semibold transition-all duration-300;
+  }
+
+  .aset-btn-secondary {
+    @apply border border-white/30 text-white hover:bg-white/10 px-6 py-3 rounded-full font-semibold transition-all duration-300;
+  }
+
+  .aset-hero-text {
+    @apply text-white text-6xl md:text-7xl font-bold leading-tight;
+  }
+
+  .aset-subtitle {
+    @apply text-white/80 text-xl leading-relaxed;
+  }
+
+  /* Adding dark mode Kavi template styles */
+  .kavi-dark-bg {
+    @apply bg-gray-900 text-white;
+  }
+
+  .kavi-section-bg {
+    @apply bg-gray-800/50;
+  }
+
+  .kavi-card-dark {
+    @apply bg-gray-800 border-gray-700 hover:bg-gray-700 transition-all duration-300;
+  }
+
+  .kavi-btn-primary-dark {
+    @apply bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300;
+  }
+
+  .kavi-btn-secondary-dark {
+    @apply border border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300;
+  }
+
+  .kavi-gradient-text-dark {
+    @apply bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent;
+  }
+}
+
+@layer utilities {
+  /* Enhanced animations for flow-state experience */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-float-delayed {
+    animation: float 6s ease-in-out infinite 2s;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-bounce-gentle {
+    animation: bounce-gentle 3s ease-in-out infinite;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.8s ease-out forwards;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 1s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.6s ease-out forwards;
+  }
+}
+
+/* Added new keyframe animations for dynamic interactions */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes bounce-gentle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease infinite;
+}

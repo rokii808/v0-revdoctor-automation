@@ -1,0 +1,211 @@
+"use client"
+
+import { useState } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Car, ExternalLink, Search, RefreshCw } from "lucide-react"
+
+interface HealthyCar {
+  id: string
+  make: string
+  model: string
+  year: number
+  mileage: number
+  condition: string
+  reserve_price: number
+  source_link: string
+  auction_site: string
+  image_url?: string
+  created_at: string
+}
+
+import type { TodaysHealthyCarsProps } from "@/lib/types"
+
+interface TodaysHealthyCarsPropsWithCars extends Omit<TodaysHealthyCarsProps, 'dealer'> {
+  dealer: TodaysHealthyCarsProps['dealer']
+  healthyCars: HealthyCar[]
+}
+
+export default function TodaysHealthyCars({ dealer, healthyCars }: TodaysHealthyCarsPropsWithCars) {
+  const [filteredCars, setFilteredCars] = useState(healthyCars)
+  const [filters, setFilters] = useState({
+    search: "",
+    brand: "",
+    maxMileage: "",
+    maxPrice: "",
+    auctionSite: "",
+  })
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
+  const handleFilterChange = (key: string, value: string) => {
+    const newFilters = { ...filters, [key]: value }
+    setFilters(newFilters)
+
+    let filtered = healthyCars
+
+    if (newFilters.search) {
+      filtered = filtered.filter(
+        (car) =>
+          car.make.toLowerCase().includes(newFilters.search.toLowerCase()) ||
+          car.model.toLowerCase().includes(newFilters.search.toLowerCase()),
+      )
+    }
+
+    if (newFilters.brand) {
+      filtered = filtered.filter((car) => car.make === newFilters.brand)
+    }
+
+    if (newFilters.maxMileage) {
+      filtered = filtered.filter((car) => car.mileage <= Number.parseInt(newFilters.maxMileage))
+    }
+
+    if (newFilters.maxPrice) {
+      filtered = filtered.filter((car) => car.reserve_price <= Number.parseInt(newFilters.maxPrice))
+    }
+
+    if (newFilters.auctionSite) {
+      filtered = filtered.filter((car) => car.auction_site === newFilters.auctionSite)
+    }
+
+    setFilteredCars(filtered)
+  }
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true)
+    // Simulate refresh - in real app this would call API
+    setTimeout(() => {
+      setIsRefreshing(false)
+    }, 2000)
+  }
+
+  const uniqueBrands = [...new Set(healthyCars.map((car) => car.make))]
+  const uniqueAuctionSites = [...new Set(healthyCars.map((car) => car.auction_site))]
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
+            <Car className="w-5 h-5" />
+            Today's Healthy Cars ({filteredCars.length})
+          </CardTitle>
+          <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isRefreshing}>
+            <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
+            Refresh
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {/* Filters */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+          <div className="relative">
+            <Search className="w-4 h-4 absolute left-3 top-3 text-muted-foreground" />
+            <Input
+              placeholder="Search make/model..."
+              value={filters.search}
+              onChange={(e) => handleFilterChange("search", e.target.value)}
+              className="pl-10"
+            />
+          </div>
+
+          <Select value={filters.brand} onValueChange={(value) => handleFilterChange("brand", value)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Brand" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Brands</SelectItem>
+              {uniqueBrands.map((brand) => (
+                <SelectItem key={brand} value={brand}>
+                  {brand}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Input
+            placeholder="Max mileage"
+            type="number"
+            value={filters.maxMileage}
+            onChange={(e) => handleFilterChange("maxMileage", e.target.value)}
+          />
+
+          <Input
+            placeholder="Max price £"
+            type="number"
+            value={filters.maxPrice}
+            onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
+          />
+
+          <Select value={filters.auctionSite} onValueChange={(value) => handleFilterChange("auctionSite", value)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Auction Site" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Sites</SelectItem>
+              {uniqueAuctionSites.map((site) => (
+                <SelectItem key={site} value={site}>
+                  {site}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Car List */}
+        <div className="space-y-4">
+          {filteredCars.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              <Car className="w-12 h-12 mx-auto mb-4 opacity-50" />
+              <p>No healthy cars found matching your filters.</p>
+            </div>
+          ) : (
+            filteredCars.map((car) => (
+              <div key={car.id} className="border rounded-lg p-4 hover:bg-muted/50 transition-colors">
+                <div className="flex items-start justify-between">
+                  <div className="flex gap-4">
+                    <div className="w-20 h-16 bg-muted rounded-lg flex items-center justify-center">
+                      {car.image_url ? (
+                        <img
+                          src={car.image_url || "/placeholder.svg"}
+                          alt={`${car.make} ${car.model}`}
+                          className="w-full h-full object-cover rounded-lg"
+                        />
+                      ) : (
+                        <Car className="w-8 h-8 text-muted-foreground" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg">
+                        {car.year} {car.make} {car.model}
+                      </h3>
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
+                        <span>{car.mileage.toLocaleString()} miles</span>
+                        <Badge variant="secondary">{car.condition}</Badge>
+                        <span className="text-green-600 font-medium">£{car.reserve_price.toLocaleString()}</span>
+                      </div>
+                      <div className="flex items-center gap-2 mt-2">
+                        <Badge variant="outline">{car.auction_site}</Badge>
+                        <span className="text-xs text-muted-foreground">
+                          Added {new Date(car.created_at).toLocaleTimeString()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <Button variant="outline" size="sm" asChild>
+                    <a href={car.source_link} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      View Listing
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
