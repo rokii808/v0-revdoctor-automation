@@ -57,28 +57,45 @@ export const dailyScraperJob = inngest.createFunction(
             if (matchesCriteria && analysis.verdict === "HEALTHY") {
               const vehicleData = {
                 dealer_id: dealer.id,
-                user_id: dealer.user_id,
-                title: `${vehicle.make} ${vehicle.model} ${vehicle.year}`,
+                auction_site: vehicle.auction_site,
                 make: vehicle.make,
                 model: vehicle.model,
-                minor_type: vehicle.model,
                 year: vehicle.year,
                 price: vehicle.price,
-                url: vehicle.url,
-                verdict: analysis.verdict,
-                reason: analysis.reason,
-                risk: analysis.risk_level,
-                profit_estimate: analysis.profit_estimate,
                 mileage: vehicle.mileage,
                 condition: vehicle.condition,
-                auction_site: vehicle.auction_site,
-                listing_id: vehicle.listing_id,
+                listing_url: vehicle.url,
+                image_url: vehicle.images?.[0] || null,
+                description: `${vehicle.make} ${vehicle.model} ${vehicle.year}`,
+                match_score: 75, // Default score, can be improved with preference matching
+                verdict: analysis.verdict,
+                reason: analysis.reason,
+                risk_level: analysis.risk_level,
+                profit_estimate: analysis.profit_estimate,
+                is_sent: false,
                 created_at: new Date().toISOString(),
               }
 
-              // Insert into both tables
-              await supabase.from("insights").insert(vehicleData)
-              await supabase.from("healthy_cars").insert(vehicleData)
+              // Insert into vehicle_matches (primary table)
+              await supabase.from("vehicle_matches").insert(vehicleData)
+
+              // Also insert into legacy tables for backward compatibility
+              const legacyData = {
+                dealer_id: dealer.id,
+                auction_site: vehicle.auction_site,
+                make: vehicle.make,
+                model: vehicle.model,
+                year: vehicle.year,
+                price: vehicle.price,
+                mileage: vehicle.mileage,
+                condition: vehicle.condition,
+                listing_url: vehicle.url,
+                verdict: analysis.verdict,
+                reason: analysis.reason,
+                created_at: new Date().toISOString(),
+              }
+              await supabase.from("insights").insert(legacyData)
+              await supabase.from("healthy_cars").insert(legacyData)
 
               totalHealthy++
             }

@@ -71,7 +71,7 @@ export default async function DashboardPage() {
 
   // Get today's healthy cars with error handling
   const { data: healthyCars, error: healthyCarsError } = await supabase
-    .from("healthy_cars")
+    .from("vehicle_matches")
     .select("*")
     .eq("dealer_id", dealer?.id || '')
     .gte("created_at", new Date().toISOString().split("T")[0])

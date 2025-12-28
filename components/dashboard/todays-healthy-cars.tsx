@@ -75,10 +75,21 @@ export default function TodaysHealthyCars({ dealer, healthyCars }: TodaysHealthy
 
   const handleRefresh = async () => {
     setIsRefreshing(true)
-    // Simulate refresh - in real app this would call API
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/vehicles")
+      if (res.ok) {
+        const { vehicles } = await res.json()
+        setFilteredCars(vehicles)
+        // Update filters with fresh data
+        handleFilterChange(filters.search ? "search" : "", filters.search)
+      } else {
+        console.error("Failed to refresh vehicles")
+      }
+    } catch (error) {
+      console.error("Refresh error:", error)
+    } finally {
       setIsRefreshing(false)
-    }, 2000)
+    }
   }
 
   const uniqueBrands = [...new Set(healthyCars.map((car) => car.make))]

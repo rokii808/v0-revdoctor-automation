@@ -52,11 +52,10 @@ export async function POST(req: NextRequest) {
         })
 
         // Update dealer status
-        await supabase.from("dealers_v2").upsert({
-          id: userId,
-          plan,
-          status: "active",
-        })
+        await supabase.from("dealers").update({
+          subscription_status: "active",
+          subscription_expires_at: new Date(subscription.current_period_end * 1000).toISOString(),
+        }).eq("user_id", userId)
 
         // Call n8n webhook to start agent (if N8N_WEBHOOK_URL is configured)
         if (process.env.N8N_WEBHOOK_URL) {
@@ -97,8 +96,11 @@ export async function POST(req: NextRequest) {
             .eq("stripe_customer_id", customerId)
 
           // Update dealer status
-          const dealerStatus = subscription.status === "active" ? "active" : "inactive"
-          await supabase.from("dealers_v2").update({ status: dealerStatus }).eq("id", existingSubscription.user_id)
+          const dealerStatus = subscription.status === "active" ? "active" : "cancelled"
+          await supabase.from("dealers").update({
+            subscription_status: dealerStatus,
+            subscription_expires_at: new Date(subscription.current_period_end * 1000).toISOString(),
+          }).eq("user_id", existingSubscription.user_id)
 
           // Stop agent if subscription cancelled
           if (subscription.status === "canceled" && process.env.N8N_WEBHOOK_URL) {
