@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -25,10 +26,21 @@ interface AlertsFeedPropsWithAlerts extends Omit<AlertsFeedProps, 'dealer'> {
   alerts: Alert[]
 }
 
-export default function AlertsFeed({ dealer, alerts }: AlertsFeedPropsWithAlerts) {
+export default function AlertsFeed({ dealer, alerts: initialAlerts }: AlertsFeedPropsWithAlerts) {
+  const [alerts, setAlerts] = useState(initialAlerts)
+
   const markAsRead = async (alertId: string) => {
-    // In real app, this would call API to mark alert as read
-    console.log("Marking alert as read:", alertId)
+    try {
+      const res = await fetch(`/api/alerts/${alertId}`, { method: "PATCH" })
+      if (res.ok) {
+        // Remove alert from list
+        setAlerts(alerts.filter(a => a.id !== alertId))
+      } else {
+        console.error("Failed to mark alert as read")
+      }
+    } catch (error) {
+      console.error("Error marking alert as read:", error)
+    }
   }
 
   return (

@@ -5,8 +5,8 @@ import { Crown, Calendar } from "lucide-react"
 import type { SubscriptionCardProps } from "@/lib/types"
 
 export default function SubscriptionCard({ dealer }: SubscriptionCardProps) {
-  const isTrialActive = dealer?.plan === "trial"
-  const currentPlan = dealer?.plan || "trial"
+  const isTrialActive = dealer?.subscription_status === "trial"
+  const currentPlan = dealer?.subscription_status || "trial"
   const planDetails = {
     trial: { name: "Free Trial", price: 0 },
     starter: { name: "Starter", price: 97 },
@@ -15,6 +15,15 @@ export default function SubscriptionCard({ dealer }: SubscriptionCardProps) {
   }
 
   const currentPlanInfo = planDetails[currentPlan as keyof typeof planDetails] || planDetails.trial
+
+  // Calculate expiry date and days left
+  const expiresAt = dealer?.subscription_expires_at
+    ? new Date(dealer.subscription_expires_at)
+    : null
+
+  const daysLeft = expiresAt
+    ? Math.max(0, Math.ceil((expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+    : 0
 
   return (
     <Card>

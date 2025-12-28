@@ -18,9 +18,31 @@ export default function EmailSettings({ dealer }: EmailSettingsProps) {
     digestEnabled: true,
   })
 
+  const [saving, setSaving] = useState(false)
+
   const handleSave = async () => {
-    // In real app, this would call API to save settings
-    console.log("Saving email settings:", settings)
+    setSaving(true)
+    try {
+      const res = await fetch("/api/preferences", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email_frequency: settings.frequency,
+          // Can expand with more settings as needed
+        }),
+      })
+
+      if (res.ok) {
+        console.log("Email settings saved successfully")
+        // Could show a toast notification here
+      } else {
+        console.error("Failed to save email settings")
+      }
+    } catch (error) {
+      console.error("Error saving settings:", error)
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -97,8 +119,8 @@ export default function EmailSettings({ dealer }: EmailSettingsProps) {
           </div>
         </div>
 
-        <Button onClick={handleSave} className="w-full">
-          Save Settings
+        <Button onClick={handleSave} className="w-full" disabled={saving}>
+          {saving ? "Saving..." : "Save Settings"}
         </Button>
       </CardContent>
     </Card>
