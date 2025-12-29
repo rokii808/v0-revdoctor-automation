@@ -13,6 +13,7 @@ export async function middleware(request: NextRequest) {
     '/pricing',
     '/demo-login',
     '/test-email',
+    '/onboarding', // Allow onboarding for authenticated users
     '/api',
   ]
 
@@ -89,6 +90,37 @@ export async function middleware(request: NextRequest) {
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
 
   if (isProtectedRoute) {
+    // Check dealer profile exists
+    const { data: dealer } = await supabase
+      .from('dealers')
+      .select('subscription_status, subscription_expires_at')
+      .eq('user_id', session.user.id)
+      .single()
+
+    // If no dealer profile, redirect to onboarding
+    if (!dealer) {
+      const redirectUrl = request.nextUrl.clone()
+      redirectUrl.pathname = '/onboarding'
+      return NextResponse.redirect(redirectUrl)
+    }
+
+    // Check if trial is valid
+    if (dealer.subscription_status === 'trial') {
+      const trialExpiry = new Date(dealer.subscription_expires_at)
+      const now = new Date()
+
+      if (trialExpiry > now) {
+        // Trial still valid, allow access
+        return response
+      } else {
+        // Trial expired, redirect to pricing
+        const redirectUrl = request.nextUrl.clone()
+        redirectUrl.pathname = '/pricing'
+        redirectUrl.searchParams.set('trial_expired', 'true')
+        return NextResponse.redirect(redirectUrl)
+      }
+    }
+
     // Check if user has active subscription
     const { data: subscription } = await supabase
       .from('subscriptions')
@@ -96,8 +128,8 @@ export async function middleware(request: NextRequest) {
       .eq('user_id', session.user.id)
       .single()
 
-    // If no active subscription, redirect to pricing
-    if (!subscription || subscription.status !== 'active') {
+    // If no active subscription and not on trial, redirect to pricing
+    if (!subscription || (subscription.status !== 'active' && dealer.subscription_status !== 'active')) {
       const redirectUrl = request.nextUrl.clone()
       redirectUrl.pathname = '/pricing'
       redirectUrl.searchParams.set('required', 'true')
