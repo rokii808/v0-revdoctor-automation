@@ -12,12 +12,15 @@ export interface SubscriptionStatus {
 }
 
 // Feature limits per plan
+// MARKET INTELLIGENCE = RevvDoctor's USP (Inventory Turn Predictions)
 const PLAN_LIMITS = {
   trial: {
     vehicles_per_day: 10,
     saved_searches: 2,
     email_alerts: true,
     export: false,
+    market_intelligence: false,      // ❌ No turn predictions on trial
+    competitive_intel: false,
     api_access: false,
     priority_support: false,
   },
@@ -26,6 +29,8 @@ const PLAN_LIMITS = {
     saved_searches: 5,
     email_alerts: true,
     export: true,
+    market_intelligence: true,       // ✅ Full turn predictions
+    competitive_intel: false,
     api_access: false,
     priority_support: false,
   },
@@ -34,6 +39,8 @@ const PLAN_LIMITS = {
     saved_searches: 15,
     email_alerts: true,
     export: true,
+    market_intelligence: true,
+    competitive_intel: true,         // ✅ + Market snapshots & competition data
     api_access: true,
     priority_support: false,
   },
@@ -42,6 +49,8 @@ const PLAN_LIMITS = {
     saved_searches: 999999,   // Unlimited
     email_alerts: true,
     export: true,
+    market_intelligence: true,
+    competitive_intel: true,
     api_access: true,
     priority_support: true,
   },
