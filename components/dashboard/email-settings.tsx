@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Mail, Clock, Bell } from "lucide-react"
 import type { EmailSettingsProps } from "@/lib/types"
+import { toast } from "sonner"
 
 export default function EmailSettings({ dealer }: EmailSettingsProps) {
   const [settings, setSettings] = useState({
@@ -28,18 +29,27 @@ export default function EmailSettings({ dealer }: EmailSettingsProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email_frequency: settings.frequency,
-          // Can expand with more settings as needed
+          email_time: settings.time,
+          instant_alerts: settings.instantAlerts,
+          weekend_emails: settings.weekendEmails,
+          digest_enabled: settings.digestEnabled,
         }),
       })
 
       if (res.ok) {
-        console.log("Email settings saved successfully")
-        // Could show a toast notification here
+        toast.success("Settings Saved!", {
+          description: "Your email preferences have been updated.",
+        })
       } else {
-        console.error("Failed to save email settings")
+        const error = await res.json()
+        toast.error("Save Failed", {
+          description: error.message || "Please try again.",
+        })
       }
     } catch (error) {
-      console.error("Error saving settings:", error)
+      toast.error("An error occurred", {
+        description: "Unable to save settings. Please check your connection.",
+      })
     } finally {
       setSaving(false)
     }

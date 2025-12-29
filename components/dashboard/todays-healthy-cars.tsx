@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Car, ExternalLink, Search, RefreshCw } from "lucide-react"
+import { toast } from "sonner"
 
 interface HealthyCar {
   id: string
@@ -82,11 +83,19 @@ export default function TodaysHealthyCars({ dealer, healthyCars }: TodaysHealthy
         setFilteredCars(vehicles)
         // Update filters with fresh data
         handleFilterChange(filters.search ? "search" : "", filters.search)
+        toast.success("Vehicles Refreshed!", {
+          description: `Found ${vehicles.length} matching vehicles.`,
+        })
       } else {
-        console.error("Failed to refresh vehicles")
+        const error = await res.json()
+        toast.error("Refresh Failed", {
+          description: error.message || "Please try again.",
+        })
       }
     } catch (error) {
-      console.error("Refresh error:", error)
+      toast.error("An error occurred", {
+        description: "Unable to refresh vehicles. Please check your connection.",
+      })
     } finally {
       setIsRefreshing(false)
     }

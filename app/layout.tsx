@@ -2,6 +2,9 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Playfair_Display, Inter } from "next/font/google"
 import "./globals.css"
+import { SubscriptionProvider } from "@/components/providers/subscription-provider"
+import { PaymentReminderModal } from "@/components/modals/payment-reminder-modal"
+import { Toaster } from "sonner"
 
 const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
@@ -31,7 +34,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${playfairDisplay.variable} ${inter.variable}`}>
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        <SubscriptionProvider>
+          {children}
+          <PaymentReminderModal />
+          <Toaster position="top-right" richColors />
+        </SubscriptionProvider>
+      </body>
     </html>
   )
 }
