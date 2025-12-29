@@ -9,143 +9,64 @@ function getResendClient() {
   return new Resend(process.env.RESEND_API_KEY)
 }
 
-export interface DigestRecipient {
-  dealer_id: string
-  dealer_name: string
+interface DemoEmailData {
   email: string
-  matches: VehicleMatch[]
-  subscription_plan: string
-}
-
-interface SendDigestResult {
-  success: boolean
-  dealer_id: string
-  email: string
-  message_id?: string
-  error?: string
+  vehicles: VehicleMatch[]
 }
 
 /**
- * Send daily vehicle digest to a dealer
+ * Send demo "See It in Action" email with sample vehicles
+ * Shows what the Revvdoctor workflow does without requiring signup
  */
-export async function sendDailyDigest(
-  recipient: DigestRecipient
-): Promise<SendDigestResult> {
+export async function sendDemoEmail(data: DemoEmailData): Promise<{
+  success: boolean
+  message_id?: string
+  error?: string
+}> {
   try {
-    console.log(
-      `[Email] Sending digest to ${recipient.email} (${recipient.matches.length} matches)`
-    )
+    console.log(`[Demo] Sending demo email to ${data.email} with ${data.vehicles.length} vehicles`)
 
-    // Don't send empty digests
-    if (recipient.matches.length === 0) {
-      console.log(`[Email] No matches for ${recipient.email}, skipping`)
-      return {
-        success: true,
-        dealer_id: recipient.dealer_id,
-        email: recipient.email,
-        message_id: "skipped_no_matches",
-      }
-    }
-
-    const html = buildDigestHTML(recipient)
-    const subject = buildSubjectLine(recipient)
+    const html = buildDemoEmailHTML(data)
     const resend = getResendClient()
 
-    const { data, error } = await resend.emails.send({
+    const { data: resendData, error } = await resend.emails.send({
       from: "Revvdoctor <digest@revvdoctor.com>",
-      to: recipient.email,
-      subject,
+      to: data.email,
+      subject: "🚗 See Revvdoctor in Action - AI-Powered Vehicle Analysis",
       html,
       tags: [
-        { name: "type", value: "daily_digest" },
-        { name: "dealer_id", value: recipient.dealer_id },
-        { name: "matches", value: recipient.matches.length.toString() },
+        { name: "type", value: "demo_email" },
+        { name: "vehicles", value: data.vehicles.length.toString() },
       ],
     })
 
     if (error) {
-      console.error(`[Email] Failed to send to ${recipient.email}:`, error)
+      console.error(`[Demo] Failed to send to ${data.email}:`, error)
       return {
         success: false,
-        dealer_id: recipient.dealer_id,
-        email: recipient.email,
         error: error.message,
       }
     }
 
-    console.log(`[Email] Successfully sent to ${recipient.email} (ID: ${data?.id})`)
+    console.log(`[Demo] Successfully sent to ${data.email} (ID: ${resendData?.id})`)
     return {
       success: true,
-      dealer_id: recipient.dealer_id,
-      email: recipient.email,
-      message_id: data?.id,
+      message_id: resendData?.id,
     }
   } catch (err) {
-    console.error(`[Email] Unexpected error sending to ${recipient.email}:`, err)
+    console.error(`[Demo] Unexpected error sending to ${data.email}:`, err)
     return {
       success: false,
-      dealer_id: recipient.dealer_id,
-      email: recipient.email,
       error: err instanceof Error ? err.message : "Unknown error",
     }
   }
 }
 
 /**
- * Send digests to multiple dealers in parallel
+ * Build demo email HTML
  */
-export async function sendDigestBatch(
-  recipients: DigestRecipient[]
-): Promise<SendDigestResult[]> {
-  console.log(`[Email] Sending batch of ${recipients.length} digests`)
-
-  // Send in parallel but limit concurrency
-  const BATCH_SIZE = 5 // Send 5 emails at a time
-  const results: SendDigestResult[] = []
-
-  for (let i = 0; i < recipients.length; i += BATCH_SIZE) {
-    const batch = recipients.slice(i, i + BATCH_SIZE)
-    const batchResults = await Promise.all(
-      batch.map(recipient => sendDailyDigest(recipient))
-    )
-    results.push(...batchResults)
-
-    // Small delay between batches to respect rate limits
-    if (i + BATCH_SIZE < recipients.length) {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-    }
-  }
-
-  const successful = results.filter(r => r.success).length
-  console.log(`[Email] Batch complete: ${successful}/${results.length} sent successfully`)
-
-  return results
-}
-
-/**
- * Build subject line with match count
- */
-function buildSubjectLine(recipient: DigestRecipient): string {
-  const count = recipient.matches.length
-  const topScore = recipient.matches[0]?.match_score || 0
-
-  if (count === 1) {
-    return `🚗 1 new match found (${topScore}% fit)`
-  } else if (topScore >= 80) {
-    return `🚗 ${count} new matches - Including high-quality leads!`
-  } else {
-    return `🚗 ${count} new matches found today`
-  }
-}
-
-/**
- * Build HTML email with vehicle cards
- */
-function buildDigestHTML(recipient: DigestRecipient): string {
-  const { dealer_name, matches } = recipient
-
-  // Get top 10 matches only
-  const topMatches = matches.slice(0, 10)
+function buildDemoEmailHTML(data: DemoEmailData): string {
+  const { vehicles } = data
 
   return `
 <!DOCTYPE html>
@@ -153,7 +74,7 @@ function buildDigestHTML(recipient: DigestRecipient): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Daily Vehicle Digest</title>
+  <title>Revvdoctor Demo - See It in Action</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -186,17 +107,52 @@ function buildDigestHTML(recipient: DigestRecipient): string {
       color: #666;
       font-size: 16px;
     }
-    .summary {
+    .demo-badge {
+      background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 600;
+      font-size: 16px;
+    }
+    .intro {
       background-color: #fdf2f8;
       border-left: 4px solid #ec4899;
       padding: 15px;
       margin-bottom: 30px;
       border-radius: 4px;
     }
-    .summary h2 {
+    .intro h2 {
       margin: 0 0 10px 0;
       font-size: 18px;
       color: #ec4899;
+    }
+    .intro p {
+      margin: 8px 0;
+      font-size: 15px;
+      color: #374151;
+    }
+    .features {
+      background-color: #eff6ff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+    .features h3 {
+      margin: 0 0 15px 0;
+      color: #3b82f6;
+      font-size: 16px;
+    }
+    .features ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    .features li {
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #374151;
     }
     .vehicle-card {
       border: 1px solid #e5e7eb;
@@ -230,9 +186,6 @@ function buildDigestHTML(recipient: DigestRecipient): string {
     }
     .match-score.medium {
       background-color: #f59e0b;
-    }
-    .match-score.low {
-      background-color: #6b7280;
     }
     .vehicle-details {
       display: grid;
@@ -274,6 +227,7 @@ function buildDigestHTML(recipient: DigestRecipient): string {
       gap: 15px;
       margin-top: 10px;
       font-size: 12px;
+      flex-wrap: wrap;
     }
     .ai-metric {
       display: flex;
@@ -304,19 +258,42 @@ function buildDigestHTML(recipient: DigestRecipient): string {
       margin-bottom: 6px;
       color: #374151;
     }
-    .view-button {
-      display: inline-block;
-      background-color: #ec4899;
+    .cta-section {
+      background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
       color: white;
-      padding: 10px 20px;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: 14px;
+      padding: 30px;
+      border-radius: 8px;
       text-align: center;
+      margin-top: 30px;
     }
-    .view-button:hover {
-      background-color: #db2777;
+    .cta-section h3 {
+      margin: 0 0 15px 0;
+      font-size: 22px;
+    }
+    .cta-section p {
+      margin: 0 0 20px 0;
+      font-size: 16px;
+      opacity: 0.95;
+    }
+    .cta-button {
+      display: inline-block;
+      background-color: white;
+      color: #ec4899;
+      padding: 14px 32px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .trial-badge {
+      display: inline-block;
+      background-color: rgba(255,255,255,0.2);
+      padding: 8px 16px;
+      border-radius: 20px;
+      margin-top: 15px;
+      font-size: 14px;
+      font-weight: 600;
     }
     .footer {
       text-align: center;
@@ -336,26 +313,55 @@ function buildDigestHTML(recipient: DigestRecipient): string {
   <div class="container">
     <div class="header">
       <h1>🚗 Revvdoctor</h1>
-      <p>Your Daily Vehicle Digest</p>
+      <p>AI-Powered Vehicle Screening</p>
     </div>
 
-    <div class="summary">
-      <h2>Good morning, ${dealer_name || "Dealer"}!</h2>
-      <p>We found <strong>${matches.length} healthy vehicles</strong> matching your preferences today.</p>
-      ${topMatches.length < matches.length ? `<p style="margin: 8px 0 0 0; color: #6b7280; font-size: 14px;">Showing top ${topMatches.length} matches</p>` : ''}
+    <div class="demo-badge">
+      ✨ DEMO - See What Revvdoctor Can Do For You
     </div>
 
-    ${topMatches.map(vehicle => buildVehicleCard(vehicle)).join('\n')}
+    <div class="intro">
+      <h2>Welcome to Revvdoctor!</h2>
+      <p>Below are <strong>2 real vehicle matches</strong> found by our AI-powered screening system. This is exactly what you'd receive daily as a subscriber!</p>
+      <p style="margin-top: 12px;">Every morning, our system:</p>
+    </div>
 
-    <div style="text-align: center; margin-top: 30px;">
-      <a href="https://revvdoctor.com/dashboard" class="view-button">View All Matches in Dashboard</a>
+    <div class="features">
+      <h3>🤖 How It Works:</h3>
+      <ul>
+        <li><strong>Scrapes</strong> thousands of vehicles from UK auction sites (RAW2K, BCA, Autorola, Manheim)</li>
+        <li><strong>Analyzes</strong> each vehicle using OpenAI GPT-4 AI for condition and profitability</li>
+        <li><strong>Matches</strong> healthy vehicles to your preferences (make, year, price, mileage)</li>
+        <li><strong>Emails</strong> you personalized daily digests with your top matches</li>
+        <li><strong>Saves you hours</strong> of manual searching and analysis every single day</li>
+      </ul>
+    </div>
+
+    <h3 style="margin-bottom: 20px; color: #374151;">📋 Sample Matches Found:</h3>
+
+    ${vehicles.map(vehicle => buildDemoVehicleCard(vehicle)).join('\n')}
+
+    <div class="cta-section">
+      <h3>Ready to Find Your Next Profitable Deal?</h3>
+      <p>Start your 7-day free trial and get daily AI-powered vehicle matches delivered to your inbox!</p>
+      <a href="https://revvdoctor.com/auth/signup" class="cta-button">Start Free Trial →</a>
+      <div class="trial-badge">
+        🎉 7 Days Free - No Credit Card Required
+      </div>
     </div>
 
     <div class="footer">
-      <p>This digest was generated by AI analysis of ${matches.length} auction listings.</p>
+      <p><strong>What You Get:</strong></p>
       <p style="margin-top: 10px;">
-        <a href="https://revvdoctor.com/settings">Update Preferences</a> |
-        <a href="https://revvdoctor.com/settings/notifications">Unsubscribe</a>
+        ✓ Daily AI-screened vehicle matches<br>
+        ✓ Detailed risk analysis & profit estimates<br>
+        ✓ Custom preference matching<br>
+        ✓ Dashboard with full history<br>
+        ✓ Priority alerts for high-value deals
+      </p>
+      <p style="margin-top: 20px;">
+        <a href="https://revvdoctor.com/pricing">View Pricing</a> |
+        <a href="https://revvdoctor.com/auth/signup">Sign Up Free</a>
       </p>
       <p style="margin-top: 15px; color: #9ca3af; font-size: 12px;">
         © ${new Date().getFullYear()} Revvdoctor. All rights reserved.
@@ -368,9 +374,9 @@ function buildDigestHTML(recipient: DigestRecipient): string {
 }
 
 /**
- * Build individual vehicle card HTML
+ * Build individual vehicle card for demo
  */
-function buildVehicleCard(vehicle: VehicleMatch): string {
+function buildDemoVehicleCard(vehicle: VehicleMatch): string {
   const {
     make,
     model,
@@ -385,9 +391,8 @@ function buildVehicleCard(vehicle: VehicleMatch): string {
   } = vehicle
 
   // Determine score class
-  let scoreClass = "low"
+  let scoreClass = "medium"
   if (match_score >= 80) scoreClass = "high"
-  else if (match_score >= 60) scoreClass = "medium"
 
   // Format mileage
   const mileageStr = mileage ? `${mileage.toLocaleString()} mi` : "N/A"
@@ -422,11 +427,11 @@ function buildVehicleCard(vehicle: VehicleMatch): string {
           <span class="detail-value">${mileageStr}</span>
         </div>
         <div class="detail-item">
-          <span class="detail-label">Location:</span>
+          <span class="detail-label">Auction:</span>
           <span class="detail-value">${auction_site}</span>
         </div>
         <div class="detail-item">
-          <span class="detail-label">Fault Type:</span>
+          <span class="detail-label">Condition:</span>
           <span class="detail-value">${ai_classification.minor_fault_type}</span>
         </div>
       </div>
@@ -440,7 +445,7 @@ function buildVehicleCard(vehicle: VehicleMatch): string {
             <span class="ai-metric-value">${ai_classification.risk_score}/100</span>
           </div>
           <div class="ai-metric">
-            <span class="ai-metric-label">Confidence</span>
+            <span class="ai-metric-label">AI Confidence</span>
             <span class="ai-metric-value">${ai_classification.confidence}%</span>
           </div>
           <div class="ai-metric">
@@ -455,32 +460,9 @@ function buildVehicleCard(vehicle: VehicleMatch): string {
       </div>
 
       <div class="match-reasons">
-        <h4>Why this matches:</h4>
-        ${match_reasons.map(reason => `<span class="reason-tag">✓ ${reason}</span>`).join('')}
-      </div>
-
-      <div style="margin-top: 15px;">
-        <a href="${listing_url}" class="view-button">View Listing →</a>
+        <h4>Why this is a good match:</h4>
+        ${match_reasons.slice(0, 4).map(reason => `<span class="reason-tag">✓ ${reason}</span>`).join('')}
       </div>
     </div>
   `
-}
-
-/**
- * Get digest statistics
- */
-export function getDigestStats(results: SendDigestResult[]) {
-  const total = results.length
-  const successful = results.filter(r => r.success).length
-  const failed = results.filter(r => !r.success).length
-  const skipped = results.filter(r => r.message_id === "skipped_no_matches").length
-
-  return {
-    total,
-    successful,
-    failed,
-    skipped,
-    sent: successful - skipped,
-    success_rate: total > 0 ? ((successful / total) * 100).toFixed(1) : "0",
-  }
 }

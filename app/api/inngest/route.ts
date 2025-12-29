@@ -6,6 +6,7 @@ import {
   triggerManualScrape,
   healthCheck,
 } from "@/lib/inngest/functions-enhanced"
+import { sendDemoAction } from "@/lib/inngest/functions-demo"
 
 // Serve Inngest functions to the Inngest platform
 // This endpoint handles both GET (for registration) and POST (for execution)
@@ -16,6 +17,7 @@ import {
 // - dailyScraperJobEnhanced (NEW) - AI-powered workflow with OpenAI
 // - triggerManualScrape (NEW) - Manual trigger for AI workflow
 // - healthCheck (NEW) - Validate environment and services
+// - sendDemoAction (NEW) - "See It in Action" demo email
 export const { GET, POST, PUT } = serve({
   client: inngest,
   functions: [
@@ -26,5 +28,7 @@ export const { GET, POST, PUT } = serve({
     dailyScraperJobEnhanced,
     triggerManualScrape,
     healthCheck,
+    // Demo function (public - no auth required)
+    sendDemoAction,
   ],
 })
