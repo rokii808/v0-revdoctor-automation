@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Bell, Car, Clock, ExternalLink } from "lucide-react"
+import { toast } from "sonner"
 
 interface Alert {
   id: string
@@ -33,13 +34,20 @@ export default function AlertsFeed({ dealer, alerts: initialAlerts }: AlertsFeed
     try {
       const res = await fetch(`/api/alerts/${alertId}`, { method: "PATCH" })
       if (res.ok) {
-        // Remove alert from list
         setAlerts(alerts.filter(a => a.id !== alertId))
+        toast.success("Alert Marked as Read", {
+          description: "This alert has been removed from your feed.",
+        })
       } else {
-        console.error("Failed to mark alert as read")
+        const error = await res.json()
+        toast.error("Failed to Mark as Read", {
+          description: error.message || "Please try again.",
+        })
       }
     } catch (error) {
-      console.error("Error marking alert as read:", error)
+      toast.error("An error occurred", {
+        description: "Unable to update alert.",
+      })
     }
   }
 

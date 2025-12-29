@@ -7,7 +7,9 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, Plus, Edit, Trash2, Play } from "lucide-react"
+import { Search, Plus, Edit, Trash2, Play, Lock } from "lucide-react"
+import { useSubscription } from "@/components/providers/subscription-provider"
+import { toast } from "sonner"
 
 interface SavedSearch {
   id: string
@@ -28,8 +30,10 @@ interface SavedSearchesPropsWithSearches extends Omit<SavedSearchesProps, 'deale
   savedSearches: SavedSearch[]
 }
 
-export default function SavedSearches({ dealer, savedSearches }: SavedSearchesPropsWithSearches) {
+export default function SavedSearches({ dealer, savedSearches: initialSearches }: SavedSearchesPropsWithSearches) {
+  const [searches, setSearches] = useState(initialSearches)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
   const [newSearch, setNewSearch] = useState({
     name: "",
     make: "",
@@ -39,28 +43,124 @@ export default function SavedSearches({ dealer, savedSearches }: SavedSearchesPr
     fuelType: "",
   })
 
+  const { checkLimit, plan } = useSubscription()
+
   const handleSaveSearch = async () => {
-    // In real app, this would call API to save search
-    console.log("Saving search:", newSearch)
-    setIsDialogOpen(false)
-    setNewSearch({
-      name: "",
-      make: "",
-      maxMileage: "",
-      maxPrice: "",
-      minYear: "",
-      fuelType: "",
-    })
+    // Validate input
+    if (!newSearch.name || !newSearch.make) {
+      toast.error("Missing Information", {
+        description: "Please provide a search name and make.",
+      })
+      return
+    }
+
+    // Check subscription limit
+    const { allowed, reason } = await checkLimit('saved_searches')
+    if (!allowed) {
+      toast.error("Limit Reached", {
+        description: reason || `Upgrade from ${plan} plan to save more searches.`,
+      })
+      return
+    }
+
+    setIsSaving(true)
+    try {
+      const res = await fetch("/api/saved-searches", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: newSearch.name,
+          make: newSearch.make,
+          maxMileage: newSearch.maxMileage ? parseInt(newSearch.maxMileage) : null,
+          maxPrice: newSearch.maxPrice ? parseInt(newSearch.maxPrice) : null,
+          minYear: newSearch.minYear ? parseInt(newSearch.minYear) : null,
+          fuelType: newSearch.fuelType || null,
+        }),
+      })
+
+      if (res.ok) {
+        const { data } = await res.json()
+        setSearches([...searches, data])
+        toast.success("Search Saved!", {
+          description: `"${newSearch.name}" will now send you alerts for matching vehicles.`,
+        })
+        setIsDialogOpen(false)
+        setNewSearch({
+          name: "",
+          make: "",
+          maxMileage: "",
+          maxPrice: "",
+          minYear: "",
+          fuelType: "",
+        })
+      } else {
+        const error = await res.json()
+        toast.error("Failed to Save", {
+          description: error.message || "Please try again.",
+        })
+      }
+    } catch (error) {
+      toast.error("An error occurred", {
+        description: "Unable to save search. Please check your connection.",
+      })
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   const toggleSearch = async (searchId: string, isActive: boolean) => {
-    // In real app, this would call API to toggle search
-    console.log("Toggling search:", searchId, !isActive)
+    try {
+      const res = await fetch(`/api/saved-searches/${searchId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isActive: !isActive }),
+      })
+
+      if (res.ok) {
+        const { data } = await res.json()
+        setSearches(searches.map(s => s.id === searchId ? data : s))
+        toast.success(data.is_active ? "Search Activated" : "Search Paused", {
+          description: data.is_active
+            ? "You'll receive alerts for matching vehicles."
+            : "Alerts paused for this search.",
+        })
+      } else {
+        const error = await res.json()
+        toast.error("Update Failed", {
+          description: error.message || "Please try again.",
+        })
+      }
+    } catch (error) {
+      toast.error("An error occurred", {
+        description: "Unable to update search.",
+      })
+    }
   }
 
   const deleteSearch = async (searchId: string) => {
-    // In real app, this would call API to delete search
-    console.log("Deleting search:", searchId)
+    const searchToDelete = searches.find(s => s.id === searchId)
+
+    try {
+      const res = await fetch(`/api/saved-searches/${searchId}`, {
+        method: "DELETE",
+      })
+
+      if (res.ok) {
+        setSearches(searches.filter(s => s.id !== searchId))
+        toast.success("Search Deleted", {
+          description: `"${searchToDelete?.name}" has been removed.`,
+        })
+      } else {
+        const error = await res.json()
+        toast.error("Delete Failed", {
+          description: error.message || "Please try again.",
+        })
+      }
+    } catch (error) {
+      toast.error("An error occurred", {
+        description: "Unable to delete search.",
+      })
+    }
   }
 
   return (
@@ -136,8 +236,8 @@ export default function SavedSearches({ dealer, savedSearches }: SavedSearchesPr
                     </SelectContent>
                   </Select>
                 </div>
-                <Button onClick={handleSaveSearch} className="w-full">
-                  Save Search
+                <Button onClick={handleSaveSearch} className="w-full" disabled={isSaving}>
+                  {isSaving ? "Saving..." : "Save Search"}
                 </Button>
               </div>
             </DialogContent>
@@ -145,7 +245,7 @@ export default function SavedSearches({ dealer, savedSearches }: SavedSearchesPr
         </div>
       </CardHeader>
       <CardContent>
-        {savedSearches.length === 0 ? (
+        {searches.length === 0 ? (
           <div className="text-center py-6 text-muted-foreground">
             <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm">No saved searches yet.</p>
@@ -153,7 +253,7 @@ export default function SavedSearches({ dealer, savedSearches }: SavedSearchesPr
           </div>
         ) : (
           <div className="space-y-3">
-            {savedSearches.map((search) => (
+            {searches.map((search) => (
               <div key={search.id} className="border rounded-lg p-3">
                 <div className="flex items-start justify-between mb-2">
                   <h3 className="font-medium text-sm">{search.name}</h3>
