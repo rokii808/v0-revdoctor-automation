@@ -12,7 +12,7 @@ import { checkUsageLimit } from "@/lib/subscription/check-subscription"
  */
 export async function POST(req: NextRequest) {
   try {
-    const supabase = createClient()
+    const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
  */
 export async function GET() {
   try {
-    const supabase = createClient()
+    const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {

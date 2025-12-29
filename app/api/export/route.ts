@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const supabase = createClient()
+    const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
@@ -112,6 +112,29 @@ export async function POST(req: NextRequest) {
 }
 
 /**
+ * Escape CSV field to prevent formula injection attacks
+ * Prefixes formula characters (=, +, -, @, \t, \r) with a single quote
+ */
+function escapeCSVField(value: any): string {
+  let str = String(value ?? '')
+
+  // Prevent CSV injection by escaping formula prefixes
+  if (str.length > 0) {
+    const firstChar = str.charAt(0)
+    if (firstChar === '=' || firstChar === '+' || firstChar === '-' ||
+        firstChar === '@' || firstChar === '\t' || firstChar === '\r') {
+      str = "'" + str
+    }
+  }
+
+  // Escape double quotes by doubling them
+  str = str.replace(/"/g, '""')
+
+  // Wrap in quotes
+  return `"${str}"`
+}
+
+/**
  * Generate CSV from vehicle data
  */
 function generateCSV(vehicles: any[]): string {
@@ -149,7 +172,7 @@ function generateCSV(vehicles: any[]): string {
       ai.confidence || '',
       ai.profit_potential || '',
       v.listing_url || '',
-    ].map(field => `"${String(field).replace(/"/g, '""')}"`)
+    ].map(field => escapeCSVField(field))
   })
 
   // Combine headers and rows

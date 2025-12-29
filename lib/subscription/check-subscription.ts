@@ -52,7 +52,7 @@ const PLAN_LIMITS = {
  * This is the single source of truth for subscription enforcement
  */
 export async function checkSubscriptionStatus(): Promise<SubscriptionStatus> {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   // Get authenticated user
   const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -79,7 +79,7 @@ export async function checkSubscriptionStatus(): Promise<SubscriptionStatus> {
   // Determine if subscription is active
   const status = dealer.subscription_status as SubscriptionStatus['status']
   const isActive = (status === 'active' || (status === 'trial' && expiresAt && expiresAt > now))
-  const paymentFailed = dealer.payment_failed === true
+  const paymentFailed: boolean = dealer.payment_failed === true
 
   // Get plan (default to trial if not set)
   const plan = (dealer.selected_plan || 'trial') as SubscriptionStatus['plan']
@@ -175,7 +175,7 @@ export async function enforceSubscription(requiredFeature?: string) {
  * Get current usage for limits
  */
 export async function getCurrentUsage(userId: string) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const today = new Date().toISOString().split('T')[0]
 
   // Get today's vehicle matches count
@@ -212,7 +212,7 @@ export async function checkUsageLimit(feature: string): Promise<{ allowed: boole
     }
   }
 
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
