@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/admin"
 
-const CRON_SECRET = process.env.CRON_SECRET || "dev-secret"
+const CRON_SECRET = process.env.CRON_SECRET
 
 interface VehicleListing {
   listing_id: string
@@ -248,8 +248,15 @@ function heuristicAnalysis(vehicle: VehicleListing): {
 }
 
 export async function GET(request: Request) {
+  // Validate CRON_SECRET is configured
+  if (!CRON_SECRET) {
+    console.error("[CRON] CRON_SECRET environment variable not set")
+    return NextResponse.json({ error: "Server configuration error" }, { status: 500 })
+  }
+
   const authHeader = request.headers.get("authorization")
   if (authHeader !== `Bearer ${CRON_SECRET}`) {
+    console.warn("[CRON] Unauthorized scrape attempt")
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 

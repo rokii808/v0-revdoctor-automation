@@ -14,11 +14,33 @@ export async function PATCH(
     return new NextResponse("Unauthorized", { status: 401 })
   }
 
+  // Validate alert ID format (prevent injection)
+  if (!params.id || typeof params.id !== 'string' || params.id.trim() === '') {
+    return NextResponse.json({ error: "Invalid alert ID" }, { status: 400 })
+  }
+
+  // SECURITY FIX: Verify the user owns this alert before updating
+  const { data: alert } = await supabase
+    .from("car_alerts")
+    .select("user_id")
+    .eq("id", params.id)
+    .single()
+
+  if (!alert) {
+    return NextResponse.json({ error: "Alert not found" }, { status: 404 })
+  }
+
+  if (alert.user_id !== user.id) {
+    console.warn(`[Security] User ${user.id} attempted to access alert ${params.id} owned by ${alert.user_id}`)
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+  }
+
   // Update alert to mark as read
   const { error } = await supabase
     .from("car_alerts")
     .update({ is_read: true })
     .eq("id", params.id)
+    .eq("user_id", user.id) // Double-check ownership in update query
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
