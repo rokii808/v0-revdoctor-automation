@@ -1,12 +1,25 @@
 import { Resend } from "resend"
 import type { VehicleMatch } from "./preference-matcher"
 
-// Lazy initialize Resend to avoid errors during import
-function getResendClient() {
+// Singleton pattern: Cache Resend client instance using closure
+// This prevents creating a new instance on every call while avoiding
+// module-level initialization errors when RESEND_API_KEY is missing
+let resendClient: Resend | null = null
+
+function getResendClient(): Resend {
+  // Return cached instance if it exists
+  if (resendClient) {
+    return resendClient
+  }
+
+  // Validate API key exists
   if (!process.env.RESEND_API_KEY) {
     throw new Error("RESEND_API_KEY environment variable is required")
   }
-  return new Resend(process.env.RESEND_API_KEY)
+
+  // Create and cache new instance (closure captures this variable)
+  resendClient = new Resend(process.env.RESEND_API_KEY)
+  return resendClient
 }
 
 interface DemoEmailData {

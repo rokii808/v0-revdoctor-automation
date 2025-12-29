@@ -34,7 +34,8 @@ export const sendDemoAction = inngest.createFunction(
     console.log(`🎬 [Demo] Starting "See It in Action" for ${email}`)
 
     // STEP 1: Quick scrape (just 5 cars from one site)
-    const scrapedVehicles = await step.run("scrape-sample-vehicles", async () => {
+    // Note: Using 'let' instead of 'const' to allow fallback reassignment
+    let scrapedVehicles = await step.run("scrape-sample-vehicles", async () => {
       console.log("🕷️  [Demo] Scraping sample vehicles from RAW2K...")
 
       try {
@@ -54,10 +55,10 @@ export const sendDemoAction = inngest.createFunction(
       }
     })
 
+    // Fallback: Use mock data if no vehicles were scraped
     if (scrapedVehicles.length === 0) {
       console.log("⚠️  [Demo] No vehicles scraped, using mock data")
-      const mockVehicles = getMockVehicles()
-      scrapedVehicles.push(...mockVehicles)
+      scrapedVehicles = getMockVehicles()
     }
 
     // STEP 2: Classify with AI
