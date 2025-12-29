@@ -12,12 +12,15 @@ export interface SubscriptionStatus {
 }
 
 // Feature limits per plan
+// MARKET INTELLIGENCE = RevvDoctor's USP (Inventory Turn Predictions)
 const PLAN_LIMITS = {
   trial: {
     vehicles_per_day: 10,
     saved_searches: 2,
     email_alerts: true,
     export: false,
+    market_intelligence: false,      // ❌ No turn predictions on trial
+    competitive_intel: false,
     api_access: false,
     priority_support: false,
   },
@@ -26,6 +29,8 @@ const PLAN_LIMITS = {
     saved_searches: 5,
     email_alerts: true,
     export: true,
+    market_intelligence: true,       // ✅ Full turn predictions
+    competitive_intel: false,
     api_access: false,
     priority_support: false,
   },
@@ -34,6 +39,8 @@ const PLAN_LIMITS = {
     saved_searches: 15,
     email_alerts: true,
     export: true,
+    market_intelligence: true,
+    competitive_intel: true,         // ✅ + Market snapshots & competition data
     api_access: true,
     priority_support: false,
   },
@@ -42,6 +49,8 @@ const PLAN_LIMITS = {
     saved_searches: 999999,   // Unlimited
     email_alerts: true,
     export: true,
+    market_intelligence: true,
+    competitive_intel: true,
     api_access: true,
     priority_support: true,
   },
@@ -52,7 +61,7 @@ const PLAN_LIMITS = {
  * This is the single source of truth for subscription enforcement
  */
 export async function checkSubscriptionStatus(): Promise<SubscriptionStatus> {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   // Get authenticated user
   const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -79,7 +88,7 @@ export async function checkSubscriptionStatus(): Promise<SubscriptionStatus> {
   // Determine if subscription is active
   const status = dealer.subscription_status as SubscriptionStatus['status']
   const isActive = (status === 'active' || (status === 'trial' && expiresAt && expiresAt > now))
-  const paymentFailed = dealer.payment_failed === true
+  const paymentFailed: boolean = dealer.payment_failed === true
 
   // Get plan (default to trial if not set)
   const plan = (dealer.selected_plan || 'trial') as SubscriptionStatus['plan']
@@ -175,7 +184,7 @@ export async function enforceSubscription(requiredFeature?: string) {
  * Get current usage for limits
  */
 export async function getCurrentUsage(userId: string) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const today = new Date().toISOString().split('T')[0]
 
   // Get today's vehicle matches count
@@ -212,7 +221,7 @@ export async function checkUsageLimit(feature: string): Promise<{ allowed: boole
     }
   }
 
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
