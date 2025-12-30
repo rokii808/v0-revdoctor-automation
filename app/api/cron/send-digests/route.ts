@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { Resend } from "resend"
-import { render } from "@react-email/render"
-import { EmailTemplate } from "@/lib/email-template"
+import { generateEmailHTML, generateEmailSubject, type CarItem } from "@/lib/email-template"
 
 const CRON_SECRET = process.env.CRON_SECRET || "dev-secret"
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -47,29 +46,24 @@ export async function GET(request: Request) {
         continue
       }
 
-      const vehicles = insights.map((insight) => ({
+      const vehicles: CarItem[] = insights.map((insight) => ({
         id: insight.id,
         title: insight.title,
-        make: insight.make,
-        model: insight.minor_type,
-        year: insight.year,
-        price: insight.price,
-        profit: Math.round(insight.price * 0.15), // 15% estimated profit
-        risk: insight.risk <= 3 ? "Low" : insight.risk <= 6 ? "Medium" : "High",
-        condition: "Good",
+        price: `£${insight.price?.toLocaleString() || "N/A"}`,
+        verdict: "HEALTHY",
+        faultType: "None",
+        risk: insight.risk || 10,
+        reason: "This vehicle passed all checks and is ready for investment",
         url: `${process.env.NEXT_PUBLIC_BASE_URL}/vehicle/${insight.id}`,
-        image: `/placeholder.svg?height=200&width=300&query=${insight.make}+${insight.minor_type}`,
       }))
 
       try {
-        const emailHtml = render(
-          EmailTemplate({
-            dealerName: dealer.dealer_name || "Dealer",
-            vehicles,
-            totalVehicles: vehicles.length,
-            unsubscribeUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/settings`,
-          }),
-        )
+        const emailHtml = generateEmailHTML({
+          items: vehicles,
+          date: new Date().toLocaleDateString(),
+          dealerName: dealer.dealer_name || "Dealer",
+          variant: "daily",
+        })
 
         await resend.emails.send({
           from: "RevvDoctor <noreply@revvdoctor.com>",

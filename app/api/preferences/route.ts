@@ -5,7 +5,7 @@ import { userPreferencesSchema } from "@/lib/types/preferences"
 // GET - Fetch user preferences
 export async function GET(request: Request) {
   try {
-    const supabase = createClient()
+    const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
     if (authError || !user) {
@@ -62,7 +62,7 @@ export async function GET(request: Request) {
 // POST - Create or update user preferences
 export async function POST(request: Request) {
   try {
-    const supabase = createClient()
+    const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
     if (authError || !user) {
@@ -75,7 +75,7 @@ export async function POST(request: Request) {
     const validatedData = userPreferencesSchema.safeParse(body)
     if (!validatedData.success) {
       return NextResponse.json(
-        { error: "Invalid preferences", details: validatedData.error.errors },
+        { error: "Invalid preferences", details: validatedData.error.issues },
         { status: 400 }
       )
     }
@@ -146,7 +146,7 @@ export async function POST(request: Request) {
 // DELETE - Reset preferences to default
 export async function DELETE(request: Request) {
   try {
-    const supabase = createClient()
+    const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
     if (authError || !user) {

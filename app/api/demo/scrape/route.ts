@@ -85,7 +85,7 @@ export async function POST(request: Request) {
     const validatedData = demoRequestSchema.safeParse(body)
     if (!validatedData.success) {
       return NextResponse.json(
-        { error: "Invalid input", details: validatedData.error.errors },
+        { error: "Invalid input", details: validatedData.error.issues },
         { status: 400 }
       )
     }
@@ -147,10 +147,10 @@ export async function POST(request: Request) {
     }
 
     // Sort by match score
-    matchedVehicles.sort((a, b) => b.match_score - a.match_score)
+    matchedVehicles.sort((a, b) => (b as any).match_score - (a as any).match_score)
 
     // Send email with demo digest
-    const emailHtml = generateDemoEmailHTML(matchedVehicles, email)
+    const emailHtml = generateDemoEmailHTML(matchedVehicles as any, email)
 
     if (!process.env.RESEND_API_KEY) {
       console.warn("[Demo] Resend API key not configured - email not sent")
@@ -188,7 +188,7 @@ export async function POST(request: Request) {
     console.error("[Demo] Error:", error)
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Validation error", details: error.errors },
+        { error: "Validation error", details: error.issues },
         { status: 400 }
       )
     }
@@ -258,7 +258,7 @@ function generateDemoEmailHTML(
         <div class="details">
           <strong>Mileage:</strong> ${vehicle.mileage?.toLocaleString() || 'Unknown'} miles<br>
           <strong>Condition:</strong> ${vehicle.condition || 'Unknown'}<br>
-          <strong>Auction:</strong> ${vehicle.auction_site}<br>
+          <strong>Auction:</strong> ${(vehicle as any).auction_site || 'Unknown'}<br>
           <strong>Risk Score:</strong> ${vehicle.risk_score}/10 (Lower is better)<br>
           <strong>Profit Estimate:</strong> £${vehicle.profit_estimate.toLocaleString()}
         </div>

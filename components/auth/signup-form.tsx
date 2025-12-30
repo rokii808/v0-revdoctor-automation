@@ -1,171 +1,71 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
-import { createClient } from "@/lib/supabase/client"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Loader2, CheckCircle, Check, X } from "lucide-react"
+import { Check, X } from "lucide-react"
 import Link from "next/link"
 
 export default function SignUpForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [dealerName, setDealerName] = useState("")
-  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
-  const supabase = createClient()
+  const router = useRouter()
 
   const isEmailValid = email.includes("@") && email.includes(".")
-  const isPasswordValid = password.length >= 6
+  const isPasswordValid = password.length >= 8
   const isDealerNameValid = dealerName.length >= 2
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
     setError(null)
 
-    try {
-      const { error } = await supabase.auth.signUp({
+    // Store signup data in session storage to use after plan selection
+    sessionStorage.setItem(
+      "signup_data",
+      JSON.stringify({
         email,
         password,
-        options: {
-          emailRedirectTo:
-            process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/auth/callback`,
-          data: {
-            dealer_name: dealerName,
-          },
-        },
+        dealerName,
       })
-
-      if (error) {
-        setError(error.message)
-      } else {
-        setSuccess(true)
-      }
-    } catch (err) {
-      setError("An unexpected error occurred")
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  if (success) {
-    return (
-      <div className="pt-6">
-        <div className="text-center space-y-4">
-          <CheckCircle className="h-12 w-12 text-pink-600 mx-auto" />
-          <h3 className="text-lg font-semibold text-gray-900">Check your email</h3>
-          <p className="text-gray-600">
-            We've sent you a confirmation link at <strong>{email}</strong>
-          </p>
-          <p className="text-sm text-gray-500">Click the link in your email to activate your Revvdoctor account.</p>
-        </div>
-      </div>
     )
+
+    // Redirect to plan selection page
+    router.push("/auth/select-plan")
   }
 
   return (
     <div className="w-full">
-      <div className="space-y-3 text-center mb-6">
-        <h1 className="text-3xl font-serif font-bold text-gray-900">Welcome to Revvdoctor!</h1>
-        <div className="flex gap-4 justify-center">
-          <button className="px-6 py-2 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold text-sm">
-            SIGN UP
-          </button>
-          <Link href="/auth/login">
-            <button className="px-6 py-2 rounded-full bg-gray-100 text-gray-600 font-semibold text-sm hover:bg-gray-200 transition-colors">
-              LOG IN
-            </button>
-          </Link>
-        </div>
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-slate-900 mb-3">Welcome to RevvDoctor!</h1>
+        <p className="text-slate-600 text-lg">Create your account to get started</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Tab switcher */}
+      <div className="flex gap-3 justify-center mb-8">
+        <div className="px-8 py-3 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold shadow-lg shadow-orange-500/30">
+          SIGN UP
+        </div>
+        <Link href="/auth/login">
+          <button className="px-8 py-3 rounded-2xl bg-white border-2 border-slate-200 text-slate-700 font-semibold hover:border-orange-300 hover:bg-orange-50/50 transition-all shadow-md hover:shadow-lg">
+            LOG IN
+          </button>
+        </Link>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-5">
         {error && (
-          <Alert className="border-red-200 bg-red-50">
+          <Alert className="border-red-200 bg-red-50 rounded-xl shadow-sm">
             <AlertDescription className="text-red-800">{error}</AlertDescription>
           </Alert>
         )}
 
         <div className="space-y-2">
-          <label htmlFor="email" className="text-sm font-medium text-gray-600">
-            Email (Login)
-          </label>
-          <div className="relative">
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="dealer@example.com"
-              required
-              className={`border-2 pr-10 ${
-                email && isEmailValid
-                  ? "border-green-400 focus:border-green-500"
-                  : email
-                    ? "border-red-400 focus:border-red-500"
-                    : "border-gray-200 focus:border-pink-400"
-              }`}
-            />
-            {email && (
-              <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                {isEmailValid ? (
-                  <div className="w-5 h-5 rounded-full bg-green-400 flex items-center justify-center">
-                    <Check className="w-3 h-3 text-white" />
-                  </div>
-                ) : (
-                  <div className="w-5 h-5 rounded-full bg-red-400 flex items-center justify-center">
-                    <X className="w-3 h-3 text-white" />
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <label htmlFor="password" className="text-sm font-medium text-gray-600">
-            Password must contain 8 characters or more
-          </label>
-          <div className="relative">
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-              minLength={6}
-              className={`border-2 pr-10 ${
-                password && isPasswordValid
-                  ? "border-green-400 focus:border-green-500"
-                  : password
-                    ? "border-red-400 focus:border-red-500"
-                    : "border-gray-200 focus:border-pink-400"
-              }`}
-            />
-            {password && (
-              <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                {isPasswordValid ? (
-                  <div className="w-5 h-5 rounded-full bg-green-400 flex items-center justify-center">
-                    <Check className="w-3 h-3 text-white" />
-                  </div>
-                ) : (
-                  <div className="w-5 h-5 rounded-full bg-red-400 flex items-center justify-center">
-                    <X className="w-3 h-3 text-white" />
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <label htmlFor="dealerName" className="text-sm font-medium text-gray-600">
+          <label htmlFor="dealerName" className="text-sm font-semibold text-slate-700">
             Dealership Name
           </label>
           <div className="relative">
@@ -176,23 +76,23 @@ export default function SignUpForm() {
               onChange={(e) => setDealerName(e.target.value)}
               placeholder="Your Dealership Ltd"
               required
-              className={`border-2 pr-10 ${
+              className={`h-12 border-2 pr-11 rounded-xl shadow-sm transition-all ${
                 dealerName && isDealerNameValid
-                  ? "border-green-400 focus:border-green-500"
+                  ? "border-green-400 focus:border-green-500 bg-green-50/30"
                   : dealerName
-                    ? "border-red-400 focus:border-red-500"
-                    : "border-gray-200 focus:border-pink-400"
+                    ? "border-red-400 focus:border-red-500 bg-red-50/30"
+                    : "border-slate-200 focus:border-orange-400 hover:border-orange-300"
               }`}
             />
             {dealerName && (
               <div className="absolute right-3 top-1/2 -translate-y-1/2">
                 {isDealerNameValid ? (
-                  <div className="w-5 h-5 rounded-full bg-green-400 flex items-center justify-center">
-                    <Check className="w-3 h-3 text-white" />
+                  <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center shadow-md">
+                    <Check className="w-4 h-4 text-white" />
                   </div>
                 ) : (
-                  <div className="w-5 h-5 rounded-full bg-red-400 flex items-center justify-center">
-                    <X className="w-3 h-3 text-white" />
+                  <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center shadow-md">
+                    <X className="w-4 h-4 text-white" />
                   </div>
                 )}
               </div>
@@ -200,40 +100,106 @@ export default function SignUpForm() {
           </div>
         </div>
 
-        <div className="flex items-start gap-2 pt-2">
+        <div className="space-y-2">
+          <label htmlFor="email" className="text-sm font-semibold text-slate-700">
+            Email (Login)
+          </label>
+          <div className="relative">
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="dealer@example.com"
+              required
+              className={`h-12 border-2 pr-11 rounded-xl shadow-sm transition-all ${
+                email && isEmailValid
+                  ? "border-green-400 focus:border-green-500 bg-green-50/30"
+                  : email
+                    ? "border-red-400 focus:border-red-500 bg-red-50/30"
+                    : "border-slate-200 focus:border-orange-400 hover:border-orange-300"
+              }`}
+            />
+            {email && (
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                {isEmailValid ? (
+                  <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center shadow-md">
+                    <Check className="w-4 h-4 text-white" />
+                  </div>
+                ) : (
+                  <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center shadow-md">
+                    <X className="w-4 h-4 text-white" />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="password" className="text-sm font-semibold text-slate-700">
+            Password <span className="text-slate-500 font-normal">(minimum 8 characters)</span>
+          </label>
+          <div className="relative">
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
+              minLength={8}
+              className={`h-12 border-2 pr-11 rounded-xl shadow-sm transition-all ${
+                password && isPasswordValid
+                  ? "border-green-400 focus:border-green-500 bg-green-50/30"
+                  : password
+                    ? "border-red-400 focus:border-red-500 bg-red-50/30"
+                    : "border-slate-200 focus:border-orange-400 hover:border-orange-300"
+              }`}
+            />
+            {password && (
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                {isPasswordValid ? (
+                  <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center shadow-md">
+                    <Check className="w-4 h-4 text-white" />
+                  </div>
+                ) : (
+                  <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center shadow-md">
+                    <X className="w-4 h-4 text-white" />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="flex items-start gap-3 pt-2 pb-2">
           <input
             type="checkbox"
             id="terms"
             required
-            className="mt-1 w-4 h-4 rounded border-gray-300 text-pink-600 focus:ring-pink-500"
+            className="mt-1 w-5 h-5 rounded-md border-2 border-slate-300 text-orange-600 focus:ring-orange-500 focus:ring-2"
           />
-          <label htmlFor="terms" className="text-sm text-gray-600">
-            I have read and agree{" "}
-            <a href="#" className="text-pink-600 hover:text-pink-700 underline">
-              Terms and Risk statements
+          <label htmlFor="terms" className="text-sm text-slate-600 leading-relaxed">
+            I have read and agree to the{" "}
+            <a href="#" className="text-orange-600 hover:text-orange-700 underline font-medium">
+              Terms and Risk Statements
             </a>
           </label>
         </div>
 
         <Button
           type="submit"
-          disabled={loading}
-          className="w-full bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-gray-900 font-semibold text-base py-6 rounded-lg shadow-lg hover:shadow-xl transition-all"
+          disabled={!isEmailValid || !isPasswordValid || !isDealerNameValid}
+          className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-base h-14 rounded-2xl shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
         >
-          {loading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Creating account...
-            </>
-          ) : (
-            "Sign up"
-          )}
+          Continue to Plan Selection
         </Button>
       </form>
 
-      <div className="mt-6 text-center text-sm text-gray-600">
+      <div className="mt-8 text-center text-sm text-slate-600">
         Already have an account?{" "}
-        <Link href="/auth/login" className="font-medium text-pink-600 hover:text-pink-700">
+        <Link href="/auth/login" className="font-semibold text-orange-600 hover:text-orange-700">
           Sign in
         </Link>
       </div>

@@ -22,6 +22,11 @@ interface DummyQueryBuilder {
   upsert: (values: unknown) => DummyQueryBuilder
   order: (column: string, options?: { ascending?: boolean }) => DummyQueryBuilder
   limit: (count: number) => DummyQueryBuilder
+  range: (from: number, to: number) => DummyQueryBuilder
+  gte: (column: string, value: unknown) => DummyQueryBuilder
+  lte: (column: string, value: unknown) => DummyQueryBuilder
+  gt: (column: string, value: unknown) => DummyQueryBuilder
+  lt: (column: string, value: unknown) => DummyQueryBuilder
   single: () => Promise<{ data: null; error: null }>
   then: (resolve: (value: { data: unknown[]; error: null }) => void) => Promise<{ data: unknown[]; error: null }>
 }
@@ -54,6 +59,11 @@ export async function createClient(): Promise<SupabaseClient | DummySupabaseClie
         upsert: () => builder,
         order: () => builder,
         limit: () => builder,
+        range: () => builder,
+        gte: () => builder,
+        lte: () => builder,
+        gt: () => builder,
+        lt: () => builder,
         single: async () => ({ data: null, error: null }),
         then: (resolve: any) => {
           resolve({ data: [], error: null })

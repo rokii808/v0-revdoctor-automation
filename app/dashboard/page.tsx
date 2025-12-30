@@ -106,16 +106,38 @@ export default async function DashboardPage() {
     console.error("[Dashboard] Error fetching saved searches:", searchesError.message)
   }
 
+  // Check if this is the user's first login (for welcome message)
+  const isFirstLogin = !dealer?.last_login_at || new Date(dealer.last_login_at).getTime() > Date.now() - 60000
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-orange-50/20">
       <DashboardHeader user={user} dealer={dealer} />
 
       <main className="container mx-auto px-4 py-8 max-w-7xl">
+        {/* Welcome Banner */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Welcome back, {dealer?.dealer_name || "Dealer"}</h1>
-          <p className="text-muted-foreground">
-            Here's your Revvdoctor dashboard with the latest healthy car picks and insights.
-          </p>
+          <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-3xl p-8 shadow-2xl shadow-orange-500/20 text-white">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div>
+                <h1 className="text-4xl font-bold mb-2">
+                  {isFirstLogin ? "Welcome" : "Welcome back"}, {dealer?.dealer_name || "Dealer"}! 🎉
+                </h1>
+                <p className="text-orange-100 text-lg">
+                  {isFirstLogin
+                    ? "Your dashboard is ready! Start exploring the best car deals from today's auctions."
+                    : "Here's your RevvDoctor dashboard with the latest healthy car picks and insights."}
+                </p>
+              </div>
+              {isFirstLogin && (
+                <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-6 py-4 border border-white/30">
+                  <p className="text-sm font-medium text-orange-50 mb-1">Quick Tip</p>
+                  <p className="text-sm text-white">
+                    Check "Today's Healthy Cars" below to see your personalized recommendations
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         <div className="grid gap-6 mb-8">
