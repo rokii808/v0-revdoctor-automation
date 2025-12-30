@@ -14,6 +14,8 @@ import {
   Filter,
   BarChart3,
 } from "lucide-react"
+import { AnimatedSection } from "@/components/animated-section"
+import { AnimatedCounter } from "@/components/animated-counter"
 
 export default function HomePage() {
   return (
@@ -21,10 +23,10 @@ export default function HomePage() {
       <header className="border-b border-gray-100 bg-white/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-6 py-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-pink-500 via-pink-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl shadow-pink-500/30">
+            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-xl shadow-orange-500/30 transition-transform duration-300 hover:scale-110">
               <Car className="w-7 h-7 text-white" />
             </div>
-            <span className="text-2xl font-serif font-bold text-gray-900">Revvdoctor</span>
+            <span className="text-2xl font-sans font-bold text-gray-900">RevvDoctor</span>
           </div>
 
           <nav className="hidden md:flex items-center gap-8">
@@ -41,35 +43,35 @@ export default function HomePage() {
 
           <Button
             size="lg"
-            className="bg-gradient-to-r from-pink-500 via-pink-600 to-purple-600 hover:from-pink-600 hover:via-pink-700 hover:to-purple-700 text-white shadow-xl shadow-pink-500/30 hover:shadow-2xl hover:shadow-pink-500/40 transition-all hover:scale-105 text-base rounded-full font-semibold px-4 py-4"
+            className="cta-enterprise bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg shadow-orange-500/25 text-base rounded-full font-semibold px-8 py-4"
             asChild
           >
-            <a href="/auth/signup">Get Started</a>
+            <a href="/auth/signup">Start Free Trial</a>
           </Button>
         </div>
       </header>
 
-      <section className="py-32 px-6 bg-gradient-to-br from-gray-50 via-white to-purple-50/30 relative overflow-hidden">
-        <div className="absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-pink-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse-slow"></div>
-        <div className="absolute bottom-20 left-10 w-80 h-80 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse-slow delay-1000"></div>
+      <section className="py-32 px-6 hero-bg-motion bg-gradient-to-br from-slate-50 via-white to-orange-50/20 relative overflow-hidden">
+        <div className="absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-orange-400/15 to-blue-400/10 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute bottom-20 left-10 w-80 h-80 bg-gradient-to-br from-blue-400/10 to-orange-400/15 rounded-full blur-3xl animate-pulse-slow delay-1000"></div>
 
         <div className="container mx-auto text-center max-w-5xl relative z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-pink-100 shadow-sm mb-8 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 backdrop-blur-sm border border-orange-100 shadow-sm mb-8 animate-fade-in signal-pill-pulse">
             <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-pink-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
             </span>
-            <span className="text-sm font-medium text-gray-600">Now scanning 500+ daily auctions</span>
+            <span className="text-sm font-medium text-slate-700">Scanning live auctions</span>
           </div>
 
-          <h1 className="text-6xl md:text-8xl font-serif font-bold text-gray-900 mb-8 leading-[1.1] tracking-tight animate-slide-up">
+          <h1 className="text-6xl md:text-8xl font-sans font-bold text-slate-900 mb-8 leading-[1.1] tracking-tight animate-slide-up">
             Automate your car sourcing.
             <br />
-            <span className="bg-gradient-to-r from-pink-600 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
               Close deals faster.
             </span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 mb-14 max-w-3xl mx-auto leading-relaxed font-medium animate-slide-up delay-100">
+          <p className="text-xl md:text-2xl text-slate-600 mb-14 max-w-3xl mx-auto leading-relaxed font-normal animate-slide-up delay-100">
             RevvDoctor scans hundreds of auctions and sends pre-qualified, investment-ready vehicles directly to your
             inbox.
           </p>
@@ -77,84 +79,92 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-6 justify-center mb-20 animate-slide-up delay-200">
             <Button
               size="lg"
-              className="bg-gradient-to-r from-pink-500 via-pink-600 to-purple-600 hover:from-pink-600 hover:via-pink-700 hover:to-purple-700 text-white text-xl px-14 py-8 rounded-full shadow-2xl shadow-pink-500/40 hover:shadow-3xl hover:shadow-pink-500/50 transition-all hover:scale-105 font-semibold group"
+              className="cta-enterprise bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white text-xl px-14 py-8 rounded-full shadow-xl shadow-orange-500/30 font-semibold group"
               asChild
             >
               <a href="/test-email">
-                See It in Action <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-1 transition-transform" />
+                See It In Action <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-1 transition-transform" />
               </a>
             </Button>
           </div>
 
           <div className="text-center mb-16">
-            <p className="text-sm text-gray-500 mb-4 font-medium">Trusted by 100+ dealerships across the UK</p>
+            <p className="text-sm text-slate-500 mb-4 font-medium">Trusted by 100+ dealerships across the UK</p>
           </div>
         </div>
       </section>
 
       <section className="py-28 px-6 bg-white">
         <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-7xl font-serif font-bold text-gray-900 mb-6 leading-tight">
+          <AnimatedSection className="text-center mb-20">
+            <h2 className="text-5xl md:text-7xl font-sans font-bold text-slate-900 mb-6 leading-tight">
               Car sourcing shouldn't
               <br />
               take hours.
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
               Dealers waste time filtering auction sites, chasing leads and analyzing cars that don&#39;t meet their
               criteria. RevvDoctor removes that manual work so you can focus on deals that actually convert.
             </p>
-          </div>
+          </AnimatedSection>
 
           <div className="grid md:grid-cols-3 gap-8 mb-20">
-            <div className="group relative text-center p-10 rounded-3xl border border-gray-100 bg-white/50 backdrop-blur-sm shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="relative z-10">
-                <div className="w-20 h-20 bg-gradient-to-br from-red-50 to-orange-50 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-sm group-hover:shadow-md">
-                  <Clock className="w-10 h-10 text-red-500 group-hover:text-red-600 transition-colors" />
+            <AnimatedSection delay={100}>
+              <div className="group relative text-center p-10 rounded-3xl border border-slate-200 bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-orange-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative z-10">
+                  <div className="w-20 h-20 bg-gradient-to-br from-orange-50 to-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                    <Clock className="w-10 h-10 text-orange-500 group-hover:text-orange-600 transition-colors" />
+                  </div>
+                  <h3 className="text-2xl font-sans font-bold text-slate-900 mb-4">Wasting hours scrolling</h3>
+                  <p className="text-slate-600 leading-relaxed text-lg">
+                    Manually checking multiple sites daily eats up valuable selling time
+                  </p>
                 </div>
-                <h3 className="text-2xl font-serif font-bold text-gray-900 mb-4">Wasting hours scrolling</h3>
-                <p className="text-gray-600 leading-relaxed text-lg">
-                  Manually checking multiple sites daily eats up valuable selling time
-                </p>
               </div>
-            </div>
+            </AnimatedSection>
 
-            <div className="group relative text-center p-10 rounded-3xl border border-gray-100 bg-white/50 backdrop-blur-sm shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="relative z-10">
-                <div className="w-20 h-20 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-sm group-hover:shadow-md">
-                  <Target className="w-10 h-10 text-amber-500 group-hover:text-amber-600 transition-colors" />
+            <AnimatedSection delay={200}>
+              <div className="group relative text-center p-10 rounded-3xl border border-slate-200 bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-orange-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative z-10">
+                  <div className="w-20 h-20 bg-gradient-to-br from-orange-50 to-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                    <Target className="w-10 h-10 text-orange-500 group-hover:text-orange-600 transition-colors" />
+                  </div>
+                  <h3 className="text-2xl font-sans font-bold text-slate-900 mb-4">Missing good vehicles</h3>
+                  <p className="text-slate-600 leading-relaxed text-lg">
+                    Quality cars slip through while you're busy with other tasks
+                  </p>
                 </div>
-                <h3 className="text-2xl font-serif font-bold text-gray-900 mb-4">Missing good vehicles</h3>
-                <p className="text-gray-600 leading-relaxed text-lg">
-                  Quality cars slip through while you're busy with other tasks
-                </p>
               </div>
-            </div>
+            </AnimatedSection>
 
-            <div className="group relative text-center p-10 rounded-3xl border border-gray-100 bg-white/50 backdrop-blur-sm shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="relative z-10">
-                <div className="w-20 h-20 bg-gradient-to-br from-orange-50 to-red-50 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-sm group-hover:shadow-md">
-                  <Shield className="w-10 h-10 text-orange-500 group-hover:text-orange-600 transition-colors" />
+            <AnimatedSection delay={300}>
+              <div className="group relative text-center p-10 rounded-3xl border border-slate-200 bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-orange-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative z-10">
+                  <div className="w-20 h-20 bg-gradient-to-br from-orange-50 to-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                    <Shield className="w-10 h-10 text-orange-500 group-hover:text-orange-600 transition-colors" />
+                  </div>
+                  <h3 className="text-2xl font-sans font-bold text-slate-900 mb-4">Unreliable condition data</h3>
+                  <p className="text-slate-600 leading-relaxed text-lg">
+                    Risky purchases from incomplete or misleading information
+                  </p>
                 </div>
-                <h3 className="text-2xl font-serif font-bold text-gray-900 mb-4">Unreliable condition data</h3>
-                <p className="text-gray-600 leading-relaxed text-lg">
-                  Risky purchases from incomplete or misleading information
-                </p>
               </div>
-            </div>
+            </AnimatedSection>
           </div>
 
-          <div className="bg-gradient-to-br from-white via-pink-50/30 to-purple-50/30 border border-pink-100 p-12 rounded-3xl shadow-2xl text-center relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
-            <h3 className="text-3xl font-serif font-bold text-gray-900 mb-6 relative z-10">The Solution</h3>
-            <p className="text-xl text-gray-700 leading-relaxed max-w-3xl mx-auto relative z-10">
-              RevvDoctor uses automation and data to filter, validate and deliver the cars you actually want — directly
-              to your inbox, twice a day.
-            </p>
-          </div>
+          <AnimatedSection delay={400}>
+            <div className="bg-gradient-to-br from-white via-orange-50/20 to-blue-50/10 border border-orange-100 p-12 rounded-3xl shadow-lg text-center relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
+              <h3 className="text-3xl font-sans font-bold text-slate-900 mb-6 relative z-10">The Solution</h3>
+              <p className="text-xl text-slate-700 leading-relaxed max-w-3xl mx-auto relative z-10">
+                RevvDoctor uses automation and data to filter, validate and deliver the cars you actually want — directly
+                to your inbox, twice a day.
+              </p>
+            </div>
+          </AnimatedSection>
         </div>
       </section>
 
