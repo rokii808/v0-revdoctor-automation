@@ -4,7 +4,6 @@ import { useEffect, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Car, MapPin, Sparkles } from "lucide-react"
 import { Button } from "./ui/button"
-import Link from "next/link"
 
 interface VehiclePin {
   id: string
@@ -117,11 +116,11 @@ export function InteractiveMapPreview() {
             />
           </svg>
 
-          {/* Vehicle Pins */}
+          {/* Vehicle Pins - Orange Board Pin Style */}
           {vehicles.map((vehicle, index) => (
             <button
               key={vehicle.id}
-              className="group absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300 hover:scale-125 hover:z-50"
+              className="group absolute transform -translate-x-1/2 translate-y-0 transition-all duration-300 hover:scale-110 hover:z-50"
               style={{
                 left: `${vehicle.x}%`,
                 top: `${vehicle.y}%`,
@@ -132,21 +131,50 @@ export function InteractiveMapPreview() {
               onMouseLeave={() => setHoveredVehicle(null)}
             >
               {/* Pulse Ring */}
-              <div className="absolute -inset-4 bg-orange-400 rounded-full opacity-20 group-hover:opacity-40 animate-ping"></div>
+              <div className="absolute -inset-6 bg-orange-400 rounded-full opacity-15 group-hover:opacity-30 animate-ping"></div>
 
-              {/* Vehicle Icon */}
-              <div className="relative w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
-                <Car className="w-4 h-4 text-white" />
+              {/* Board Pin Container */}
+              <div className="relative flex flex-col items-center">
+                {/* Pin Head - Large & Detailed */}
+                <div className="relative w-12 h-12 mb-1 group-hover:mb-2 transition-all duration-300">
+                  {/* Outer ring for depth */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-orange-600 to-orange-700 rounded-full shadow-[0_4px_12px_rgba(249,115,22,0.4)] group-hover:shadow-[0_6px_20px_rgba(249,115,22,0.6)] transition-shadow"></div>
+
+                  {/* Inner gradient circle */}
+                  <div className="absolute inset-1 bg-gradient-to-br from-orange-400 to-orange-500 rounded-full"></div>
+
+                  {/* Highlight effect for 3D look */}
+                  <div className="absolute inset-2 bg-gradient-to-br from-white/40 to-transparent rounded-full"></div>
+
+                  {/* Icon */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Car className="w-6 h-6 text-white drop-shadow-lg relative z-10" />
+                  </div>
+
+                  {/* Bottom shadow for depth */}
+                  <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-10 h-2 bg-orange-900/30 blur-sm rounded-full"></div>
+                </div>
+
+                {/* Pin Point/Needle */}
+                <div className="relative w-1 h-6 bg-gradient-to-b from-orange-600 to-orange-800 rounded-full shadow-lg">
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-full"></div>
+                </div>
+
+                {/* Pin Shadow at bottom */}
+                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-8 h-3 bg-slate-900/20 blur-md rounded-full"></div>
               </div>
 
               {/* Price Tag - Shows on Hover */}
               {hoveredVehicle === vehicle.id && (
-                <div className="absolute top-10 left-1/2 transform -translate-x-1/2 bg-white px-3 py-2 rounded-lg shadow-xl border border-orange-200 whitespace-nowrap animate-fade-in">
-                  <p className="text-xs font-bold text-slate-900">
+                <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-white px-4 py-3 rounded-xl shadow-2xl border-2 border-orange-200 whitespace-nowrap animate-fade-in">
+                  <p className="text-sm font-bold text-slate-900">
                     {vehicle.make} {vehicle.model}
                   </p>
-                  <p className="text-sm font-bold text-orange-600">£{vehicle.price.toLocaleString()}</p>
-                  <p className="text-xs text-slate-500">{vehicle.location}</p>
+                  <p className="text-lg font-bold text-orange-600">£{vehicle.price.toLocaleString()}</p>
+                  <p className="text-xs text-slate-500 flex items-center gap-1 mt-1">
+                    <MapPin className="w-3 h-3" />
+                    {vehicle.location}
+                  </p>
                 </div>
               )}
             </button>
@@ -199,10 +227,10 @@ export function InteractiveMapPreview() {
                   className="mt-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg"
                   asChild
                 >
-                  <Link href="/pricing">
+                  <a href="#pricing">
                     <Sparkles className="w-4 h-4 mr-2" />
-                    View Full Details
-                  </Link>
+                    Start Free Trial
+                  </a>
                 </Button>
               </div>
             </div>

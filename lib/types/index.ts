@@ -157,7 +157,7 @@ export interface DealersListProps {
 }
 
 export interface AdminHeaderProps {
-  user: Profile | null
+  user: { id: string; email?: string } | null
 }
 
 // API Response types
