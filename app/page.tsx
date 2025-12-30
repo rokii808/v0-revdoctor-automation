@@ -16,6 +16,8 @@ import {
 } from "lucide-react"
 import { AnimatedSection } from "@/components/animated-section"
 import { AnimatedCounter } from "@/components/animated-counter"
+import { LiveMetricsPreview } from "@/components/live-metrics-preview"
+import { InteractiveMapPreview } from "@/components/interactive-map-preview"
 
 export default function HomePage() {
   return (
@@ -52,8 +54,24 @@ export default function HomePage() {
       </header>
 
       <section className="py-32 px-6 hero-bg-motion bg-gradient-to-br from-slate-50 via-white to-orange-50/20 relative overflow-hidden">
+        {/* Subtle Grid Pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.15]"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, rgb(148 163 184 / 0.15) 1px, transparent 1px),
+              linear-gradient(to bottom, rgb(148 163 184 / 0.15) 1px, transparent 1px)
+            `,
+            backgroundSize: "48px 48px",
+          }}
+        ></div>
+
+        {/* Glowing Orbs */}
         <div className="absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-orange-400/15 to-blue-400/10 rounded-full blur-3xl animate-pulse-slow"></div>
         <div className="absolute bottom-20 left-10 w-80 h-80 bg-gradient-to-br from-blue-400/10 to-orange-400/15 rounded-full blur-3xl animate-pulse-slow delay-1000"></div>
+
+        {/* Accent Glow */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-orange-500/5 to-transparent rounded-full blur-3xl"></div>
 
         <div className="container mx-auto text-center max-w-5xl relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 backdrop-blur-sm border border-orange-100 shadow-sm mb-8 animate-fade-in signal-pill-pulse">
@@ -91,6 +109,33 @@ export default function HomePage() {
           <div className="text-center mb-16">
             <p className="text-sm text-slate-500 mb-4 font-medium">Trusted by 100+ dealerships across the UK</p>
           </div>
+        </div>
+      </section>
+
+      {/* Live Metrics Dashboard Preview */}
+      <section className="py-20 px-6 bg-gradient-to-b from-white via-slate-50 to-white">
+        <div className="container mx-auto max-w-6xl">
+          <AnimatedSection className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-50 border border-orange-200 mb-6">
+              <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
+              <span className="text-sm font-semibold text-orange-700">LIVE DATA</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-sans font-bold text-slate-900 mb-6 leading-tight">
+              See Results in
+              <br />
+              <span className="bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
+                Real-Time
+              </span>
+            </h2>
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+              Watch as our AI scans hundreds of auctions and delivers qualified vehicles to your inbox — updated every
+              minute.
+            </p>
+          </AnimatedSection>
+
+          <AnimatedSection delay={200}>
+            <LiveMetricsPreview />
+          </AnimatedSection>
         </div>
       </section>
 
@@ -338,14 +383,17 @@ export default function HomePage() {
           </p>
 
           <div className="grid md:grid-cols-2 gap-8 mb-12">
-            <div className="bg-white p-12 rounded-3xl border border-gray-100 hover:border-orange-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6">
-                <Filter className="w-8 h-8 text-white" />
+            <div className="group relative bg-white p-12 rounded-3xl border border-slate-200 hover:border-orange-200 shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_20px_60px_rgb(249,115,22,0.15)] transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-50/0 to-orange-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative z-10">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/25">
+                  <Filter className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">AI powered filtering</h3>
+                <p className="text-gray-600 leading-relaxed text-lg">
+                  Only see cars that match your exact criteria. No more wasting time on unsuitable vehicles.
+                </p>
               </div>
-              <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">AI powered filtering</h3>
-              <p className="text-gray-600 leading-relaxed text-lg">
-                Only see cars that match your exact criteria. No more wasting time on unsuitable vehicles.
-              </p>
             </div>
 
             <div className="bg-white p-12 rounded-3xl border border-gray-100 hover:border-orange-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
@@ -569,6 +617,39 @@ export default function HomePage() {
                 </li>
               </ul>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Interactive Map Preview */}
+      <section className="py-28 px-6 bg-gradient-to-br from-white via-slate-50/50 to-white">
+        <div className="container mx-auto max-w-7xl">
+          <AnimatedSection className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-200 mb-6">
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+              <span className="text-sm font-semibold text-blue-700">INTERACTIVE PREVIEW</span>
+            </div>
+            <h2 className="text-5xl md:text-7xl font-sans font-bold text-slate-900 mb-6 leading-tight">
+              Live Auction Coverage
+              <br />
+              <span className="bg-gradient-to-r from-orange-600 to-blue-600 bg-clip-text text-transparent">
+                Across the UK
+              </span>
+            </h2>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+              See real vehicles from live auctions, pinned to their locations. Click any vehicle to view full details
+              and start your free trial.
+            </p>
+          </AnimatedSection>
+
+          <AnimatedSection delay={200}>
+            <InteractiveMapPreview />
+          </AnimatedSection>
+
+          <div className="text-center mt-12">
+            <p className="text-sm text-slate-500">
+              📍 Covering all major auction houses across England, Scotland, and Wales
+            </p>
           </div>
         </div>
       </section>
