@@ -1,24 +1,24 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Playfair_Display, Inter } from "next/font/google"
 import "./globals.css"
 import { SubscriptionProvider } from "@/components/providers/subscription-provider"
 import { PaymentReminderModal } from "@/components/modals/payment-reminder-modal"
 import { Toaster } from "sonner"
 
-const playfairDisplay = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
-  variable: "--font-playfair",
-  display: "swap",
-})
+// Using system fonts temporarily due to network restrictions
+// const playfairDisplay = Playfair_Display({
+//   subsets: ["latin"],
+//   weight: ["400", "500", "600", "700", "800", "900"],
+//   variable: "--font-playfair",
+//   display: "swap",
+// })
 
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-inter",
-  display: "swap",
-})
+// const inter = Inter({
+//   subsets: ["latin"],
+//   weight: ["400", "500", "600", "700"],
+//   variable: "--font-inter",
+//   display: "swap",
+// })
 
 export const metadata: Metadata = {
   title: "Revvdoctor - AI-Powered Car Auction Health Screening",
@@ -33,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${playfairDisplay.variable} ${inter.variable}`}>
+    <html lang="en">
       <body className="font-sans antialiased">
         <SubscriptionProvider>
           {children}
