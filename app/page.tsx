@@ -181,7 +181,7 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-4 gap-6">
             <div className="text-center p-8 rounded-3xl border border-gray-100 bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group">
-              <div className="w-16 h-16 bg-gradient-to-br from-pink-500 via-pink-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-pink-500/20 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform duration-300">
                 <span className="text-2xl font-bold text-white">1</span>
               </div>
               <h3 className="text-xl font-serif font-bold text-gray-900 mb-3">Set preferences</h3>
@@ -191,7 +191,7 @@ export default function HomePage() {
             </div>
 
             <div className="text-center p-8 rounded-3xl border border-gray-100 bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group">
-              <div className="w-16 h-16 bg-gradient-to-br from-pink-500 via-pink-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-pink-500/20 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform duration-300">
                 <span className="text-2xl font-bold text-white">2</span>
               </div>
               <h3 className="text-xl font-serif font-bold text-gray-900 mb-3">We scan auctions</h3>
@@ -201,7 +201,7 @@ export default function HomePage() {
             </div>
 
             <div className="text-center p-8 rounded-3xl border border-gray-100 bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group">
-              <div className="w-16 h-16 bg-gradient-to-br from-pink-500 via-pink-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-pink-500/20 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform duration-300">
                 <span className="text-2xl font-bold text-white">3</span>
               </div>
               <h3 className="text-xl font-serif font-bold text-gray-900 mb-3">Get healthy cars</h3>
@@ -211,7 +211,7 @@ export default function HomePage() {
             </div>
 
             <div className="text-center p-8 rounded-3xl border border-gray-100 bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group">
-              <div className="w-16 h-16 bg-gradient-to-br from-pink-500 via-pink-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-pink-500/20 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform duration-300">
                 <span className="text-2xl font-bold text-white">4</span>
               </div>
               <h3 className="text-xl font-serif font-bold text-gray-900 mb-3">Focus on deals</h3>
@@ -241,7 +241,7 @@ export default function HomePage() {
             <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-8 rounded-3xl border-2 border-gray-200 shadow-2xl">
               <div className="bg-white p-6 rounded-2xl shadow-lg mb-4">
                 <div className="flex items-center gap-3 mb-4 pb-4 border-b">
-                  <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
                     <Mail className="w-5 h-5 text-white" />
                   </div>
                   <div>
@@ -269,8 +269,8 @@ export default function HomePage() {
 
             <div className="space-y-6">
               <div className="flex gap-4">
-                <div className="w-12 h-12 bg-pink-100 rounded-2xl flex items-center justify-center flex-shrink-0">
-                  <CheckCircle2 className="w-6 h-6 text-pink-600 flex-shrink-0 mt-0.5" />
+                <div className="w-12 h-12 bg-orange-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                  <CheckCircle2 className="w-6 h-6 text-orange-600 flex-shrink-0 mt-0.5" />
                 </div>
                 <div>
                   <h4 className="text-xl font-bold text-gray-900 mb-2">Make, model & year</h4>
@@ -281,8 +281,8 @@ export default function HomePage() {
               </div>
 
               <div className="flex gap-4">
-                <div className="w-12 h-12 bg-pink-100 rounded-2xl flex items-center justify-center flex-shrink-0">
-                  <BarChart3 className="w-6 h-6 text-pink-600" />
+                <div className="w-12 h-12 bg-orange-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                  <BarChart3 className="w-6 h-6 text-orange-600" />
                 </div>
                 <div>
                   <h4 className="text-xl font-bold text-gray-900 mb-2">Mileage & price</h4>
@@ -293,8 +293,8 @@ export default function HomePage() {
               </div>
 
               <div className="flex gap-4">
-                <div className="w-12 h-12 bg-pink-100 rounded-2xl flex items-center justify-center flex-shrink-0">
-                  <Shield className="w-6 h-6 text-pink-600" />
+                <div className="w-12 h-12 bg-orange-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                  <Shield className="w-6 h-6 text-orange-600" />
                 </div>
                 <div>
                   <h4 className="text-xl font-bold text-gray-900 mb-2">Condition validation</h4>
@@ -303,8 +303,8 @@ export default function HomePage() {
               </div>
 
               <div className="flex gap-4">
-                <div className="w-12 h-12 bg-pink-100 rounded-2xl flex items-center justify-center flex-shrink-0">
-                  <ArrowRight className="w-6 h-6 text-pink-600" />
+                <div className="w-12 h-12 bg-orange-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                  <ArrowRight className="w-6 h-6 text-orange-600" />
                 </div>
                 <div>
                   <h4 className="text-xl font-bold text-gray-900 mb-2">Direct source links</h4>
@@ -316,7 +316,7 @@ export default function HomePage() {
 
               <Button
                 size="lg"
-                className="w-full bg-gradient-to-r from-pink-500 via-pink-600 to-purple-600 hover:from-pink-600 hover:via-pink-700 hover:to-purple-700 text-white text-lg px-10 py-7 rounded-full shadow-xl shadow-pink-500/30 hover:scale-105 transition-all font-semibold"
+                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white text-lg px-10 py-7 rounded-full shadow-xl shadow-orange-500/30 hover:scale-105 transition-all font-semibold"
                 asChild
               >
                 <a href="/test-email">Get My First Sample Email</a>
@@ -338,8 +338,8 @@ export default function HomePage() {
           </p>
 
           <div className="grid md:grid-cols-2 gap-8 mb-12">
-            <div className="bg-white p-12 rounded-3xl border border-gray-100 hover:border-pink-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-              <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6">
+            <div className="bg-white p-12 rounded-3xl border border-gray-100 hover:border-orange-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6">
                 <Filter className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">AI powered filtering</h3>
@@ -348,8 +348,8 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="bg-white p-12 rounded-3xl border border-gray-100 hover:border-pink-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-              <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6">
+            <div className="bg-white p-12 rounded-3xl border border-gray-100 hover:border-orange-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6">
                 <Shield className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Condition validation</h3>
@@ -358,8 +358,8 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="bg-white p-12 rounded-3xl border border-gray-100 hover:border-pink-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-              <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6">
+            <div className="bg-white p-12 rounded-3xl border border-gray-100 hover:border-orange-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6">
                 <Target className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Auction coverage</h3>
@@ -368,8 +368,8 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="bg-white p-12 rounded-3xl border border-gray-100 hover:border-pink-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-              <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6">
+            <div className="bg-white p-12 rounded-3xl border border-gray-100 hover:border-orange-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6">
                 <Mail className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Dealer-ready format</h3>
@@ -378,8 +378,8 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="bg-white p-12 rounded-3xl border border-gray-100 hover:border-pink-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-              <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6">
+            <div className="bg-white p-12 rounded-3xl border border-gray-100 hover:border-orange-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6">
                 <Zap className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Zero manual work</h3>
@@ -388,8 +388,8 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="bg-white p-12 rounded-3xl border border-gray-100 hover:border-pink-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-              <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6">
+            <div className="bg-white p-12 rounded-3xl border border-gray-100 hover:border-orange-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6">
                 <TrendingUp className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Increase margins</h3>
@@ -412,9 +412,9 @@ export default function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 mb-16">
-            <div className="bg-gradient-to-br from-pink-50 to-purple-50/50 p-10 rounded-3xl border-2 border-pink-200 shadow-lg">
+            <div className="bg-gradient-to-br from-orange-50 to-orange-100/50 p-10 rounded-3xl border-2 border-orange-200 shadow-lg">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
                   JS
                 </div>
                 <div>
@@ -428,9 +428,9 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="bg-gradient-to-br from-pink-50 to-purple-50/50 p-10 rounded-3xl border-2 border-pink-200 shadow-lg">
+            <div className="bg-gradient-to-br from-orange-50 to-orange-100/50 p-10 rounded-3xl border-2 border-orange-200 shadow-lg">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
                   MJ
                 </div>
                 <div>
@@ -444,9 +444,9 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="bg-gradient-to-br from-pink-50 to-purple-50/50 p-10 rounded-3xl border-2 border-pink-200 shadow-lg">
+            <div className="bg-gradient-to-br from-orange-50 to-orange-100/50 p-10 rounded-3xl border-2 border-orange-200 shadow-lg">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
                   DW
                 </div>
                 <div>
@@ -498,9 +498,9 @@ export default function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-10 rounded-3xl border-2 border-gray-200 hover:border-pink-300 shadow-lg hover:shadow-2xl transition-all duration-300 text-left hover:-translate-y-2">
-              <div className="w-16 h-16 bg-pink-100 rounded-2xl flex items-center justify-center mb-6">
-                <Users className="w-8 h-8 text-pink-600" />
+            <div className="bg-white p-10 rounded-3xl border-2 border-gray-200 hover:border-orange-300 shadow-lg hover:shadow-2xl transition-all duration-300 text-left hover:-translate-y-2">
+              <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mb-6">
+                <Users className="w-8 h-8 text-orange-600" />
               </div>
               <h3 className="text-2xl font-semibold text-gray-900 mb-4">Independent Dealers</h3>
               <p className="text-gray-600 leading-relaxed text-lg mb-6">
@@ -508,23 +508,23 @@ export default function HomePage() {
               </p>
               <ul className="space-y-3 text-gray-600">
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>No technical setup required</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>Affordable starter plans</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>Compete with larger dealers</span>
                 </li>
               </ul>
             </div>
 
-            <div className="bg-white p-10 rounded-3xl border-2 border-gray-200 hover:border-pink-300 shadow-lg hover:shadow-2xl transition-all duration-300 text-left hover:-translate-y-2">
-              <div className="w-16 h-16 bg-pink-100 rounded-2xl flex items-center justify-center mb-6">
-                <TrendingUp className="w-8 h-8 text-pink-600" />
+            <div className="bg-white p-10 rounded-3xl border-2 border-gray-200 hover:border-orange-300 shadow-lg hover:shadow-2xl transition-all duration-300 text-left hover:-translate-y-2">
+              <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mb-6">
+                <TrendingUp className="w-8 h-8 text-orange-600" />
               </div>
               <h3 className="text-2xl font-semibold text-gray-900 mb-4">Large Dealership Groups</h3>
               <p className="text-gray-600 leading-relaxed text-lg mb-6">
@@ -532,23 +532,23 @@ export default function HomePage() {
               </p>
               <ul className="space-y-3 text-gray-600">
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>Team accounts & collaboration</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>Custom integrations available</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>Dedicated support</span>
                 </li>
               </ul>
             </div>
 
-            <div className="bg-white p-10 rounded-3xl border-2 border-gray-200 hover:border-pink-300 shadow-lg hover:shadow-2xl transition-all duration-300 text-left hover:-translate-y-2">
-              <div className="w-16 h-16 bg-pink-100 rounded-2xl flex items-center justify-center mb-6">
-                <Zap className="w-8 h-8 text-pink-600" />
+            <div className="bg-white p-10 rounded-3xl border-2 border-gray-200 hover:border-orange-300 shadow-lg hover:shadow-2xl transition-all duration-300 text-left hover:-translate-y-2">
+              <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mb-6">
+                <Zap className="w-8 h-8 text-orange-600" />
               </div>
               <h3 className="text-2xl font-semibold text-gray-900 mb-4">New Startups</h3>
               <p className="text-gray-600 leading-relaxed text-lg mb-6">
@@ -556,15 +556,15 @@ export default function HomePage() {
               </p>
               <ul className="space-y-3 text-gray-600">
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>Quick onboarding process</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>Scale as you grow</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>No long-term contracts</span>
                 </li>
               </ul>
@@ -600,18 +600,18 @@ export default function HomePage() {
               </Button>
               <ul className="text-left space-y-4 text-base text-gray-600">
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>Basic AI screening</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>Email support</span>
                 </li>
               </ul>
             </div>
 
-            <div className="bg-gradient-to-br from-pink-50 via-purple-50/50 to-pink-50 border-2 border-pink-400 p-10 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 relative shadow-xl">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-pink-500 via-pink-600 to-purple-600 text-white rounded-full text-sm font-bold shadow-xl shadow-pink-500/40 px-8 py-2">
+            <div className="bg-gradient-to-br from-pink-50 via-purple-50/50 to-pink-50 border-2 border-orange-400 p-10 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 relative shadow-xl">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full text-sm font-bold shadow-xl shadow-orange-500/40 px-8 py-2">
                 MOST POPULAR
               </div>
               <h3 className="text-2xl font-serif font-bold text-gray-900 mb-3 mt-2">Premium</h3>
@@ -620,22 +620,22 @@ export default function HomePage() {
               <p className="text-base text-gray-500 mb-8">/month</p>
               <Button
                 size="lg"
-                className="w-full mb-8 bg-gradient-to-r from-pink-500 via-pink-600 to-purple-600 hover:from-pink-600 hover:via-pink-700 hover:to-purple-700 rounded-full shadow-xl shadow-pink-500/30 text-base py-6 hover:scale-105 transition-all"
+                className="w-full mb-8 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 rounded-full shadow-xl shadow-orange-500/30 text-base py-6 hover:scale-105 transition-all"
                 asChild
               >
                 <a href="/test-email">See it in action</a>
               </Button>
               <ul className="text-left space-y-4 text-base text-gray-600">
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>Advanced AI screening</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>ROI tracking</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>Priority support</span>
                 </li>
               </ul>
@@ -656,15 +656,15 @@ export default function HomePage() {
               </Button>
               <ul className="text-left space-y-4 text-base text-gray-600">
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>Team accounts</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>6 AM delivery</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>Chat support</span>
                 </li>
               </ul>
@@ -685,15 +685,15 @@ export default function HomePage() {
               </Button>
               <ul className="text-left space-y-4 text-base text-gray-600">
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>API access</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>Custom integrations</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>Dedicated support</span>
                 </li>
               </ul>
