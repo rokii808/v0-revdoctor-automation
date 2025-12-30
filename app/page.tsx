@@ -396,51 +396,66 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="bg-white p-12 rounded-3xl border border-gray-100 hover:border-orange-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6">
-                <Shield className="w-8 h-8 text-white" />
+            <div className="group relative bg-white p-12 rounded-3xl border border-slate-200 hover:border-orange-200 shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_20px_60px_rgb(249,115,22,0.15)] transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-50/0 to-orange-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative z-10">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/25">
+                  <Shield className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Condition validation</h3>
+                <p className="text-gray-600 leading-relaxed text-lg">
+                  Automatically flags potential risks before you bid. Make confident purchasing decisions.
+                </p>
               </div>
-              <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Condition validation</h3>
-              <p className="text-gray-600 leading-relaxed text-lg">
-                Automatically flags potential risks before you bid. Make confident purchasing decisions.
-              </p>
             </div>
 
-            <div className="bg-white p-12 rounded-3xl border border-gray-100 hover:border-orange-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6">
+            <div className="group relative bg-white p-12 rounded-3xl border border-slate-200 hover:border-orange-200 shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_20px_60px_rgb(249,115,22,0.15)] transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-50/0 to-orange-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative z-10">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/25">
                 <Target className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Auction coverage</h3>
               <p className="text-gray-600 leading-relaxed text-lg">
                 Searches multiple platforms simultaneously. Never miss a good deal again.
               </p>
+              </div>
             </div>
 
-            <div className="bg-white p-12 rounded-3xl border border-gray-100 hover:border-orange-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6">
+            <div className="group relative bg-white p-12 rounded-3xl border border-slate-200 hover:border-orange-200 shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_20px_60px_rgb(249,115,22,0.15)] transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-50/0 to-orange-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative z-10">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/25">
                 <Mail className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Dealer-ready format</h3>
               <p className="text-gray-600 leading-relaxed text-lg">
                 Clean, structured email reports. All the information you need at a glance.
+              </div>
               </p>
             </div>
 
-            <div className="bg-white p-12 rounded-3xl border border-gray-100 hover:border-orange-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6">
+            <div className="group relative bg-white p-12 rounded-3xl border border-slate-200 hover:border-orange-200 shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_20px_60px_rgb(249,115,22,0.15)] transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-50/0 to-orange-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative z-10">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/25">
                 <Zap className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Zero manual work</h3>
               <p className="text-gray-600 leading-relaxed text-lg">
+              </div>
                 Save 30+ hours per week on sourcing. Focus on what matters closing deals.
               </p>
             </div>
 
-            <div className="bg-white p-12 rounded-3xl border border-gray-100 hover:border-orange-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6">
+            <div className="group relative bg-white p-12 rounded-3xl border border-slate-200 hover:border-orange-200 shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_20px_60px_rgb(249,115,22,0.15)] transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-50/0 to-orange-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative z-10">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/25">
                 <TrendingUp className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Increase margins</h3>
+              </div>
               <p className="text-gray-600 leading-relaxed text-lg">
                 Find better deals faster. Our dealers report 22% higher profit margins on average.
               </p>
