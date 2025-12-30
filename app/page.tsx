@@ -460,22 +460,30 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-gray-900 to-gray-800 p-12 rounded-3xl shadow-2xl text-center">
-            <div className="grid md:grid-cols-3 gap-8">
-              <div>
-                <p className="text-5xl font-bold text-white mb-2">30+</p>
-                <p className="text-gray-300">Hours saved per week</p>
-              </div>
-              <div>
-                <p className="text-5xl font-bold text-white mb-2">22%</p>
-                <p className="text-gray-300">Average margin increase</p>
-              </div>
-              <div>
-                <p className="text-5xl font-bold text-white mb-2">95%</p>
-                <p className="text-gray-300">AI accuracy rate</p>
+          <AnimatedSection delay={200}>
+            <div className="bg-gradient-to-br from-slate-900 to-slate-800 p-12 rounded-3xl shadow-2xl text-center">
+              <div className="grid md:grid-cols-3 gap-8">
+                <div>
+                  <p className="text-5xl font-bold text-white mb-2">
+                    <AnimatedCounter end={30} suffix="+" />
+                  </p>
+                  <p className="text-slate-300">Hours saved per week</p>
+                </div>
+                <div>
+                  <p className="text-5xl font-bold text-white mb-2">
+                    <AnimatedCounter end={22} suffix="%" />
+                  </p>
+                  <p className="text-slate-300">Average margin increase</p>
+                </div>
+                <div>
+                  <p className="text-5xl font-bold text-white mb-2">
+                    <AnimatedCounter end={95} suffix="%" />
+                  </p>
+                  <p className="text-slate-300">AI accuracy rate</p>
+                </div>
               </div>
             </div>
-          </div>
+          </AnimatedSection>
         </div>
       </section>
 
@@ -747,26 +755,26 @@ export default function HomePage() {
           </p>
           <Button
             size="lg"
-            className="bg-gradient-to-r from-pink-500 via-pink-600 to-purple-600 hover:from-pink-600 hover:via-pink-700 hover:to-purple-700 text-white text-xl px-14 py-8 rounded-full shadow-2xl shadow-pink-500/40 hover:shadow-3xl hover:shadow-pink-500/50 transition-all hover:scale-105 font-semibold"
+            className="cta-enterprise bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white text-xl px-14 py-8 rounded-full shadow-xl shadow-orange-500/30 font-semibold group"
             asChild
           >
             <a href="/test-email">
-              See It in Action <ArrowRight className="w-6 h-6 ml-3" />
+              See It In Action <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-1 transition-transform" />
             </a>
           </Button>
         </div>
       </section>
 
-      <footer className="border-t border-gray-100 py-16 px-6 bg-white">
+      <footer className="border-t border-slate-100 py-16 px-6 footer-subtle-motion">
         <div className="container mx-auto">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-pink-500 via-pink-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-pink-500/30">
+              <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/20">
                 <Car className="w-6 h-6 text-white" />
               </div>
-              <span className="text-2xl font-serif font-bold text-gray-900">Revvdoctor</span>
+              <span className="text-2xl font-sans font-bold text-slate-900">RevvDoctor</span>
             </div>
-            <p className="text-sm text-gray-500">2025 Copyright - Privacy Terms & Conditions</p>
+            <p className="text-sm text-slate-500">2025 Copyright - Privacy Terms & Conditions</p>
           </div>
         </div>
       </footer>
