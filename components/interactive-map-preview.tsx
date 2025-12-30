@@ -1,0 +1,214 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { createClient } from "@/lib/supabase/client"
+import { Car, MapPin, Sparkles } from "lucide-react"
+import { Button } from "./ui/button"
+import Link from "next/link"
+
+interface VehiclePin {
+  id: string
+  make: string
+  model: string
+  price: number
+  location: string
+  x: number
+  y: number
+}
+
+export function InteractiveMapPreview() {
+  const [vehicles, setVehicles] = useState<VehiclePin[]>([
+    { id: "1", make: "BMW", model: "3 Series", price: 12500, location: "Manchester", x: 45, y: 35 },
+    { id: "2", make: "Audi", model: "A4", price: 15800, location: "Birmingham", x: 52, y: 58 },
+    { id: "3", make: "Mercedes", model: "C-Class", price: 11200, location: "Leeds", x: 58, y: 28 },
+    { id: "4", make: "VW", model: "Golf GTI", price: 9500, location: "Liverpool", x: 38, y: 42 },
+    { id: "5", make: "Toyota", model: "RAV4", price: 18200, location: "London", x: 68, y: 72 },
+  ])
+  const [selectedVehicle, setSelectedVehicle] = useState<VehiclePin | null>(null)
+  const [hoveredVehicle, setHoveredVehicle] = useState<string | null>(null)
+
+  useEffect(() => {
+    const supabase = createClient()
+
+    // Fetch real vehicle data
+    const fetchVehicles = async () => {
+      const { data } = await supabase
+        .from("vehicle_matches")
+        .select("id, make, model, price, location")
+        .limit(8)
+        .order("created_at", { ascending: false })
+
+      if (data && data.length > 0) {
+        // Map real data to random positions on the map
+        const mapped = data.map((v, i) => ({
+          id: v.id,
+          make: v.make || "Unknown",
+          model: v.model || "Model",
+          price: v.price || 0,
+          location: v.location || "UK",
+          x: 35 + (i * 8) % 40,
+          y: 25 + (i * 12) % 50,
+        }))
+        setVehicles(mapped)
+      }
+    }
+
+    fetchVehicles()
+
+    // Subscribe to real-time updates
+    const channel = supabase
+      .channel("vehicle_pins")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "vehicle_matches" }, () => {
+        fetchVehicles()
+      })
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [])
+
+  return (
+    <div className="relative w-full h-[600px] bg-gradient-to-br from-slate-50 to-slate-100 rounded-3xl overflow-hidden border-2 border-slate-200 shadow-2xl">
+      {/* Grid Pattern Overlay */}
+      <div
+        className="absolute inset-0 opacity-30"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, rgb(148 163 184 / 0.1) 1px, transparent 1px),
+            linear-gradient(to bottom, rgb(148 163 184 / 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: "40px 40px",
+        }}
+      ></div>
+
+      {/* Map Content */}
+      <div className="absolute inset-0 p-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <MapPin className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-slate-900">Live Auction Coverage</h3>
+              <p className="text-sm text-slate-600">Real-time vehicle tracking across the UK</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-orange-200 shadow-sm">
+            <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="text-sm font-medium text-slate-700">{vehicles.length} Active Listings</span>
+          </div>
+        </div>
+
+        {/* Simplified UK Map with Pins */}
+        <div className="relative w-full h-[400px] bg-white/60 backdrop-blur-sm rounded-2xl border border-slate-200 shadow-inner overflow-hidden">
+          {/* UK Outline (simplified SVG) */}
+          <svg
+            viewBox="0 0 100 100"
+            className="absolute inset-0 w-full h-full opacity-20"
+            preserveAspectRatio="xMidYMid slice"
+          >
+            <path
+              d="M 50 10 Q 60 15 65 25 L 70 40 Q 72 50 68 60 L 65 70 Q 60 80 50 85 L 40 88 Q 30 85 25 75 L 22 60 Q 20 50 22 40 L 25 25 Q 30 15 40 12 Z"
+              fill="none"
+              stroke="rgb(148 163 184)"
+              strokeWidth="0.5"
+            />
+          </svg>
+
+          {/* Vehicle Pins */}
+          {vehicles.map((vehicle, index) => (
+            <button
+              key={vehicle.id}
+              className="group absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300 hover:scale-125 hover:z-50"
+              style={{
+                left: `${vehicle.x}%`,
+                top: `${vehicle.y}%`,
+                animationDelay: `${index * 100}ms`,
+              }}
+              onClick={() => setSelectedVehicle(vehicle)}
+              onMouseEnter={() => setHoveredVehicle(vehicle.id)}
+              onMouseLeave={() => setHoveredVehicle(null)}
+            >
+              {/* Pulse Ring */}
+              <div className="absolute -inset-4 bg-orange-400 rounded-full opacity-20 group-hover:opacity-40 animate-ping"></div>
+
+              {/* Vehicle Icon */}
+              <div className="relative w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+                <Car className="w-4 h-4 text-white" />
+              </div>
+
+              {/* Price Tag - Shows on Hover */}
+              {hoveredVehicle === vehicle.id && (
+                <div className="absolute top-10 left-1/2 transform -translate-x-1/2 bg-white px-3 py-2 rounded-lg shadow-xl border border-orange-200 whitespace-nowrap animate-fade-in">
+                  <p className="text-xs font-bold text-slate-900">
+                    {vehicle.make} {vehicle.model}
+                  </p>
+                  <p className="text-sm font-bold text-orange-600">£{vehicle.price.toLocaleString()}</p>
+                  <p className="text-xs text-slate-500">{vehicle.location}</p>
+                </div>
+              )}
+            </button>
+          ))}
+
+          {/* Animated Connection Lines */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none">
+            {vehicles.map((vehicle, i) => {
+              if (i === 0) return null
+              const prev = vehicles[i - 1]
+              return (
+                <line
+                  key={`line-${vehicle.id}`}
+                  x1={`${prev.x}%`}
+                  y1={`${prev.y}%`}
+                  x2={`${vehicle.x}%`}
+                  y2={`${vehicle.y}%`}
+                  stroke="rgb(249 115 22 / 0.2)"
+                  strokeWidth="2"
+                  strokeDasharray="5,5"
+                  className="flow-line-animated"
+                />
+              )
+            })}
+          </svg>
+        </div>
+
+        {/* Selected Vehicle Details */}
+        {selectedVehicle && (
+          <div className="absolute bottom-8 left-8 right-8 bg-white/95 backdrop-blur-lg p-6 rounded-2xl shadow-2xl border border-orange-200 animate-slide-up">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center">
+                  <Car className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h4 className="text-xl font-bold text-slate-900">
+                    {selectedVehicle.make} {selectedVehicle.model}
+                  </h4>
+                  <p className="text-sm text-slate-600 flex items-center gap-1">
+                    <MapPin className="w-4 h-4" />
+                    {selectedVehicle.location}
+                  </p>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="text-3xl font-bold text-orange-600">£{selectedVehicle.price.toLocaleString()}</p>
+                <Button
+                  size="lg"
+                  className="mt-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg"
+                  asChild
+                >
+                  <Link href="/pricing">
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    View Full Details
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}

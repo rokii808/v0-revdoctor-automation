@@ -6,13 +6,14 @@ import { ArrowLeft, ExternalLink, AlertTriangle, CheckCircle, Car, Calendar, Map
 import { notFound } from "next/navigation"
 import Link from "next/link"
 
-export default async function VehicleDetailPage({ params }: { params: { id: string } }) {
+export default async function VehicleDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const supabase = await createClient()
+  const { id } = await params
 
   const { data: vehicle, error } = await supabase
     .from("insights")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", id)
     .eq("is_active", true)
     .single()
 

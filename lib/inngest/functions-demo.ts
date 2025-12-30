@@ -1,5 +1,5 @@
 import { inngest } from "./client"
-import { scrapeRaw2k } from "../scrapers/raw2k-scraper"
+import { scrapeRaw2k } from "../scrapers/raw2k"
 import { classifyVehiclesWithAI } from "../analysis/ai-classifier"
 import { sendDemoEmail } from "../workflow/email-digest-demo"
 import type { VehicleListing } from "../scrapers/types"
