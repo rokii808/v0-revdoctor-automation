@@ -164,7 +164,7 @@ export async function predictInventoryTurn(
     opportunityFlags,
     recommendation,
     recommendationReason: reason,
-    marketIntelligence: marketData,
+    marketIntelligence: marketData || undefined,
   }
 }
 

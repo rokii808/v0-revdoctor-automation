@@ -8,7 +8,7 @@ import { TrendingUp, TrendingDown, Car, DollarSign, Calendar, Target, ArrowLeft 
 import Link from "next/link"
 
 export default async function ReportsPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()

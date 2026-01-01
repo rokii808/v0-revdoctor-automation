@@ -74,7 +74,9 @@ export default function PreferencesPage() {
         throw new Error("User not found")
       }
 
-      // Save preferences to database
+      // For now, skip saving preferences to database
+      // TODO: Create user_preferences table in Supabase and uncomment this code
+      /*
       const { error: prefError } = await supabase.from("user_preferences").upsert({
         user_id: user.id,
         preferred_makes: selectedMakes,
@@ -88,8 +90,18 @@ export default function PreferencesPage() {
 
       if (prefError) {
         console.error("Preferences save error:", prefError)
-        // Don't throw - continue to dashboard even if preferences fail
       }
+      */
+
+      // Store preferences in localStorage temporarily
+      localStorage.setItem('user_preferences', JSON.stringify({
+        preferred_makes: selectedMakes,
+        min_budget: minBudget,
+        max_budget: maxBudget,
+        min_year: minYear,
+        max_mileage: maxMileage,
+        notification_time: notificationTime,
+      }))
 
       // Clear session storage
       sessionStorage.removeItem("signup_data")
@@ -99,6 +111,7 @@ export default function PreferencesPage() {
 
       // Redirect to dashboard
       router.push("/dashboard")
+      router.refresh()
     } catch (err: any) {
       setError(err.message || "Failed to save preferences")
       setLoading(false)

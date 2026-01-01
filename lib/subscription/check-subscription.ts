@@ -94,7 +94,7 @@ export async function checkSubscriptionStatus(): Promise<SubscriptionStatus> {
   const plan = (dealer.selected_plan || 'trial') as SubscriptionStatus['plan']
 
   return {
-    isActive: isActive && !paymentFailed,
+    isActive: Boolean(isActive && !paymentFailed),
     status,
     plan,
     expiresAt,

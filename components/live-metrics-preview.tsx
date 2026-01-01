@@ -32,6 +32,7 @@ export function LiveMetricsPreview() {
     // Subscribe to real-time updates
     const channel = supabase
       .channel("vehicle_matches_changes")
+      // @ts-expect-error - Supabase real-time types are complex, suppressing for dummy client compatibility
       .on("postgres_changes", { event: "*", schema: "public", table: "vehicle_matches" }, () => {
         fetchMetrics()
       })

@@ -20,6 +20,7 @@ interface DummyQueryBuilder {
   delete: () => DummyQueryBuilder
   eq: (column: string, value: unknown) => DummyQueryBuilder
   not: (column: string, operator: string, value: unknown) => DummyQueryBuilder
+  in: (column: string, values: unknown[]) => DummyQueryBuilder
   upsert: (values: unknown) => DummyQueryBuilder
   order: (column: string, options?: { ascending?: boolean }) => DummyQueryBuilder
   limit: (count: number) => DummyQueryBuilder
@@ -29,7 +30,7 @@ interface DummyQueryBuilder {
   gt: (column: string, value: unknown) => DummyQueryBuilder
   lt: (column: string, value: unknown) => DummyQueryBuilder
   single: () => Promise<{ data: null; error: null }>
-  then: (resolve: (value: { data: unknown[]; error: null }) => void) => Promise<{ data: unknown[]; error: null }>
+  then: <T>(resolve: (value: { data: any; error: null }) => T) => Promise<T>
 }
 
 interface DummySupabaseClient {
@@ -58,6 +59,7 @@ export async function createClient(): Promise<SupabaseClient | DummySupabaseClie
         delete: () => builder,
         eq: () => builder,
         not: () => builder,
+        in: () => builder,
         upsert: () => builder,
         order: () => builder,
         limit: () => builder,

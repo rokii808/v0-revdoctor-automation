@@ -39,7 +39,7 @@ export function InteractiveMapPreview() {
 
       if (data && data.length > 0) {
         // Map real data to random positions on the map
-        const mapped = data.map((v, i) => ({
+        const mapped = data.map((v: any, i: number) => ({
           id: v.id,
           make: v.make || "Unknown",
           model: v.model || "Model",
@@ -57,6 +57,7 @@ export function InteractiveMapPreview() {
     // Subscribe to real-time updates
     const channel = supabase
       .channel("vehicle_pins")
+      // @ts-expect-error - Supabase real-time types are complex, suppressing for dummy client compatibility
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "vehicle_matches" }, () => {
         fetchVehicles()
       })

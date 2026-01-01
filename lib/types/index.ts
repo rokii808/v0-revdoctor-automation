@@ -21,6 +21,11 @@ export interface Dealer {
   prefs: DealerPreferences | null
   plan: 'trial' | 'basic' | 'pro'
   status: 'active' | 'inactive' | 'cancelled'
+  subscription_status?: string | null
+  subscription_expires_at?: string | null
+  dealer_name?: string | null
+  email?: string | null
+  user_id?: string
 }
 
 export interface Subscription {
@@ -92,7 +97,7 @@ export interface DashboardStatsProps {
 }
 
 export interface DashboardHeaderProps {
-  user: Profile | null
+  user: any | null
   dealer: Dealer | null
 }
 

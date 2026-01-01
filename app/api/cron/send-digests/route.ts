@@ -46,7 +46,7 @@ export async function GET(request: Request) {
         continue
       }
 
-      const vehicles: CarItem[] = insights.map((insight) => ({
+      const vehicles: CarItem[] = insights.map((insight: any) => ({
         id: insight.id,
         title: insight.title,
         price: `£${insight.price?.toLocaleString() || "N/A"}`,

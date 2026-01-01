@@ -29,7 +29,7 @@ export default function DailyDigestEmail({
     <Html>
       <Head />
       <Preview>
-        {isPreview ? "Preview: " : ""}Revvdoctor Daily Healthy Picks - {items.length} cars for you today
+        {`${isPreview ? "Preview: " : ""}Revvdoctor Daily Healthy Picks - ${items.length} cars for you today`}
       </Preview>
       <Body style={main}>
         <Container style={container}>

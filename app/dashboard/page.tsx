@@ -12,7 +12,7 @@ import EmailSettings from "@/components/dashboard/email-settings"
 import ExportOptions from "@/components/dashboard/export-options"
 
 export default async function DashboardPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -27,8 +27,9 @@ export default async function DashboardPage() {
     .eq('user_id', user.id)
     .single()
 
-  // If no active subscription, redirect to pricing
-  if (!subscription || subscription.status !== 'active') {
+  // Allow new users to access dashboard (they're on free trial)
+  // Only redirect to pricing if subscription is explicitly cancelled
+  if (subscription && subscription.status === 'cancelled') {
     redirect("/pricing?required=true")
   }
 

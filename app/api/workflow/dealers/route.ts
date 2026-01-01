@@ -27,7 +27,7 @@ export async function GET() {
 
     // Transform to n8n expected format
     const formattedDealers =
-      dealers?.map((dealer) => ({
+      dealers?.map((dealer: any) => ({
         dealer_id: dealer.id,
         dealer_name: dealer.company_name,
         email: dealer.email,

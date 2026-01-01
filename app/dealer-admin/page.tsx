@@ -10,7 +10,7 @@ import { Settings, Crown, Database, Filter, Plus, ExternalLink, ArrowLeft } from
 import Link from "next/link"
 
 export default async function DealerAdminPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()

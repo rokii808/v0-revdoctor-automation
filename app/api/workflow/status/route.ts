@@ -28,7 +28,7 @@ export async function GET() {
     }
 
     // Get recent insights count for each dealer
-    const dealerIds = dealers?.map((d) => d.id) || []
+    const dealerIds = dealers?.map((d: any) => d.id) || []
     const { data: insightCounts, error: insightError } = await supabase
       .from("insights")
       .select("dealer_id")
@@ -41,7 +41,7 @@ export async function GET() {
 
     // Count insights per dealer
     const insightCountMap = (insightCounts || []).reduce(
-      (acc, insight) => {
+      (acc: Record<string, number>, insight: any) => {
         acc[insight.dealer_id] = (acc[insight.dealer_id] || 0) + 1
         return acc
       },
@@ -50,7 +50,7 @@ export async function GET() {
 
     // Format response
     const statusData =
-      dealers?.map((dealer) => ({
+      dealers?.map((dealer: any) => ({
         dealer_id: dealer.id,
         dealer_name: dealer.company_name,
         email: dealer.email,
@@ -65,7 +65,7 @@ export async function GET() {
 
     return NextResponse.json({
       total_dealers: statusData.length,
-      active_dealers: statusData.filter((d) => d.is_active).length,
+      active_dealers: statusData.filter((d: any) => d.is_active).length,
       dealers: statusData,
     })
   } catch (error) {

@@ -1,8 +1,8 @@
 import { inngest } from "./client"
-import { scrapeRaw2k } from "../scrapers/raw2k"
+import { scrapeRAW2K } from "../scrapers/raw2k"
 import { classifyVehiclesWithAI } from "../analysis/ai-classifier"
 import { sendDemoEmail } from "../workflow/email-digest-demo"
-import type { VehicleListing } from "../scrapers/types"
+import type { VehicleListing } from "../scrapers/index"
 import type { VehicleMatch } from "../workflow/preference-matcher"
 
 /**
@@ -40,7 +40,7 @@ export const sendDemoAction = inngest.createFunction(
 
       try {
         // Scrape RAW2K (fastest scraper)
-        const vehicles = await scrapeRaw2k()
+        const vehicles = await scrapeRAW2K()
 
         // Take first 5 vehicles for demo
         const sampleVehicles = vehicles.slice(0, 5)
@@ -113,7 +113,8 @@ export const sendDemoAction = inngest.createFunction(
         match_reasons: generateDemoMatchReasons(vehicle),
         dealer_id: "demo",
         dealer_name: "Demo User",
-      }))
+        classified_at: new Date().toISOString(),
+      } as VehicleMatch))
 
       console.log(`✅ [Demo] Selected ${matches.length} vehicles for demo`)
 
@@ -233,6 +234,8 @@ function generateDemoMatchReasons(vehicle: any): string[] {
 function getMockVehicles(): VehicleListing[] {
   return [
     {
+      listing_id: "raw2k-001",
+      lot_number: "LOT-001",
       make: "BMW",
       model: "3 Series",
       year: 2019,
@@ -240,11 +243,13 @@ function getMockVehicles(): VehicleListing[] {
       mileage: 45000,
       condition: "CAT S",
       auction_site: "RAW2K",
-      listing_url: "https://www.raw2k.com",
-      description: "BMW 3 Series 320d M Sport - CAT S repaired professionally",
+      auction_date: new Date().toISOString(),
+      url: "https://www.raw2k.com",
       images: [],
     },
     {
+      listing_id: "raw2k-002",
+      lot_number: "LOT-002",
       make: "Mercedes-Benz",
       model: "C-Class",
       year: 2018,
@@ -252,8 +257,8 @@ function getMockVehicles(): VehicleListing[] {
       mileage: 52000,
       condition: "CAT N",
       auction_site: "RAW2K",
-      listing_url: "https://www.raw2k.com",
-      description: "Mercedes C200 AMG Line - CAT N with minor damage",
+      auction_date: new Date().toISOString(),
+      url: "https://www.raw2k.com",
       images: [],
     },
   ]

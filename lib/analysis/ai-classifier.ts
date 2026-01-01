@@ -10,7 +10,7 @@ interface AIClassification {
   profit_potential: number
 }
 
-interface ClassificationResult extends VehicleListing {
+export interface ClassificationResult extends VehicleListing {
   ai_classification: AIClassification
   classified_at: string
 }
@@ -120,7 +120,6 @@ Respond ONLY with valid JSON in this exact format:
       model: openai("gpt-4o-mini"), // Fast and cost-effective
       prompt,
       temperature: 0.3, // Lower temperature for consistent output
-      maxTokens: 300,
     })
 
     // Parse JSON response
