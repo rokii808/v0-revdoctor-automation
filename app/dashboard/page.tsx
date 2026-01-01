@@ -91,6 +91,11 @@ export default async function DashboardPage() {
     console.error("[Dashboard] Error fetching healthy cars:", healthyCarsError.message)
   }
 
+  // Debug: Log the first vehicle to see data structure
+  if (healthyCars && healthyCars.length > 0) {
+    console.log("[Dashboard] Sample vehicle data:", JSON.stringify(healthyCars[0], null, 2))
+  }
+
   // Get total vehicles found this week
   const weekAgo = new Date()
   weekAgo.setDate(weekAgo.getDate() - 7)
@@ -124,25 +129,39 @@ export default async function DashboardPage() {
   }
 
   // Transform vehicle data for VehicleGrid
-  const vehicles = (healthyCars || []).map((match: any) => ({
-    id: match.vehicle_id || match.id,
-    make: match.vehicle_data?.make || 'Unknown',
-    model: match.vehicle_data?.model || 'Unknown',
-    year: match.vehicle_data?.year || 2020,
-    price: match.vehicle_data?.price || 0,
-    mileage: match.vehicle_data?.mileage || 0,
-    location: match.vehicle_data?.location,
-    image_url: match.vehicle_data?.image_url,
-    url: match.vehicle_data?.url || match.listing_url,
-    condition: match.vehicle_data?.condition,
-    ai_classification: {
-      verdict: match.ai_classification?.verdict || 'REVIEW',
-      profit_potential: match.ai_classification?.profit_potential,
-      confidence: match.match_score ? Math.round(match.match_score * 100) : undefined,
-      issues: match.ai_classification?.issues,
-    },
-    viewed: false,
-  }))
+  const vehicles = (healthyCars || []).map((match: any) => {
+    // Get image URL - check multiple possible locations
+    let imageUrl = null
+    if (match.vehicle_data?.image_url) {
+      imageUrl = match.vehicle_data.image_url
+    } else if (match.vehicle_data?.images && match.vehicle_data.images.length > 0) {
+      imageUrl = match.vehicle_data.images[0]
+    } else if (match.images && match.images.length > 0) {
+      imageUrl = match.images[0]
+    } else if (match.image_url) {
+      imageUrl = match.image_url
+    }
+
+    return {
+      id: match.vehicle_id || match.id,
+      make: match.vehicle_data?.make || match.make || 'Unknown',
+      model: match.vehicle_data?.model || match.model || 'Unknown',
+      year: match.vehicle_data?.year || match.year || 2020,
+      price: match.vehicle_data?.price || match.price || 0,
+      mileage: match.vehicle_data?.mileage || match.mileage || 0,
+      location: match.vehicle_data?.location || match.location,
+      image_url: imageUrl,
+      url: match.vehicle_data?.url || match.url || match.listing_url,
+      condition: match.vehicle_data?.condition || match.condition,
+      ai_classification: {
+        verdict: match.ai_classification?.verdict || 'REVIEW',
+        profit_potential: match.ai_classification?.profit_potential,
+        confidence: match.match_score ? Math.round(match.match_score * 100) : undefined,
+        issues: match.ai_classification?.issues,
+      },
+      viewed: false,
+    }
+  })
 
   // Generate activity feed (using mock data for now - replace with real activity later)
   const activities = generateMockActivities()

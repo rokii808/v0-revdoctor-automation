@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { motion } from "framer-motion"
 import { Car, TrendingUp, AlertTriangle, Eye, ExternalLink, MapPin, Gauge, Calendar } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
@@ -97,9 +98,15 @@ interface VehicleCardProps {
 }
 
 function VehicleCard({ vehicle, index, variants, canView, onView, planTier }: VehicleCardProps) {
+  const [imageError, setImageError] = useState(false)
   const isHealthy = vehicle.ai_classification?.verdict === "HEALTHY"
   const isAvoid = vehicle.ai_classification?.verdict === "AVOID"
   const profitPotential = vehicle.ai_classification?.profit_potential || 0
+
+  // Debug log for images
+  if (vehicle.image_url && imageError) {
+    console.log(`[VehicleCard] Image failed to load: ${vehicle.image_url}`)
+  }
 
   const verdictConfig = {
     HEALTHY: {
@@ -170,15 +177,23 @@ function VehicleCard({ vehicle, index, variants, canView, onView, planTier }: Ve
       <div className={`bg-white rounded-2xl border-2 ${config.border} overflow-hidden shadow-lg ${config.glow} hover:shadow-xl transition-shadow duration-300`}>
         {/* Vehicle Image */}
         <div className="relative aspect-video bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden">
-          {vehicle.image_url ? (
+          {vehicle.image_url && !imageError ? (
             <img
               src={vehicle.image_url}
               alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              onError={(e) => {
+                console.error(`Failed to load image: ${vehicle.image_url}`)
+                setImageError(true)
+              }}
+              loading="lazy"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
               <Car className="w-16 h-16 text-slate-300" />
+              {vehicle.image_url && imageError && (
+                <p className="absolute bottom-2 text-xs text-slate-400">Image unavailable</p>
+              )}
             </div>
           )}
 
