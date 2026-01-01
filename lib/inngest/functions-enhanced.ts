@@ -207,11 +207,14 @@ export const dailyScraperJobEnhanced = inngest.createFunction(
             year: match.year,
             price: match.price,
             mileage: match.mileage,
+            condition: match.condition,
             auction_site: match.auction_site,
-            url: match.url,
+            listing_url: match.url, // Database field is listing_url, not url
+            image_url: match.images && match.images.length > 0 ? match.images[0] : null, // Save first image
             match_score: match.match_score,
-            match_reasons: match.match_reasons,
-            ai_classification: match.ai_classification,
+            verdict: match.ai_classification?.verdict, // Flatten AI classification to match schema
+            reason: match.ai_classification?.reason, // AI classification reason
+            profit_estimate: match.ai_classification?.profit_potential,
             created_at: new Date().toISOString(),
           })
         }

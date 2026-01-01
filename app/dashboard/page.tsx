@@ -145,7 +145,7 @@ export default async function DashboardPage() {
       verdict: (match.verdict || 'REVIEW') as "HEALTHY" | "AVOID" | "REVIEW",
       profit_potential: match.profit_estimate,
       confidence: match.match_score,
-      issues: match.reason ? [match.reason] : undefined,
+      issues: match.reason ? match.reason.split('; ').filter(Boolean) : undefined, // Split semicolon-separated reasons
     },
     viewed: false,
   }))
