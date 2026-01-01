@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Slider } from "@/components/ui/slider"
 import { Check, ArrowRight, Car, MapPin, Calendar, Gauge, Plus, X, Loader2, Sparkles } from "lucide-react"
 import { savePrefs } from "@/lib/actions"
+import OnboardingLoading from "@/components/onboarding-loading"
 
 const PRICING_PLANS = [
   {
@@ -18,11 +19,7 @@ const PRICING_PLANS = [
     price: "£29",
     period: "/month",
     plan: "basic",
-    features: [
-      "Daily digest (10 cars)",
-      "Basic AI screening",
-      "Email delivery",
-    ],
+    features: ["Daily digest (10 cars)", "Basic AI screening", "Email delivery"],
     popular: false,
   },
   {
@@ -30,12 +27,7 @@ const PRICING_PLANS = [
     price: "£59",
     period: "/month",
     plan: "startup",
-    features: [
-      "Daily digest (25 cars)",
-      "MOT history lookup",
-      "Team accounts (3 users)",
-      "Priority delivery",
-    ],
+    features: ["Daily digest (25 cars)", "MOT history lookup", "Team accounts (3 users)", "Priority delivery"],
     popular: true,
   },
   {
@@ -43,23 +35,14 @@ const PRICING_PLANS = [
     price: "£99",
     period: "/month",
     plan: "premium",
-    features: [
-      "Daily digest (50 cars)",
-      "Real-time SMS alerts",
-      "Advanced filtering",
-      "Custom profiles",
-    ],
+    features: ["Daily digest (50 cars)", "Real-time SMS alerts", "Advanced filtering", "Custom profiles"],
     popular: false,
   },
 ]
 
-const POPULAR_MAKES = [
-  "BMW", "Mercedes", "Audi", "Volkswagen", "Ford", "Toyota", "Honda", "Nissan"
-]
+const POPULAR_MAKES = ["BMW", "Mercedes", "Audi", "Volkswagen", "Ford", "Toyota", "Honda", "Nissan"]
 
-const POPULAR_LOCATIONS = [
-  "London", "Birmingham", "Manchester", "Leeds", "Liverpool", "Bristol"
-]
+const POPULAR_LOCATIONS = ["London", "Birmingham", "Manchester", "Leeds", "Liverpool", "Bristol"]
 
 function OnboardingPageContent() {
   const router = useRouter()
@@ -90,7 +73,9 @@ function OnboardingPageContent() {
   }, [])
 
   const checkUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
 
     if (!user) {
       router.push("/auth/login")
@@ -120,9 +105,8 @@ function OnboardingPageContent() {
       const trialEndsAt = new Date()
       trialEndsAt.setDate(trialEndsAt.getDate() + 7)
 
-      const { error: dealerError } = await supabase
-        .from("dealers")
-        .upsert({
+      const { error: dealerError } = await supabase.from("dealers").upsert(
+        {
           user_id: user.id,
           email: user.email,
           dealer_name: user.email?.split("@")[0] || "Dealer",
@@ -132,9 +116,11 @@ function OnboardingPageContent() {
           min_year: 2015,
           max_bid: 15000,
           created_at: new Date().toISOString(),
-        }, {
-          onConflict: "user_id"
-        })
+        },
+        {
+          onConflict: "user_id",
+        },
+      )
 
       if (dealerError) {
         console.error("Error creating dealer:", dealerError)
@@ -182,24 +168,24 @@ function OnboardingPageContent() {
 
   const addMake = (make: string) => {
     if (make && !preferences.makes.includes(make)) {
-      setPreferences(prev => ({ ...prev, makes: [...prev.makes, make] }))
+      setPreferences((prev) => ({ ...prev, makes: [...prev.makes, make] }))
       setNewMake("")
     }
   }
 
   const removeMake = (make: string) => {
-    setPreferences(prev => ({ ...prev, makes: prev.makes.filter(m => m !== make) }))
+    setPreferences((prev) => ({ ...prev, makes: prev.makes.filter((m) => m !== make) }))
   }
 
   const addLocation = (location: string) => {
     if (location && !preferences.locations.includes(location)) {
-      setPreferences(prev => ({ ...prev, locations: [...prev.locations, location] }))
+      setPreferences((prev) => ({ ...prev, locations: [...prev.locations, location] }))
       setNewLocation("")
     }
   }
 
   const removeLocation = (location: string) => {
-    setPreferences(prev => ({ ...prev, locations: prev.locations.filter(l => l !== location) }))
+    setPreferences((prev) => ({ ...prev, locations: prev.locations.filter((l) => l !== location) }))
   }
 
   if (!user) {
@@ -226,27 +212,33 @@ function OnboardingPageContent() {
           <div className="mb-12">
             <div className="flex items-center justify-center gap-4">
               <div className={`flex items-center gap-2 ${step >= 1 ? "text-pink-600" : "text-gray-400"}`}>
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-                  step >= 1 ? "bg-pink-600 text-white" : "bg-gray-200"
-                }`}>
+                <div
+                  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
+                    step >= 1 ? "bg-pink-600 text-white" : "bg-gray-200"
+                  }`}
+                >
                   {step > 1 ? <Check className="w-5 h-5" /> : "1"}
                 </div>
                 <span className="font-medium hidden sm:block">Welcome</span>
               </div>
               <div className={`w-12 h-1 ${step >= 2 ? "bg-pink-600" : "bg-gray-200"}`} />
               <div className={`flex items-center gap-2 ${step >= 2 ? "text-pink-600" : "text-gray-400"}`}>
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-                  step >= 2 ? "bg-pink-600 text-white" : "bg-gray-200"
-                }`}>
+                <div
+                  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
+                    step >= 2 ? "bg-pink-600 text-white" : "bg-gray-200"
+                  }`}
+                >
                   {step > 2 ? <Check className="w-5 h-5" /> : "2"}
                 </div>
                 <span className="font-medium hidden sm:block">Choose Plan</span>
               </div>
               <div className={`w-12 h-1 ${step >= 3 ? "bg-pink-600" : "bg-gray-200"}`} />
               <div className={`flex items-center gap-2 ${step >= 3 ? "text-pink-600" : "text-gray-400"}`}>
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-                  step >= 3 ? "bg-pink-600 text-white" : "bg-gray-200"
-                }`}>
+                <div
+                  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
+                    step >= 3 ? "bg-pink-600 text-white" : "bg-gray-200"
+                  }`}
+                >
                   3
                 </div>
                 <span className="font-medium hidden sm:block">Preferences</span>
@@ -423,13 +415,8 @@ function OnboardingPageContent() {
                   </div>
 
                   <div className="flex flex-wrap gap-2">
-                    {POPULAR_MAKES.filter(m => !preferences.makes.includes(m)).map((make) => (
-                      <Button
-                        key={make}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => addMake(make)}
-                      >
+                    {POPULAR_MAKES.filter((m) => !preferences.makes.includes(m)).map((make) => (
+                      <Button key={make} variant="outline" size="sm" onClick={() => addMake(make)}>
                         + {make}
                       </Button>
                     ))}
@@ -452,10 +439,12 @@ function OnboardingPageContent() {
                         id="minYear"
                         type="number"
                         value={preferences.minYear}
-                        onChange={(e) => setPreferences(prev => ({
-                          ...prev,
-                          minYear: parseInt(e.target.value) || 2000
-                        }))}
+                        onChange={(e) =>
+                          setPreferences((prev) => ({
+                            ...prev,
+                            minYear: Number.parseInt(e.target.value) || 2000,
+                          }))
+                        }
                         min="2000"
                         max={new Date().getFullYear()}
                       />
@@ -466,10 +455,12 @@ function OnboardingPageContent() {
                         id="maxYear"
                         type="number"
                         value={preferences.maxYear}
-                        onChange={(e) => setPreferences(prev => ({
-                          ...prev,
-                          maxYear: parseInt(e.target.value) || new Date().getFullYear()
-                        }))}
+                        onChange={(e) =>
+                          setPreferences((prev) => ({
+                            ...prev,
+                            maxYear: Number.parseInt(e.target.value) || new Date().getFullYear(),
+                          }))
+                        }
                         min="2000"
                         max={new Date().getFullYear()}
                       />
@@ -484,14 +475,12 @@ function OnboardingPageContent() {
                     <Gauge className="w-5 h-5 text-pink-600" />
                     Maximum Mileage
                   </CardTitle>
-                  <CardDescription>
-                    {preferences.maxMileage.toLocaleString()} miles
-                  </CardDescription>
+                  <CardDescription>{preferences.maxMileage.toLocaleString()} miles</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Slider
                     value={[preferences.maxMileage]}
-                    onValueChange={(value) => setPreferences(prev => ({ ...prev, maxMileage: value[0] }))}
+                    onValueChange={(value) => setPreferences((prev) => ({ ...prev, maxMileage: value[0] }))}
                     max={200000}
                     min={10000}
                     step={5000}
@@ -509,9 +498,7 @@ function OnboardingPageContent() {
                     <MapPin className="w-5 h-5 text-pink-600" />
                     Preferred Locations
                   </CardTitle>
-                  <CardDescription>
-                    Select auction locations (or leave empty for all locations)
-                  </CardDescription>
+                  <CardDescription>Select auction locations (or leave empty for all locations)</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex flex-wrap gap-2">
@@ -536,13 +523,8 @@ function OnboardingPageContent() {
                   </div>
 
                   <div className="flex flex-wrap gap-2">
-                    {POPULAR_LOCATIONS.filter(l => !preferences.locations.includes(l)).map((location) => (
-                      <Button
-                        key={location}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => addLocation(location)}
-                      >
+                    {POPULAR_LOCATIONS.filter((l) => !preferences.locations.includes(l)).map((location) => (
+                      <Button key={location} variant="outline" size="sm" onClick={() => addLocation(location)}>
                         + {location}
                       </Button>
                     ))}
@@ -580,7 +562,7 @@ function OnboardingPageContent() {
 
 export default function OnboardingPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+    <Suspense fallback={<OnboardingLoading />}>
       <OnboardingPageContent />
     </Suspense>
   )
