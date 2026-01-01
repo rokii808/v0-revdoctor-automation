@@ -41,9 +41,9 @@ Before starting, create accounts for:
 - **Monthly cost:** ~$6-9
 
 ### Environment Variable:
-```bash
+\`\`\`bash
 OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-```
+\`\`\`
 
 ---
 
@@ -64,7 +64,7 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 1. Go to **Domains** in dashboard
 2. Add your domain: `revvdoctor.com`
 3. Add DNS records provided by Resend:
-   ```
+   \`\`\`
    Type: TXT
    Name: @
    Value: [provided by Resend]
@@ -72,15 +72,15 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
    Type: CNAME
    Name: resend._domainkey
    Value: [provided by Resend]
-   ```
+   \`\`\`
 4. Wait for verification (usually 5-10 minutes)
 5. Set as default domain
 
 ### Update Email "From" Address:
 If you verified a custom domain, update in `lib/workflow/email-digest.ts`:
-```typescript
+\`\`\`typescript
 from: "Revvdoctor <digest@revvdoctor.com>",  // Use your domain
-```
+\`\`\`
 
 ### Pricing:
 - **Free tier:** 3,000 emails/month
@@ -88,9 +88,9 @@ from: "Revvdoctor <digest@revvdoctor.com>",  // Use your domain
 - **For Revvdoctor:** Free tier sufficient unless you have 100+ dealers
 
 ### Environment Variable:
-```bash
+\`\`\`bash
 RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-```
+\`\`\`
 
 ---
 
@@ -102,7 +102,7 @@ You need to set environment variables in **3 places:**
 
 Create or update `.env.local` in project root:
 
-```bash
+\`\`\`bash
 # Supabase (existing)
 NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -125,12 +125,12 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # Resend (NEW - required)
 RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-```
+\`\`\`
 
 **To generate CRON_SECRET if not set:**
-```bash
+\`\`\`bash
 openssl rand -base64 32
-```
+\`\`\`
 
 ### 3.2 Vercel Environment Variables
 
@@ -196,9 +196,9 @@ Run the SQL migration to create the `workflow_stats` table:
 7. Verify table created in **Table Editor**
 
 ### Via Supabase CLI (alternative):
-```bash
+\`\`\`bash
 supabase db push
-```
+\`\`\`
 
 ---
 
@@ -206,7 +206,7 @@ supabase db push
 
 ### 5.1 Test Local Environment
 
-```bash
+\`\`\`bash
 # Install dependencies
 npm install
 
@@ -215,7 +215,7 @@ npm run dev
 
 # Open browser
 open http://localhost:3000
-```
+\`\`\`
 
 **Check:**
 - ✅ No errors in console
@@ -231,7 +231,7 @@ open http://localhost:3000
 4. Click **"Invoke"**
 5. Send event: `workflow/health-check`
 6. Check output:
-   ```json
+   \`\`\`json
    {
      "healthy": true,
      "checks": {
@@ -243,7 +243,7 @@ open http://localhost:3000
        "OpenAI Key Format": true
      }
    }
-   ```
+   \`\`\`
 
 ❌ **If any check fails:**
 - Verify the environment variable is set in Inngest dashboard
@@ -253,7 +253,7 @@ open http://localhost:3000
 ### 5.3 Test AI Classification
 
 Create a test file `test-ai.ts`:
-```typescript
+\`\`\`typescript
 import { classifyVehiclesWithAI } from "./lib/analysis/ai-classifier"
 
 const testVehicle = {
@@ -275,15 +275,15 @@ async function test() {
 }
 
 test()
-```
+\`\`\`
 
 Run:
-```bash
+\`\`\`bash
 npx tsx test-ai.ts
-```
+\`\`\`
 
 Expected output:
-```json
+\`\`\`json
 [
   {
     "make": "BMW",
@@ -301,12 +301,12 @@ Expected output:
     }
   }
 ]
-```
+\`\`\`
 
 ### 5.4 Test Email Sending
 
 Create a test file `test-email.ts`:
-```typescript
+\`\`\`typescript
 import { sendDailyDigest } from "./lib/workflow/email-digest"
 
 const testRecipient = {
@@ -344,12 +344,12 @@ async function test() {
 }
 
 test()
-```
+\`\`\`
 
 Run:
-```bash
+\`\`\`bash
 npx tsx test-email.ts
-```
+\`\`\`
 
 Check your inbox for the digest email!
 
@@ -365,14 +365,14 @@ Check your inbox for the digest email!
 3. Find `trigger-manual-scrape` function
 4. Click **"Invoke"**
 5. Send event:
-   ```json
+   \`\`\`json
    {
      "name": "scraper/manual-trigger",
      "data": {
        "admin_user_id": "your-user-id"
      }
    }
-   ```
+   \`\`\`
 6. Monitor execution:
    - View step-by-step progress
    - Check logs for each step
@@ -391,7 +391,7 @@ Check your inbox for the digest email!
 ### Verify Results:
 
 **In Supabase:**
-```sql
+\`\`\`sql
 -- Check workflow stats
 SELECT * FROM workflow_stats ORDER BY run_date DESC LIMIT 1;
 
@@ -404,7 +404,7 @@ FROM vehicle_matches
 WHERE created_at > NOW() - INTERVAL '1 hour'
 GROUP BY dealer_id
 ORDER BY match_count DESC;
-```
+\`\`\`
 
 **In Resend Dashboard:**
 1. Go to https://resend.com/emails
@@ -489,10 +489,10 @@ The workflow is configured to run automatically at **6 AM daily**.
 **Fix:**
 1. Add payment method to OpenAI account
 2. Increase batch delay in `ai-classifier.ts`:
-   ```typescript
+   \`\`\`typescript
    // After each batch
    await new Promise(resolve => setTimeout(resolve, 2000)) // 2 seconds
-   ```
+   \`\`\`
 
 ---
 

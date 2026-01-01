@@ -22,14 +22,14 @@
 **File**: `app/api/stripe/webhook/route.ts`
 
 **Problem**:
-```typescript
+\`\`\`typescript
 // Current code references non-existent table
 await supabase.from("dealers_v2").upsert({
   user_id: userId,
   subscription_status: "active",
   // ...
 })
-```
+\`\`\`
 
 **Database Reality**: Only `dealers` table exists (not `dealers_v2`)
 
@@ -39,14 +39,14 @@ await supabase.from("dealers_v2").upsert({
 - Revenue loss + customer support burden
 
 **Fix**:
-```typescript
+\`\`\`typescript
 // Change dealers_v2 → dealers
 await supabase.from("dealers").upsert({
   user_id: userId,
   subscription_status: "active",
   subscription_expires_at: new Date(subscription.current_period_end * 1000).toISOString(),
 })
-```
+\`\`\`
 
 **Files to Update**:
 - `app/api/stripe/webhook/route.ts` (2 locations)
@@ -59,13 +59,13 @@ await supabase.from("dealers").upsert({
 **File**: `app/api/cron/scrape-raw2k/route.ts`
 
 **Problem**:
-```typescript
+\`\`\`typescript
 await supabase.from("vehicle_matches").insert({
   auction_site: "RAW2K",
   make: vehicle.make,
   // ... MISSING dealer_id!
 })
-```
+\`\`\`
 
 **Database Schema**: `dealer_id` is nullable but should be set for proper filtering
 
@@ -75,7 +75,7 @@ await supabase.from("vehicle_matches").insert({
 - Users see "No vehicles found"
 
 **Fix**:
-```typescript
+\`\`\`typescript
 // Get all active dealers
 const { data: dealers } = await supabase
   .from("dealers")
@@ -91,7 +91,7 @@ for (const dealer of dealers) {
     // ...
   })
 }
-```
+\`\`\`
 
 ---
 
@@ -100,11 +100,11 @@ for (const dealer of dealers) {
 **File**: `app/dashboard/page.tsx`
 
 **Problem**:
-```typescript
+\`\`\`typescript
 const { data: healthyCars } = await supabase
   .from("healthy_cars")  // Legacy table
   .select("*")
-```
+\`\`\`
 
 **Issue**: New scraper writes to `vehicle_matches`, dashboard reads from `healthy_cars`
 
@@ -115,21 +115,21 @@ const { data: healthyCars } = await supabase
 **Fix Options**:
 
 **Option A**: Update scraper to write to both tables (backward compatible)
-```typescript
+\`\`\`typescript
 // In scraper
 await supabase.from("vehicle_matches").insert(vehicleData)
 await supabase.from("healthy_cars").insert(vehicleData) // For legacy compatibility
-```
+\`\`\`
 
 **Option B**: Update dashboard to read from vehicle_matches (recommended)
-```typescript
+\`\`\`typescript
 const { data: healthyCars } = await supabase
   .from("vehicle_matches")
   .select("*")
   .eq("dealer_id", dealer.id)
   .gte("created_at", new Date().toISOString().split("T")[0])
   .order("created_at", { ascending: false })
-```
+\`\`\`
 
 ---
 
@@ -140,20 +140,20 @@ const { data: healthyCars } = await supabase
 **File**: `components/dashboard/todays-healthy-cars.tsx`
 
 **Problem**:
-```tsx
+\`\`\`tsx
 const handleRefresh = async () => {
   setIsRefreshing(true)
   // Simulate refresh - in real app this would call API
   setTimeout(() => setIsRefreshing(false), 2000)
 }
-```
+\`\`\`
 
 **Impact**: Refresh button does nothing, users must reload page
 
 **Fix**: Add API route and actual fetch
 
 **Step 1**: Create API route `app/api/vehicles/route.ts`:
-```typescript
+\`\`\`typescript
 import { createClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
 
@@ -184,10 +184,10 @@ export async function GET(request: Request) {
 
   return NextResponse.json({ vehicles })
 }
-```
+\`\`\`
 
 **Step 2**: Update component:
-```tsx
+\`\`\`tsx
 const handleRefresh = async () => {
   setIsRefreshing(true)
   try {
@@ -201,7 +201,7 @@ const handleRefresh = async () => {
     setIsRefreshing(false)
   }
 }
-```
+\`\`\`
 
 ---
 
@@ -210,19 +210,19 @@ const handleRefresh = async () => {
 **File**: `components/dashboard/preferences-card.tsx`
 
 **Problem**:
-```tsx
+\`\`\`tsx
 <Button size="sm" variant="outline" className="w-full">
   <Edit className="w-4 h-4 mr-2" />
   Edit Preferences
 </Button>
 // No onClick, no dialog, no form
-```
+\`\`\`
 
 **Impact**: Users can't update their buying criteria
 
 **Fix**: Add dialog with form
 
-```tsx
+\`\`\`tsx
 "use client"
 import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -270,7 +270,7 @@ export default function PreferencesCard({ dealer }: ...) {
     </>
   )
 }
-```
+\`\`\`
 
 ---
 
@@ -279,17 +279,17 @@ export default function PreferencesCard({ dealer }: ...) {
 **File**: `components/dashboard/email-settings.tsx`
 
 **Problem**:
-```tsx
+\`\`\`tsx
 const handleSave = async () => {
   console.log("Saving email settings:", settings) // Only logs!
 }
-```
+\`\`\`
 
 **Impact**: Email preferences lost on page reload
 
 **Fix**: Connect to `/api/preferences` (already exists!)
 
-```tsx
+\`\`\`tsx
 const handleSave = async () => {
   try {
     const res = await fetch("/api/preferences", {
@@ -309,7 +309,7 @@ const handleSave = async () => {
     console.error("Failed to save settings:", error)
   }
 }
-```
+\`\`\`
 
 ---
 
@@ -318,18 +318,18 @@ const handleSave = async () => {
 **File**: `components/dashboard/alerts-feed.tsx`
 
 **Problem**:
-```tsx
+\`\`\`tsx
 const markAsRead = async (alertId: string) => {
   console.log("Marking alert as read:", alertId) // Only logs!
 }
-```
+\`\`\`
 
 **Impact**: Alert badge never clears
 
 **Fix**: Add API route to update
 
 **Step 1**: Create `app/api/alerts/[id]/route.ts`:
-```typescript
+\`\`\`typescript
 import { createClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
 
@@ -353,10 +353,10 @@ export async function PATCH(
 
   return NextResponse.json({ success: true })
 }
-```
+\`\`\`
 
 **Step 2**: Update component:
-```tsx
+\`\`\`tsx
 const markAsRead = async (alertId: string) => {
   try {
     await fetch(`/api/alerts/${alertId}`, { method: "PATCH" })
@@ -366,7 +366,7 @@ const markAsRead = async (alertId: string) => {
     console.error("Failed to mark alert as read:", error)
   }
 }
-```
+\`\`\`
 
 ---
 
@@ -375,18 +375,18 @@ const markAsRead = async (alertId: string) => {
 **File**: `components/dashboard/subscription-card.tsx`
 
 **Problem**:
-```tsx
+\`\`\`tsx
 {isTrialActive && expiresAt && (
   <div>{expiresAt.toLocaleDateString()}</div>
 )}
 // expiresAt is undefined
-```
+\`\`\`
 
 **Impact**: Users don't see when trial expires
 
 **Fix**: Calculate from dealer data
 
-```tsx
+\`\`\`tsx
 export default function SubscriptionCard({ dealer }: { dealer: any }) {
   const expiresAt = dealer?.subscription_expires_at
     ? new Date(dealer.subscription_expires_at)
@@ -409,7 +409,7 @@ export default function SubscriptionCard({ dealer }: { dealer: any }) {
     </Card>
   )
 }
-```
+\`\`\`
 
 ---
 
@@ -425,7 +425,7 @@ export default function SubscriptionCard({ dealer }: { dealer: any }) {
 **Fixes**:
 
 **9.1 Add Mobile Navigation**:
-```tsx
+\`\`\`tsx
 // In dashboard-header.tsx
 "use client"
 import { Menu } from "lucide-react"
@@ -446,18 +446,18 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
     </nav>
   </SheetContent>
 </Sheet>
-```
+\`\`\`
 
 **9.2 Responsive Filters**:
-```tsx
+\`\`\`tsx
 // In todays-healthy-cars.tsx
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
   {/* Filters stack on mobile, 2 cols on tablet, 5 on desktop */}
 </div>
-```
+\`\`\`
 
 **9.3 Vehicle Card Layout**:
-```tsx
+\`\`\`tsx
 <Card className="flex flex-col sm:flex-row">
   <div className="w-full sm:w-48 h-48 sm:h-auto">
     <Image ... />
@@ -466,7 +466,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
     {/* Content */}
   </div>
 </Card>
-```
+\`\`\`
 
 ---
 
@@ -479,16 +479,16 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 **Fix**: Generate types from Supabase
 
-```bash
+\`\`\`bash
 # Install Supabase CLI
 npm install supabase --save-dev
 
 # Generate types
 npx supabase gen types typescript --project-id fycvbkmgssdutumjpodz > lib/types/database.ts
-```
+\`\`\`
 
 **Usage**:
-```typescript
+\`\`\`typescript
 import { Database } from "@/lib/types/database"
 
 type Dealer = Database["public"]["Tables"]["dealers"]["Row"]
@@ -497,7 +497,7 @@ type VehicleMatch = Database["public"]["Tables"]["vehicle_matches"]["Row"]
 export default function DashboardPage({ dealer }: { dealer: Dealer }) {
   // Fully typed!
 }
-```
+\`\`\`
 
 ---
 
@@ -506,19 +506,19 @@ export default function DashboardPage({ dealer }: { dealer: Dealer }) {
 ### ✅ Working Responsive Patterns
 
 1. **Grid Layouts**: Dashboard uses responsive grids correctly
-   ```tsx
+   \`\`\`tsx
    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-   ```
+   \`\`\`
 
 2. **Container Queries**: Card headers use modern @container queries
-   ```tsx
+   \`\`\`tsx
    className="@container/card-header grid auto-rows-min"
-   ```
+   \`\`\`
 
 3. **Hidden Elements**: Navigation properly hidden on mobile
-   ```tsx
+   \`\`\`tsx
    className="hidden md:flex"
-   ```
+   \`\`\`
 
 4. **Breakpoints**: Consistent use of Tailwind breakpoints (sm, md, lg, xl)
 

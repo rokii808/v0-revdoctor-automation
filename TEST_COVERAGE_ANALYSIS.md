@@ -39,7 +39,7 @@ The codebase currently has **zero test coverage** with no testing infrastructure
 - Edge cases (zero mileage, missing data)
 
 **Example Test Cases:**
-```typescript
+\`\`\`typescript
 describe('heuristicAnalysis', () => {
   it('should mark old high-mileage vehicles as AVOID', () => {
     const vehicle = {
@@ -64,7 +64,7 @@ describe('heuristicAnalysis', () => {
     expect(result.profit_estimate).toBeGreaterThan(0)
   })
 })
-```
+\`\`\`
 
 ---
 
@@ -92,7 +92,7 @@ describe('heuristicAnalysis', () => {
   - Network failures
 
 **Example Test Cases:**
-```typescript
+\`\`\`typescript
 describe('Stripe Webhook', () => {
   it('should reject webhooks with invalid signatures', async () => {
     const response = await POST(mockRequest({
@@ -108,7 +108,7 @@ describe('Stripe Webhook', () => {
     // Check N8N notification
   })
 })
-```
+\`\`\`
 
 ---
 
@@ -142,7 +142,7 @@ describe('Stripe Webhook', () => {
 - Malformed HTML
 
 **Example Test Cases:**
-```typescript
+\`\`\`typescript
 describe('scrapeRAW2K', () => {
   it('should parse vehicle listings from HTML', async () => {
     global.fetch = vi.fn().mockResolvedValue({
@@ -166,7 +166,7 @@ describe('scrapeRAW2K', () => {
     expect(results).toEqual([])
   })
 })
-```
+\`\`\`
 
 ---
 
@@ -239,7 +239,7 @@ describe('scrapeRAW2K', () => {
 ## Recommended Testing Stack
 
 ### Testing Frameworks
-```json
+\`\`\`json
 {
   "devDependencies": {
     "vitest": "^1.0.0",
@@ -251,12 +251,12 @@ describe('scrapeRAW2K', () => {
     "msw": "^2.0.0"
   }
 }
-```
+\`\`\`
 
 ### Configuration
 
 **vitest.config.ts:**
-```typescript
+\`\`\`typescript
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import path from 'path'
@@ -291,10 +291,10 @@ export default defineConfig({
     }
   }
 })
-```
+\`\`\`
 
 **package.json scripts:**
-```json
+\`\`\`json
 {
   "scripts": {
     "test": "vitest",
@@ -303,7 +303,7 @@ export default defineConfig({
     "test:watch": "vitest --watch"
   }
 }
-```
+\`\`\`
 
 ---
 
@@ -436,7 +436,7 @@ export default defineConfig({
 ## Sample Test Examples
 
 ### Example 1: Heuristic Analysis Test
-```typescript
+\`\`\`typescript
 // tests/lib/analysis/heuristic.test.ts
 import { describe, it, expect } from 'vitest'
 import { heuristicAnalysis } from '@/lib/analysis/heuristic'
@@ -480,10 +480,10 @@ describe('heuristicAnalysis', () => {
     expect(result.reason).toContain('High risk')
   })
 })
-```
+\`\`\`
 
 ### Example 2: Scraper Test
-```typescript
+\`\`\`typescript
 // tests/lib/scrapers/raw2k.test.ts
 import { describe, it, expect, vi } from 'vitest'
 import { scrapeRAW2K } from '@/lib/scrapers/raw2k'
@@ -514,14 +514,14 @@ describe('scrapeRAW2K', () => {
     })
   })
 })
-```
+\`\`\`
 
 ---
 
 ## Continuous Integration Setup
 
 ### GitHub Actions Workflow
-```yaml
+\`\`\`yaml
 # .github/workflows/test.yml
 name: Tests
 
@@ -554,7 +554,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           files: ./coverage/coverage-final.json
-```
+\`\`\`
 
 ---
 

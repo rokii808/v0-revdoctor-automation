@@ -31,7 +31,7 @@ This document tracks the enterprise-level implementation of:
 - Server-side enforcement for APIs
 
 **Features:**
-```typescript
+\`\`\`typescript
 PLAN_LIMITS = {
   trial: {
     vehicles_per_day: 10,
@@ -58,7 +58,7 @@ PLAN_LIMITS = {
     api_access: true,
   },
 }
-```
+\`\`\`
 
 **Key Functions:**
 - `checkSubscriptionStatus()` - Get full subscription status
@@ -79,7 +79,7 @@ PLAN_LIMITS = {
 - Auto-shows payment modal
 
 **Usage in Components:**
-```typescript
+\`\`\`typescript
 const { isActive, plan, canAccessFeature, checkLimit, paymentFailed } = useSubscription()
 
 // Check feature access
@@ -94,7 +94,7 @@ if (!allowed) {
   toast.error(reason)
   return
 }
-```
+\`\`\`
 
 ---
 
@@ -260,7 +260,7 @@ if (!allowed) {
 - ✅ Added Toaster with top-right position and rich colors
 
 **Implementation:**
-```typescript
+\`\`\`typescript
 import { SubscriptionProvider } from "@/components/providers/subscription-provider"
 import { PaymentReminderModal } from "@/components/modals/payment-reminder-modal"
 import { Toaster } from "sonner"
@@ -278,7 +278,7 @@ export default function RootLayout({ children }) {
     </html>
   )
 }
-```
+\`\`\`
 
 **Result:**
 - All components now have access to subscription context
@@ -291,7 +291,7 @@ export default function RootLayout({ children }) {
 
 ### Add payment_failed column to dealers table
 
-```sql
+\`\`\`sql
 ALTER TABLE dealers
 ADD COLUMN IF NOT EXISTS payment_failed BOOLEAN DEFAULT FALSE;
 
@@ -299,11 +299,11 @@ ADD COLUMN IF NOT EXISTS payment_failed BOOLEAN DEFAULT FALSE;
 CREATE INDEX IF NOT EXISTS idx_dealers_payment_failed
 ON dealers(payment_failed)
 WHERE payment_failed = TRUE;
-```
+\`\`\`
 
 ### Ensure saved_searches table exists
 
-```sql
+\`\`\`sql
 CREATE TABLE IF NOT EXISTS saved_searches (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   dealer_id UUID NOT NULL REFERENCES dealers(id) ON DELETE CASCADE,
@@ -344,7 +344,7 @@ ON saved_searches FOR DELETE
 USING (dealer_id IN (
   SELECT id FROM dealers WHERE user_id = auth.uid()
 ));
-```
+\`\`\`
 
 ---
 

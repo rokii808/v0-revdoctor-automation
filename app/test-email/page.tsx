@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Mail, Car, CheckCircle, ArrowLeft, AlertTriangle, Sparkles, RefreshCw, Shield } from 'lucide-react'
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
+import { Mail, Car, CheckCircle, ArrowLeft, AlertTriangle, Sparkles, RefreshCw, Shield, Zap } from 'lucide-react'
 import { useState } from "react"
 
 const sampleCars = [
@@ -35,6 +37,7 @@ export default function TestEmailPage() {
   const [isSending, setIsSending] = useState(false)
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null)
   const [emailError, setEmailError] = useState("")
+  const [useRealData, setUseRealData] = useState(false)
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -110,7 +113,7 @@ export default function TestEmailPage() {
 
     setIsSending(true)
     try {
-      console.log("[v0] Sending preview request via n8n...")
+      console.log(useRealData ? "[Preview] Running REAL scraper..." : "[Preview] Using mock data...")
 
       const response = await fetch("/api/preview", {
         method: "POST",
@@ -120,15 +123,17 @@ export default function TestEmailPage() {
         body: JSON.stringify({
           email: email,
           count: 2,
+          useRealData: useRealData,
         }),
       })
 
       const result = await response.json()
 
       if (response.ok) {
-        console.log("[v0] Preview email sent successfully via n8n")
+        const dataSource = result.dataSource === "real_scrape" ? "from LIVE auction scraper" : "mock data"
+        console.log(`[Preview] Email sent successfully (${dataSource})`)
         alert(
-          `✅ Success! Check your inbox at ${email}\n\nYour sample digest with 2 healthy car listings is on its way.\n\nCheck your spam folder if you don't see it within 2 minutes.`,
+          `✅ Success! Check your inbox at ${email}\n\nYour sample digest with 2 healthy car listings is on its way ${useRealData ? "(REAL SCRAPER DATA with AI analysis)" : "(demo data)"}.\n\nCheck your spam folder if you don't see it within 2 minutes.`,
         )
       } else {
         console.error("[v0] Preview send failed:", result)
@@ -200,6 +205,34 @@ export default function TestEmailPage() {
                 <p className="text-red-500 text-sm text-center">{emailError}</p>
               )}
             </div>
+
+            {/* Real Scraper Toggle */}
+            <div className="max-w-md mx-auto">
+              <div className="flex items-center justify-center space-x-3 p-4 bg-gradient-to-br from-orange-50 to-purple-50 rounded-xl border-2 border-orange-200">
+                <Label htmlFor="real-data-toggle" className="flex items-center gap-2 cursor-pointer">
+                  <Zap className={`w-5 h-5 ${useRealData ? "text-orange-600" : "text-gray-400"}`} />
+                  <span className={`font-semibold ${useRealData ? "text-orange-900" : "text-gray-600"}`}>
+                    {useRealData ? "LIVE SCRAPER MODE" : "Quick Demo (Mock Data)"}
+                  </span>
+                </Label>
+                <Switch
+                  id="real-data-toggle"
+                  checked={useRealData}
+                  onCheckedChange={setUseRealData}
+                  className="data-[state=checked]:bg-orange-600"
+                />
+              </div>
+              <p className="text-center text-sm text-muted-foreground mt-2">
+                {useRealData ? (
+                  <span className="text-orange-700">
+                    ⚡ Real scraper will analyze live auction data (~30 seconds)
+                  </span>
+                ) : (
+                  "Toggle on to use real scraper with AI analysis"
+                )}
+              </p>
+            </div>
+
             <div className="text-center">
               <Button
                 onClick={handleSendTestEmail}

@@ -55,7 +55,7 @@ We analyze **5 critical factors** weighted by importance:
 
 ### On Every Vehicle Card:
 
-```
+\`\`\`
 ┌─────────────────────────────────────────────────────┐
 │ 🎯 MARKET FIT SCORE: 87/100 ✅ STRONG BUY          │
 │                                                     │
@@ -67,11 +67,11 @@ We analyze **5 critical factors** weighted by importance:
 │ ✅ Low competition - only 2 similar listings       │
 │ ✅ High demand - 47 searches this month            │
 └─────────────────────────────────────────────────────┘
-```
+\`\`\`
 
 ### In The Dashboard Widget:
 
-```
+\`\`\`
 ┌─────────────────────────────────────────────────────┐
 │  ⚡ INVENTORY VELOCITY FORECAST                     │
 ├─────────────────────────────────────────────────────┤
@@ -83,7 +83,7 @@ We analyze **5 critical factors** weighted by importance:
 │  • +$24,000/mo in capital velocity                 │
 │  • 13x ROI on subscription                         │
 └─────────────────────────────────────────────────────┘
-```
+\`\`\`
 
 ---
 
@@ -155,7 +155,7 @@ We analyze **5 critical factors** weighted by importance:
 
 #### 1. Fetch Predictions for Vehicles
 
-```typescript
+\`\`\`typescript
 // In your vehicle list component
 const getPredictions = async (vehicles: Vehicle[]) => {
   const predictions = await Promise.all(
@@ -175,11 +175,11 @@ const getPredictions = async (vehicles: Vehicle[]) => {
   )
   return predictions
 }
-```
+\`\`\`
 
 #### 2. Display Vehicle Cards
 
-```tsx
+\`\`\`tsx
 import { VehicleCardWithPrediction } from "@/components/market-intelligence/vehicle-card-with-prediction"
 
 <div className="grid md:grid-cols-2 gap-6">
@@ -191,11 +191,11 @@ import { VehicleCardWithPrediction } from "@/components/market-intelligence/vehi
     />
   ))}
 </div>
-```
+\`\`\`
 
 #### 3. Add Velocity Forecast Widget
 
-```tsx
+\`\`\`tsx
 import { VelocityForecastWidget } from "@/components/market-intelligence/velocity-forecast-widget"
 
 <VelocityForecastWidget
@@ -206,11 +206,11 @@ import { VelocityForecastWidget } from "@/components/market-intelligence/velocit
   estimatedMonthlySavings={calculateSavings(predictions)}
   capitalVelocityImprovement={calculateImprovement(predictions)}
 />
-```
+\`\`\`
 
 ### Subscription Gating
 
-```typescript
+\`\`\`typescript
 // Already implemented in lib/subscription/check-subscription.ts
 
 PLAN_LIMITS = {
@@ -229,7 +229,7 @@ PLAN_LIMITS = {
     competitive_intel: true,     // ✅ + Advanced analytics
   },
 }
-```
+\`\`\`
 
 ---
 

@@ -14,7 +14,7 @@ You now have a complete **multi-site scraper architecture** using Inngest for ba
 
 ## Architecture Overview
 
-```
+\`\`\`
 ┌─────────────────────────────────────────────────────────┐
 │                    Inngest Platform                      │
 │  (Runs background jobs, manages retries, monitoring)    │
@@ -48,7 +48,7 @@ You now have a complete **multi-site scraper architecture** using Inngest for ba
 │  │ (healthy cars)   │  │ (dealer preferences)    │     │
 │  └──────────────────┘  └─────────────────────────┘     │
 └─────────────────────────────────────────────────────────┘
-```
+\`\`\`
 
 ---
 
@@ -107,15 +107,15 @@ You now have a complete **multi-site scraper architecture** using Inngest for ba
 
 ### 1. Install Dependencies (Already Done ✅)
 
-```bash
+\`\`\`bash
 npm install inngest --legacy-peer-deps
-```
+\`\`\`
 
 ### 2. Environment Variables
 
 Add to `.env.local`:
 
-```bash
+\`\`\`bash
 # Inngest
 INNGEST_EVENT_KEY=your-inngest-event-key
 INNGEST_SIGNING_KEY=your-inngest-signing-key
@@ -124,13 +124,13 @@ INNGEST_SIGNING_KEY=your-inngest-signing-key
 # 1. Create free account
 # 2. Create new app
 # 3. Copy Event Key and Signing Key
-```
+\`\`\`
 
 ### 3. Database Migrations
 
 Run this SQL in Supabase SQL Editor:
 
-```sql
+\`\`\`sql
 -- Create user_preferences table
 CREATE TABLE IF NOT EXISTS user_preferences (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -208,7 +208,7 @@ CREATE INDEX idx_user_preferences_dealer ON user_preferences(dealer_id);
 CREATE INDEX idx_vehicle_matches_dealer_date ON vehicle_matches(dealer_id, created_at DESC);
 CREATE INDEX idx_vehicle_matches_sent ON vehicle_matches(is_sent, sent_at);
 CREATE INDEX idx_vehicle_matches_auction_site ON vehicle_matches(auction_site);
-```
+\`\`\`
 
 ### 4. Inngest Account Setup
 
@@ -222,15 +222,15 @@ CREATE INDEX idx_vehicle_matches_auction_site ON vehicle_matches(auction_site);
 
 Start the dev server:
 
-```bash
+\`\`\`bash
 npm run dev
-```
+\`\`\`
 
 In another terminal, start Inngest Dev Server:
 
-```bash
+\`\`\`bash
 npx inngest-cli@latest dev
-```
+\`\`\`
 
 This opens http://localhost:8288 where you can:
 - See registered functions
@@ -240,7 +240,7 @@ This opens http://localhost:8288 where you can:
 
 ### 6. Test Manual Scraper
 
-```bash
+\`\`\`bash
 # Trigger manual scraper job
 curl -X POST http://localhost:3000/api/inngest \
   -H "Content-Type: application/json" \
@@ -253,7 +253,7 @@ curl -X POST http://localhost:3000/api/inngest \
       }
     }
   }'
-```
+\`\`\`
 
 Check the Inngest Dev Server UI to see job execution.
 
@@ -279,7 +279,7 @@ Every day at 6:00 AM (UTC):
 
 Trigger scraping on-demand:
 
-```typescript
+\`\`\`typescript
 // In your admin panel or API route
 import { inngest } from "@/lib/inngest/client"
 
@@ -290,11 +290,11 @@ await inngest.send({
     dealerId: "optional-dealer-id", // Specific dealer or all
   },
 })
-```
+\`\`\`
 
 ### User Preference Matching
 
-```typescript
+\`\`\`typescript
 // Example preference scoring
 const preferences = {
   preferred_makes: ["BMW", "Audi"],
@@ -314,7 +314,7 @@ const vehicle = {
 
 // calculateMatchScore returns 85% match
 // Vehicle is inserted with match_score = 85
-```
+\`\`\`
 
 ---
 
@@ -324,7 +324,7 @@ Want to add Copart or another site? Follow these steps:
 
 ### 1. Create Scraper File
 
-```typescript
+\`\`\`typescript
 // lib/scrapers/copart.ts
 import type { VehicleListing } from "./index"
 
@@ -368,11 +368,11 @@ export async function scrapeCopart(): Promise<VehicleListing[]> {
     return []
   }
 }
-```
+\`\`\`
 
 ### 2. Register in lib/scrapers/index.ts
 
-```typescript
+\`\`\`typescript
 import { scrapeCopart } from "./copart"
 
 export const AUCTION_SITES: Record<string, AuctionSiteScraper> = {
@@ -382,11 +382,11 @@ export const AUCTION_SITES: Record<string, AuctionSiteScraper> = {
   Manheim: { name: "Manheim", enabled: false, scrape: scrapeManheim },
   Copart: { name: "Copart", enabled: true, scrape: scrapeCopart }, // ✅ Added
 }
-```
+\`\`\`
 
 ### 3. Test
 
-```bash
+\`\`\`bash
 # Trigger manual scrape for Copart only
 curl -X POST http://localhost:3000/api/inngest \
   -H "Content-Type: application/json" \
@@ -398,7 +398,7 @@ curl -X POST http://localhost:3000/api/inngest \
       }
     }
   }'
-```
+\`\`\`
 
 ---
 
@@ -406,9 +406,9 @@ curl -X POST http://localhost:3000/api/inngest \
 
 ### 1. Deploy to Vercel
 
-```bash
+\`\`\`bash
 vercel --prod
-```
+\`\`\`
 
 ### 2. Configure Inngest Webhook
 
@@ -421,7 +421,7 @@ In Inngest Dashboard:
 
 In Vercel Dashboard → Settings → Environment Variables:
 
-```
+\`\`\`
 INNGEST_EVENT_KEY=...
 INNGEST_SIGNING_KEY=...
 NEXT_PUBLIC_SUPABASE_URL=...
@@ -429,7 +429,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=...
 RESEND_API_KEY=...
 OPENAI_API_KEY=...
-```
+\`\`\`
 
 ### 4. Verify Cron Job
 
@@ -457,7 +457,7 @@ In Inngest Dashboard, you should see:
 2. Inspect HTML structure of vehicle listings
 3. Update patterns in `lib/scrapers/autorola.ts`:
 
-```typescript
+\`\`\`typescript
 // Example: If Autorola uses this HTML structure:
 // <div class="car-card">
 //   <span class="car-make">BMW</span>
@@ -467,7 +467,7 @@ In Inngest Dashboard, you should see:
 const vehiclePattern = /<div class="car-card"[^>]*>(.*?)<\/div>/gs
 const makePattern = /<span class="car-make">([^<]+)<\/span>/i
 const modelPattern = /<span class="car-model">([^<]+)<\/span>/i
-```
+\`\`\`
 
 4. Test locally with Inngest Dev Server
 5. Deploy when working
@@ -490,16 +490,16 @@ You'll see:
 ### Common Issues
 
 **Issue: "Inngest client not configured"**
-```bash
+\`\`\`bash
 # Check environment variables are set
 echo $INNGEST_EVENT_KEY
 echo $INNGEST_SIGNING_KEY
 
 # Make sure they're in .env.local
-```
+\`\`\`
 
 **Issue: "No vehicles scraped"**
-```typescript
+\`\`\`typescript
 // Check scraper logs in Inngest dashboard
 // Look for error messages like:
 // "[RAW2K] Failed to parse vehicles"
@@ -507,10 +507,10 @@ echo $INNGEST_SIGNING_KEY
 
 // Add debug logging:
 console.log("[Scraper] HTML sample:", html.substring(0, 500))
-```
+\`\`\`
 
 **Issue: "Job timeout"**
-```typescript
+\`\`\`typescript
 // Inngest has 60s timeout by default
 // For long-running scrapers, increase timeout:
 
@@ -525,7 +525,7 @@ export const dailyScraperJob = inngest.createFunction(
     // ...
   }
 )
-```
+\`\`\`
 
 ---
 

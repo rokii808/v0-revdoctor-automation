@@ -18,12 +18,12 @@ This document analyzes the codebase from fundamental programming concepts to ens
 **Location:** `lib/workflow/email-digest.ts` & `lib/workflow/email-digest-demo.ts`
 
 **Problem:**
-```typescript
+\`\`\`typescript
 // BEFORE - Creates new instance on EVERY call
 function getResendClient() {
   return new Resend(process.env.RESEND_API_KEY)
 }
-```
+\`\`\`
 
 **Execution Context Issue:**
 - New Resend instance created on every function call
@@ -34,7 +34,7 @@ function getResendClient() {
 **Root Cause:** Missing closure to cache instance
 
 **Fix Applied - Singleton Pattern with Closure:**
-```typescript
+\`\`\`typescript
 // AFTER - Caches instance using closure
 let resendClient: Resend | null = null
 
@@ -53,7 +53,7 @@ function getResendClient(): Resend {
   resendClient = new Resend(process.env.RESEND_API_KEY)
   return resendClient
 }
-```
+\`\`\`
 
 **How It Works:**
 1. **Closure:** `resendClient` variable is captured in the function's lexical scope
@@ -77,7 +77,7 @@ function getResendClient(): Resend {
 **Location:** `lib/inngest/functions-demo.ts:57-61`
 
 **Problem:**
-```typescript
+\`\`\`typescript
 // BEFORE - Attempting to mutate const
 const scrapedVehicles = await step.run(...)
 
@@ -85,7 +85,7 @@ if (scrapedVehicles.length === 0) {
   const mockVehicles = getMockVehicles()
   scrapedVehicles.push(...mockVehicles)  // ❌ ERROR: Cannot mutate const
 }
-```
+\`\`\`
 
 **Scope Issue:**
 - `scrapedVehicles` declared with `const`
@@ -96,7 +96,7 @@ if (scrapedVehicles.length === 0) {
 **Root Cause:** Wrong variable declaration type
 
 **Fix Applied:**
-```typescript
+\`\`\`typescript
 // AFTER - Using let for reassignment
 let scrapedVehicles = await step.run(...)
 
@@ -105,7 +105,7 @@ if (scrapedVehicles.length === 0) {
   console.log("⚠️  [Demo] No vehicles scraped, using mock data")
   scrapedVehicles = getMockVehicles()  // ✅ Clean reassignment
 }
-```
+\`\`\`
 
 **Benefits:**
 - ✅ Clean reassignment instead of mutation
@@ -122,7 +122,7 @@ if (scrapedVehicles.length === 0) {
 **File:** `lib/workflow/email-digest.ts` & `lib/workflow/email-digest-demo.ts`
 
 **Closure Analysis:**
-```typescript
+\`\`\`typescript
 let resendClient: Resend | null = null  // Captured by closure
 
 function getResendClient(): Resend {
@@ -132,7 +132,7 @@ function getResendClient(): Resend {
   resendClient = new Resend(...)  // Modifies closure variable
   return resendClient
 }
-```
+\`\`\`
 
 **Memory Safety:**
 - ✅ **No Memory Leak:** Single instance per module, not per call
@@ -147,7 +147,7 @@ function getResendClient(): Resend {
 **File:** `components/see-it-in-action-form.tsx`
 
 **Closure Analysis:**
-```typescript
+\`\`\`typescript
 const [email, setEmail] = useState("")
 const [loading, setLoading] = useState(false)
 
@@ -157,7 +157,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   setLoading(true)
   // ... async logic
 }
-```
+\`\`\`
 
 **Memory Safety:**
 - ✅ **No Stale Closures:** Using latest state via useState setters
@@ -178,7 +178,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 **File:** `lib/inngest/functions-enhanced.ts`
 
 **Callback Pattern:**
-```typescript
+\`\`\`typescript
 const scrapeResults = await Promise.allSettled([
   scrapeRaw2k(),
   scrapeBCA(),
@@ -193,7 +193,7 @@ scrapeResults.forEach((result, index) => {
     console.error(`❌ ${siteName}: ${result.reason}`)
   }
 })
-```
+\`\`\`
 
 **Analysis:**
 - ✅ **Proper Error Handling:** allSettled doesn't reject
@@ -206,7 +206,7 @@ scrapeResults.forEach((result, index) => {
 **File:** `components/see-it-in-action-form.tsx`
 
 **Callback Pattern:**
-```typescript
+\`\`\`typescript
 try {
   const response = await fetch("/api/demo/see-action", {...})
   const data = await response.json()
@@ -221,7 +221,7 @@ try {
 } finally {
   setLoading(false)  // Always executes
 }
-```
+\`\`\`
 
 **Analysis:**
 - ✅ **Proper Try/Catch:** All async operations wrapped
@@ -245,11 +245,11 @@ try {
 ### Class Instantiation
 
 **Resend Class:**
-```typescript
+\`\`\`typescript
 // Proper singleton pattern
 let resendClient: Resend | null = null
 resendClient = new Resend(process.env.RESEND_API_KEY)
-```
+\`\`\`
 
 **Analysis:**
 - ✅ **Constructor Called Correctly:** new keyword used
@@ -257,13 +257,13 @@ resendClient = new Resend(process.env.RESEND_API_KEY)
 - ✅ **Proper Context:** this binding preserved in class methods
 
 **Inngest Class:**
-```typescript
+\`\`\`typescript
 // File: lib/inngest/client.ts
 export const inngest = new Inngest({
   id: "revvdoctor",
   name: "RevvDoctor Background Jobs",
 })
-```
+\`\`\`
 
 **Analysis:**
 - ✅ **Module-level Instance:** Safe for stateless client
@@ -278,7 +278,7 @@ export const inngest = new Inngest({
 
 **Complete Flow:**
 
-```
+\`\`\`
 1. User submits form
    ↓
 2. handleSubmit() executes
@@ -303,7 +303,7 @@ export const inngest = new Inngest({
    └─ Returns message_id
    ↓
 6. User receives email in inbox
-```
+\`\`\`
 
 **Execution Context Analysis:**
 - ✅ **Async Boundaries:** Each step properly awaited
@@ -343,7 +343,7 @@ export const inngest = new Inngest({
 ### TypeScript Analysis:
 
 **Explicit Types:**
-```typescript
+\`\`\`typescript
 // Function return types explicit
 function getResendClient(): Resend { ... }
 
@@ -359,7 +359,7 @@ export async function sendDemoEmail(data: DemoEmailData): Promise<{
   message_id?: string
   error?: string
 }> { ... }
-```
+\`\`\`
 
 **Analysis:**
 - ✅ No implicit `any` types
@@ -374,7 +374,7 @@ export async function sendDemoEmail(data: DemoEmailData): Promise<{
 ### Error Boundary Levels:
 
 **Level 1: API Endpoint**
-```typescript
+\`\`\`typescript
 try {
   const body = await req.json()
   // ... validation
@@ -383,10 +383,10 @@ try {
 } catch (error) {
   return NextResponse.json({ error: "Failed to trigger demo" }, { status: 500 })
 }
-```
+\`\`\`
 
 **Level 2: Inngest Workflow**
-```typescript
+\`\`\`typescript
 const scrapedVehicles = await step.run("scrape-sample-vehicles", async () => {
   try {
     const vehicles = await scrapeRaw2k()
@@ -396,10 +396,10 @@ const scrapedVehicles = await step.run("scrape-sample-vehicles", async () => {
     return getMockVehicles()  // Fallback
   }
 })
-```
+\`\`\`
 
 **Level 3: Email Sending**
-```typescript
+\`\`\`typescript
 try {
   const result = await sendDemoEmail({ email, vehicles })
   if (result.success) {
@@ -408,7 +408,7 @@ try {
 } catch (err) {
   return { success: false, error: err.message }
 }
-```
+\`\`\`
 
 **Pattern Analysis:**
 - ✅ **Layered Error Handling:** Errors caught at appropriate levels
@@ -460,7 +460,7 @@ try {
 ## Testing Recommendations
 
 ### Unit Tests:
-```typescript
+\`\`\`typescript
 // Test Resend singleton
 test('getResendClient returns same instance', () => {
   const client1 = getResendClient()
@@ -475,7 +475,7 @@ test('uses mock data when scraping fails', async () => {
   })
   expect(vehicles).toEqual(getMockVehicles())
 })
-```
+\`\`\`
 
 ### Integration Tests:
 - ✅ Full workflow execution

@@ -16,7 +16,7 @@ These are already added to your `.env.local` file! ✅
 
 You need to fill in the remaining environment variables. Open `.env.local` and update:
 
-```bash
+\`\`\`bash
 # Required - Get from Supabase Dashboard
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
@@ -39,16 +39,16 @@ CRON_SECRET=your_random_secure_cron_secret
 # Inngest - Already configured ✅
 INNGEST_EVENT_KEY=6WbIZSjNbAsqL3THM_9eISGsPVDGkJck5ssF2MBNTPEUePeXpMawQBcYyhbJbAVavMiZmDhm2fblNArh8QFGTg
 INNGEST_SIGNING_KEY=signkey-prod-08440fda60c5ae9f42ccd962b91c17bd45d0be9051c8249477d5953980f65a75
-```
+\`\`\`
 
 **Quick way to generate CRON_SECRET:**
-```bash
+\`\`\`bash
 # On Windows PowerShell
 -join ((48..57) + (65..90) + (97..122) | Get-Random -Count 32 | ForEach-Object {[char]$_})
 
 # On Mac/Linux
 openssl rand -hex 32
-```
+\`\`\`
 
 ### Step 2: Run Database Migrations (2 minutes)
 
@@ -61,36 +61,36 @@ openssl rand -hex 32
 7. Click **Run** (or press Cmd/Ctrl + Enter)
 
 You should see:
-```
+\`\`\`
 ✅ user_preferences created | row_count: 0
 ✅ vehicle_matches created | row_count: 0
-```
+\`\`\`
 
 ### Step 3: Start Development Servers (1 minute)
 
 **Terminal 1** - Start Next.js dev server:
-```bash
+\`\`\`bash
 cd "C:\Users\taiwo\Downloads\v0-revdoctor-automation-main (1)\v0-revdoctor-automation-main"
 npm run dev
-```
+\`\`\`
 
 Wait for:
-```
+\`\`\`
 ✓ Ready in 3.2s
 ○ Local: http://localhost:3000
-```
+\`\`\`
 
 **Terminal 2** - Start Inngest dev server:
-```bash
+\`\`\`bash
 cd "C:\Users\taiwo\Downloads\v0-revdoctor-automation-main (1)\v0-revdoctor-automation-main"
 npx inngest-cli@latest dev
-```
+\`\`\`
 
 Wait for:
-```
+\`\`\`
 ✓ Inngest dev server running!
   View functions: http://localhost:8288
-```
+\`\`\`
 
 ---
 
@@ -114,17 +114,17 @@ Wait for:
 3. Click on `manual-scraper`
 4. Click **Invoke Function**
 5. Use this test payload:
-   ```json
+   \`\`\`json
    {
      "sites": ["RAW2K"]
    }
-   ```
+   \`\`\`
 6. Click **Invoke**
 7. Watch the execution in real-time!
 
 **Option B: Via API Call**
 
-```bash
+\`\`\`bash
 curl -X POST http://localhost:3000/api/inngest/send \
   -H "Content-Type: application/json" \
   -d '{
@@ -133,7 +133,7 @@ curl -X POST http://localhost:3000/api/inngest/send \
       "sites": ["RAW2K"]
     }
   }'
-```
+\`\`\`
 
 ### Test 3: Check Results
 
@@ -155,7 +155,7 @@ After the scraper runs (should take 10-30 seconds), check Supabase:
 
 ### Manual Scraper Flow
 
-```
+\`\`\`
 1. You trigger → scraper/trigger.manual event
 2. Inngest receives event
 3. Runs scrapeAllSites() function
@@ -165,11 +165,11 @@ After the scraper runs (should take 10-30 seconds), check Supabase:
 7. Calculates match scores
 8. Inserts into vehicle_matches table
 9. Returns results
-```
+\`\`\`
 
 ### Daily Scraper Flow (Automatic)
 
-```
+\`\`\`
 1. Inngest triggers at 6:00 AM UTC daily
 2. Scrapes ALL enabled sites in parallel
 3. Gets all active dealers from database
@@ -179,7 +179,7 @@ After the scraper runs (should take 10-30 seconds), check Supabase:
    - Only saves vehicles with match_score >= 50
 5. Marks which vehicles were sent
 6. Sends email digest (if enough vehicles found)
-```
+\`\`\`
 
 ---
 
@@ -188,25 +188,25 @@ After the scraper runs (should take 10-30 seconds), check Supabase:
 ### Issue: "Inngest client not configured"
 
 **Fix:** Make sure both environment variables are set:
-```bash
+\`\`\`bash
 # Check in your terminal:
 echo $INNGEST_EVENT_KEY
 echo $INNGEST_SIGNING_KEY
 
 # Should output your keys
 # If not, restart your dev server after updating .env.local
-```
+\`\`\`
 
 ### Issue: "Failed to connect to Inngest"
 
 **Fix:** Make sure Inngest dev server is running on port 8288:
-```bash
+\`\`\`bash
 # Terminal 2:
 npx inngest-cli@latest dev
 
 # Should see:
 # ✓ Inngest dev server running at http://localhost:8288
-```
+\`\`\`
 
 ### Issue: "No vehicles scraped"
 
@@ -250,7 +250,7 @@ See `MULTI_SITE_SCRAPER_SETUP.md` for detailed instructions.
 
 Insert test preferences to see matching in action:
 
-```sql
+\`\`\`sql
 -- Run in Supabase SQL Editor
 INSERT INTO user_preferences (
   dealer_id,
@@ -268,11 +268,11 @@ VALUES (
   60000,
   ARRAY['RAW2K', 'Autorola']
 );
-```
+\`\`\`
 
 ### 3. Deploy to Vercel
 
-```bash
+\`\`\`bash
 # Install Vercel CLI
 npm i -g vercel
 
@@ -281,7 +281,7 @@ vercel --prod
 
 # Set environment variables in Vercel dashboard
 # Configure Inngest webhook: https://your-app.vercel.app/api/inngest
-```
+\`\`\`
 
 ### 4. Monitor Production
 

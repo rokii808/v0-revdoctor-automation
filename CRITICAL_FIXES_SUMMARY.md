@@ -12,18 +12,18 @@ This document summarizes all critical production oversights discovered and fixed
 **Files Affected:** 8 instances across new enterprise features
 
 #### The Problem:
-```typescript
+\`\`\`typescript
 // ❌ WRONG - Returns a Promise, not a Supabase client
 const supabase = createClient()
 await supabase.auth.getUser() // Error: Property 'auth' does not exist on type 'Promise<...>'
-```
+\`\`\`
 
 #### The Fix:
-```typescript
+\`\`\`typescript
 // ✅ CORRECT - Await the Promise to get the client
 const supabase = await createClient()
 await supabase.auth.getUser() // Works correctly
-```
+\`\`\`
 
 #### Files Fixed:
 - `app/api/export/route.ts:34`
@@ -41,15 +41,15 @@ await supabase.auth.getUser() // Works correctly
 
 #### The Problem:
 CSV exports didn't sanitize formula characters, allowing CSV injection attacks:
-```typescript
+\`\`\`typescript
 // ❌ VULNERABLE
 `"${String(field).replace(/"/g, '""')}"` // Only escapes quotes
-```
+\`\`\`
 
 If a vehicle listing URL contained `=cmd|'/c calc'!A1`, Excel would execute it.
 
 #### The Fix:
-```typescript
+\`\`\`typescript
 // ✅ SECURE - Escapes formula injection
 function escapeCSVField(value: any): string {
   let str = String(value ?? '')
@@ -65,7 +65,7 @@ function escapeCSVField(value: any): string {
 
   return `"${str.replace(/"/g, '""')}"` // Then escape quotes
 }
-```
+\`\`\`
 
 **Impact:** Protects users from malicious vehicle data executing code in their spreadsheet applications.
 
@@ -87,7 +87,7 @@ The subscription enforcement system checks for columns that don't exist:
 Created comprehensive migration: `scripts/05_add_subscription_fields.sql`
 
 **Added:**
-```sql
+\`\`\`sql
 -- Payment enforcement
 ALTER TABLE dealers ADD COLUMN payment_failed BOOLEAN DEFAULT false;
 
@@ -113,7 +113,7 @@ CREATE TABLE saved_searches (
 -- Security: Row Level Security policies
 ALTER TABLE saved_searches ENABLE ROW LEVEL SECURITY;
 -- [Comprehensive RLS policies included]
-```
+\`\`\`
 
 **Impact:** Subscription system now has all required database columns and tables.
 
@@ -124,16 +124,16 @@ ALTER TABLE saved_searches ENABLE ROW LEVEL SECURITY;
 **File:** `lib/subscription/check-subscription.ts:82`
 
 #### The Problem:
-```typescript
+\`\`\`typescript
 const paymentFailed = dealer.payment_failed === true
 // TypeScript thinks this could be: boolean | null
-```
+\`\`\`
 
 #### The Fix:
-```typescript
+\`\`\`typescript
 const paymentFailed: boolean = dealer.payment_failed === true
 // Explicit type annotation ensures it's always boolean
-```
+\`\`\`
 
 **Impact:** Resolves TypeScript build errors in subscription system.
 
@@ -149,10 +149,10 @@ const paymentFailed: boolean = dealer.payment_failed === true
 **Reason:** DummySupabaseClient interface doesn't fully match PostgrestFilterBuilder chain
 
 **Example:**
-```typescript
+\`\`\`typescript
 error TS2339: Property 'eq' does not exist on type
   'Promise<...> | PostgrestFilterBuilder<...>'
-```
+\`\`\`
 
 **Status:** Non-blocking - These only appear when Supabase env vars are missing (development mode)
 **Fix Required:** Improve DummySupabaseClient type definitions OR ensure Supabase is always configured
@@ -162,7 +162,7 @@ error TS2339: Property 'eq' does not exist on type
 **Issue:** No validation that required env vars are set
 
 **Recommendation:**
-```typescript
+\`\`\`typescript
 // Add to lib/env-validation.ts
 const requiredEnvVars = [
   'NEXT_PUBLIC_SUPABASE_URL',
@@ -179,7 +179,7 @@ export function validateEnv() {
     throw new Error(`Missing required environment variables: ${missing.join(', ')}`)
   }
 }
-```
+\`\`\`
 
 #### 3. No Error Boundaries
 **Impact:** Any component error crashes entire app
@@ -193,12 +193,12 @@ export function validateEnv() {
 **Recommendation:** Add middleware with rate limiting (e.g., `@upstash/ratelimit`)
 
 #### 5. Missing Indexes for Performance
-```sql
+\`\`\`sql
 -- Recommended indexes
 CREATE INDEX idx_saved_searches_dealer_id ON saved_searches(dealer_id);
 CREATE INDEX idx_subscriptions_user_id ON subscriptions(user_id);
 CREATE INDEX idx_subscriptions_stripe_customer ON subscriptions(stripe_customer_id);
-```
+\`\`\`
 
 ---
 
@@ -207,7 +207,7 @@ CREATE INDEX idx_subscriptions_stripe_customer ON subscriptions(stripe_customer_
 ### Before Deploying to Production:
 
 #### 1. Database Migration (REQUIRED)
-```bash
+\`\`\`bash
 # Connect to your production database
 psql -h your-db-host -U your-user -d your-database
 
@@ -217,11 +217,11 @@ psql -h your-db-host -U your-user -d your-database
 # Verify columns were added
 \d dealers
 \d saved_searches
-```
+\`\`\`
 
 #### 2. Environment Variables (REQUIRED)
 Ensure `.env.production` has:
-```bash
+\`\`\`bash
 NEXT_PUBLIC_SUPABASE_URL=...
 NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=...
@@ -231,13 +231,13 @@ STRIPE_SECRET_KEY=...
 STRIPE_WEBHOOK_SECRET=...
 INNGEST_EVENT_KEY=...
 INNGEST_SIGNING_KEY=...
-```
+\`\`\`
 
 #### 3. Build Test (REQUIRED)
-```bash
+\`\`\`bash
 npm run build
 # Should complete without errors
-```
+\`\`\`
 
 #### 4. Staging Testing (RECOMMENDED)
 - [ ] Test subscription enforcement

@@ -4,11 +4,12 @@ import { scrapeRAW2K } from "../scrapers/raw2k"
 import { scrapeBCA } from "../scrapers/bca"
 import { scrapeAutorola } from "../scrapers/autorola"
 import { scrapeManheim } from "../scrapers/manheim"
-import { classifyVehiclesWithAI } from "../analysis/ai-classifier"
+import { classifyVehiclesWithAI } from "../analysis/ai-classifier-enhanced" // Use enhanced classifier
 import { matchVehiclesToDealers, getMatchStats, type VehicleMatch } from "../workflow/preference-matcher"
 import { sendDigestBatch, getDigestStats } from "../workflow/email-digest"
 import type { VehicleListing } from "../scrapers/index"
 import type { DigestRecipient } from "../workflow/email-digest"
+import type { Dealer } from "../types"
 
 // Initialize Supabase client with service role key for background jobs
 // Use placeholders for build time, will fail at runtime if actually used without the keys
@@ -207,11 +208,14 @@ export const dailyScraperJobEnhanced = inngest.createFunction(
             year: match.year,
             price: match.price,
             mileage: match.mileage,
+            condition: match.condition,
             auction_site: match.auction_site,
-            url: match.url,
+            listing_url: match.url, // Database field is listing_url, not url
+            image_url: match.images && match.images.length > 0 ? match.images[0] : null, // Save first image
             match_score: match.match_score,
-            match_reasons: match.match_reasons,
-            ai_classification: match.ai_classification,
+            verdict: match.ai_classification?.verdict, // Flatten AI classification to match schema
+            reason: match.ai_classification?.reason, // AI classification reason
+            profit_estimate: match.ai_classification?.profit_potential,
             created_at: new Date().toISOString(),
           })
         }

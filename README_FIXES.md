@@ -77,17 +77,17 @@
 ### 🚨 Fix TODAY (Before ANY production traffic):
 
 1. **Remove "dev-secret" fallback** - Anyone can trigger your scraper
-   ```typescript
+   \`\`\`typescript
    // ❌ Current (DANGEROUS)
    const CRON_SECRET = process.env.CRON_SECRET || "dev-secret"
 
    // ✅ Fixed (SAFE)
    const CRON_SECRET = process.env.CRON_SECRET
    if (!CRON_SECRET) throw new Error("CRON_SECRET required")
-   ```
+   \`\`\`
 
 2. **Enable Row Level Security (RLS)** - Users can access other users' data
-   ```sql
+   \`\`\`sql
    -- Run in Supabase SQL Editor
    ALTER TABLE dealers ENABLE ROW LEVEL SECURITY;
    ALTER TABLE healthy_cars ENABLE ROW LEVEL SECURITY;
@@ -97,19 +97,19 @@
      ON dealers FOR SELECT
      USING (auth.uid() = user_id);
    -- (See SECURITY_AUDIT.md for all policies)
-   ```
+   \`\`\`
 
 3. **Add Rate Limiting** - Prevent abuse of demo endpoint
-   ```bash
+   \`\`\`bash
    npm install @upstash/ratelimit @upstash/redis
-   ```
+   \`\`\`
 
 4. **Verify Stripe Webhook Signature** - Prevent fake payment confirmations
-   ```typescript
+   \`\`\`typescript
    // Check app/api/stripe/webhook/route.ts has this:
    const sig = request.headers.get("stripe-signature")
    const event = stripe.webhooks.constructEvent(body, sig, webhookSecret)
-   ```
+   \`\`\`
 
 5. **Enable Email Verification** - Prevent spam
    - Supabase Dashboard → Authentication → Settings → Enable "Confirm email"
@@ -153,13 +153,13 @@ See IMPLEMENTATION_CHECKLIST.md "Phase 1"
 ## Quick Start (What to Do Right Now)
 
 ### 1. Database Setup (15 minutes)
-```sql
+\`\`\`sql
 -- Go to Supabase Dashboard → SQL Editor
 -- Copy and run SQL from IMPLEMENTATION_CHECKLIST.md Phase 1.1
-```
+\`\`\`
 
 ### 2. Environment Variables (5 minutes)
-```bash
+\`\`\`bash
 # Copy template
 cp .env.example .env.local
 
@@ -169,10 +169,10 @@ cp .env.example .env.local
 # - SUPABASE_SERVICE_ROLE_KEY
 # - RESEND_API_KEY
 # - CRON_SECRET (generate random: openssl rand -hex 32)
-```
+\`\`\`
 
 ### 3. Test Demo Endpoint (2 minutes)
-```bash
+\`\`\`bash
 npm run dev
 
 # In another terminal:
@@ -181,7 +181,7 @@ curl -X POST http://localhost:3000/api/demo/scrape \
   -d '{"email":"your-email@example.com"}'
 
 # Check your email!
-```
+\`\`\`
 
 ### 4. Fix Critical Security (30 minutes)
 - [ ] Run RLS SQL from SECURITY_AUDIT.md
@@ -223,31 +223,31 @@ curl -X POST http://localhost:3000/api/demo/scrape \
 ### Common Issues
 
 **Q: "Supabase not configured" error**
-```bash
+\`\`\`bash
 # Check these are set in .env.local:
 NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
-```
+\`\`\`
 
 **Q: "Failed to fetch preferences" error**
-```sql
+\`\`\`sql
 -- Run this in Supabase SQL Editor:
 SELECT * FROM user_preferences; -- Should return empty or error
 -- If error, table doesn't exist - run Phase 1.1 SQL
-```
+\`\`\`
 
 **Q: "Demo email not sent"**
-```bash
+\`\`\`bash
 # Check Resend API key is set:
 echo $RESEND_API_KEY
 # Should output: re_xxxxx
 
 # Check Resend dashboard for errors:
 # https://resend.com/logs
-```
+\`\`\`
 
 **Q: "Scraper returns 0 vehicles"**
-```bash
+\`\`\`bash
 # Check console logs - should see:
 # "[v0] Fetched X characters from RAW2K"
 # "[v0] Sample HTML: ..." (if no matches found)
@@ -255,7 +255,7 @@ echo $RESEND_API_KEY
 # RAW2K may have changed HTML structure
 # Inspect https://www.raw2k.co.uk/vehicles manually
 # Update regex patterns in scrape-raw2k/route.ts
-```
+\`\`\`
 
 ---
 

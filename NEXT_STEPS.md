@@ -40,7 +40,7 @@ Your multi-site scraper is now **production-ready** with these improvements:
 
 Open `.env.local` and add your Supabase credentials:
 
-```bash
+\`\`\`bash
 # Already configured ✅
 INNGEST_EVENT_KEY=6WbIZSjNbAsqL3THM_9eISGsPVDGkJck5ssF2MBNTPEUePeXpMawQBcYyhbJbAVavMiZmDhm2fblNArh8QFGTg
 INNGEST_SIGNING_KEY=signkey-prod-08440fda60c5ae9f42ccd962b91c17bd45d0be9051c8249477d5953980f65a75
@@ -56,7 +56,7 @@ CRON_SECRET=<random-32-characters>
 # Optional (for now):
 OPENAI_API_KEY=sk-...
 RESEND_API_KEY=re_...
-```
+\`\`\`
 
 **Where to find Supabase keys:**
 1. Go to https://supabase.com/dashboard
@@ -65,18 +65,18 @@ RESEND_API_KEY=re_...
 4. Copy the values
 
 **Generate CRON_SECRET (PowerShell):**
-```powershell
+\`\`\`powershell
 -join ((48..57) + (65..90) + (97..122) | Get-Random -Count 32 | ForEach-Object {[char]$_})
-```
+\`\`\`
 
 ---
 
 ### Step 2: Install Dependencies (1 minute)
 
-```bash
+\`\`\`bash
 cd "C:\Users\taiwo\Downloads\v0-revdoctor-automation-main (1)\v0-revdoctor-automation-main"
 npm install
-```
+\`\`\`
 
 This ensures `cheerio` and `inngest` are installed locally.
 
@@ -85,16 +85,16 @@ This ensures `cheerio` and `inngest` are installed locally.
 ### Step 3: Test Locally (5 minutes)
 
 #### Terminal 1 - Start Next.js
-```bash
+\`\`\`bash
 npm run dev
-```
+\`\`\`
 
 Wait for: `✓ Ready in X seconds`
 
 #### Terminal 2 - Start Inngest Dev Server
-```bash
+\`\`\`bash
 npx inngest-cli@latest dev
-```
+\`\`\`
 
 Wait for: `✓ Inngest dev server running at http://localhost:8288`
 
@@ -108,11 +108,11 @@ Wait for: `✓ Inngest dev server running at http://localhost:8288`
 3. Click on `manual-scraper`
 4. Click **Invoke Function**
 5. Use this test payload:
-   ```json
+   \`\`\`json
    {
      "sites": ["RAW2K"]
    }
-   ```
+   \`\`\`
 6. Click **Invoke**
 7. Watch the execution in real-time!
 
@@ -147,14 +147,14 @@ Wait for: `✓ Inngest dev server running at http://localhost:8288`
 ### Deployment Steps
 
 #### 1. Install Vercel CLI
-```bash
+\`\`\`bash
 npm install -g vercel
-```
+\`\`\`
 
 #### 2. Deploy
-```bash
+\`\`\`bash
 vercel --prod
-```
+\`\`\`
 
 Follow the prompts:
 - Link to existing project? **No**
@@ -188,7 +188,7 @@ Add all variables from `.env.local`:
 
 Add to `vercel.json` (if it doesn't exist, create it):
 
-```json
+\`\`\`json
 {
   "crons": [
     {
@@ -197,7 +197,7 @@ Add to `vercel.json` (if it doesn't exist, create it):
     }
   ]
 }
-```
+\`\`\`
 
 This triggers the scraper at 6 AM daily as a backup to Inngest.
 
@@ -214,7 +214,7 @@ This triggers the scraper at 6 AM daily as a backup to Inngest.
 - `components/onboarding/preferences-form.tsx` - Form component
 
 **Features:**
-```typescript
+\`\`\`typescript
 // User selects:
 - Preferred makes (BMW, Audi, Mercedes, etc.)
 - Preferred models (3 Series, A4, C-Class, etc.)
@@ -223,7 +223,7 @@ This triggers the scraper at 6 AM daily as a backup to Inngest.
 - Max mileage (60,000 miles)
 - Auction sites (RAW2K, Autorola, BCA, Manheim)
 - Email frequency (Daily, Weekly, Instant)
-```
+\`\`\`
 
 **API endpoint already exists:**
 - `POST /api/preferences` - Create/update preferences
@@ -265,7 +265,7 @@ Update the daily email to use the new system:
 **File to modify:** `app/api/cron/send-daily-digest/route.ts`
 
 **Changes needed:**
-```typescript
+\`\`\`typescript
 // 1. Query vehicle_matches instead of healthy_cars
 const { data: vehicles } = await supabase
   .from("vehicle_matches")
@@ -295,7 +295,7 @@ if (filteredVehicles.length >= preferences.min_vehicles_to_send) {
     .update({ is_sent: true, sent_at: new Date().toISOString() })
     .in("id", vehicleIds)
 }
-```
+\`\`\`
 
 ---
 
@@ -304,7 +304,7 @@ if (filteredVehicles.length >= preferences.min_vehicles_to_send) {
 See `SECURITY_AUDIT.md` for all 19 vulnerabilities. Fix these **Priority 1** items:
 
 #### Remove "dev-secret" Fallback
-```typescript
+\`\`\`typescript
 // ❌ Bad (current in old cron routes)
 const CRON_SECRET = process.env.CRON_SECRET || "dev-secret"
 
@@ -313,14 +313,14 @@ const authHeader = request.headers.get("authorization")
 if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
   return new NextResponse("Unauthorized", { status: 401 })
 }
-```
+\`\`\`
 
 #### Add Rate Limiting
-```bash
+\`\`\`bash
 npm install @upstash/ratelimit @upstash/redis
-```
+\`\`\`
 
-```typescript
+\`\`\`typescript
 import { Ratelimit } from "@upstash/ratelimit"
 import { Redis } from "@upstash/redis"
 
@@ -334,7 +334,7 @@ const { success } = await ratelimit.limit(identifier)
 if (!success) {
   return new NextResponse("Too Many Requests", { status: 429 })
 }
-```
+\`\`\`
 
 #### Enable Email Verification
 1. Go to Supabase Dashboard → **Authentication** → **Settings**
@@ -346,11 +346,11 @@ if (!success) {
 ## 📊 Performance Optimization (Optional)
 
 ### Add Caching
-```bash
+\`\`\`bash
 npm install @vercel/kv
-```
+\`\`\`
 
-```typescript
+\`\`\`typescript
 import { kv } from "@vercel/kv"
 
 // Cache scraper results for 1 hour
@@ -359,10 +359,10 @@ if (cached) return cached
 
 const vehicles = await scrapeSite(site)
 await kv.set(`scraper:${site}`, vehicles, { ex: 3600 })
-```
+\`\`\`
 
 ### Add Pagination
-```typescript
+\`\`\`typescript
 // In dashboard, add pagination
 const page = searchParams.get("page") || "1"
 const limit = 20
@@ -371,7 +371,7 @@ const { data, count } = await supabase
   .from("vehicle_matches")
   .select("*", { count: "exact" })
   .range((page - 1) * limit, page * limit - 1)
-```
+\`\`\`
 
 ---
 
@@ -446,11 +446,11 @@ Track these to measure success:
 ### Issue: "Duplicate vehicles"
 **Cause:** No unique constraint on listing_id
 **Fix:** Add unique constraint in migration:
-```sql
+\`\`\`sql
 ALTER TABLE vehicle_matches
 ADD CONSTRAINT unique_listing
 UNIQUE (auction_site, listing_id);
-```
+\`\`\`
 
 ---
 
