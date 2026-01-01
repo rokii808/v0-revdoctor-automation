@@ -89,46 +89,46 @@ export default function HomePage() {
       {/* Hero Section with Car Grid Layout */}
       <section className="py-32 px-6 hero-bg-motion bg-gradient-to-br from-slate-50 via-white to-orange-50/20 relative overflow-hidden min-h-[900px]">
         {/* Background Cars and People */}
-        {/* Top Left - Dealer with Volvo XC90 */}
-        <div className="absolute left-0 top-20 w-[400px] h-[500px] hidden lg:block">
+        {/* Top Left - Professional with luxury SUV */}
+        <div className="absolute left-0 top-20 w-[420px] h-[520px] hidden lg:block z-0">
           <img
-            src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"
-            alt="Professional dealer with luxury SUV"
-            className="w-full h-full object-contain"
+            src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=80"
+            alt="Professional with luxury SUV"
+            className="w-full h-full object-cover rounded-2xl"
           />
         </div>
 
-        {/* Top Right - Dealer with Bentley */}
-        <div className="absolute right-0 top-20 w-[400px] h-[500px] hidden lg:block">
+        {/* Top Right - Professional with luxury sedan */}
+        <div className="absolute right-0 top-20 w-[420px] h-[520px] hidden lg:block z-0">
           <img
-            src="https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=800&q=80"
+            src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=900&q=80"
             alt="Professional with luxury sedan"
+            className="w-full h-full object-cover rounded-2xl"
+          />
+        </div>
+
+        {/* Bottom Left - Mercedes-AMG front view */}
+        <div className="absolute left-0 bottom-0 w-[480px] h-[360px] hidden lg:block z-0">
+          <img
+            src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1000&q=80"
+            alt="Mercedes-AMG luxury performance car"
             className="w-full h-full object-contain"
           />
         </div>
 
-        {/* Bottom Left - Mercedes-AMG */}
-        <div className="absolute left-0 bottom-0 w-[450px] h-[350px] hidden lg:block">
+        {/* Bottom Center - Professional dealer standing with car */}
+        <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-[380px] h-[480px] hidden md:block z-0">
           <img
-            src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=900&q=80"
-            alt="Mercedes-AMG luxury car"
-            className="w-full h-full object-contain"
+            src="https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&w=800&q=80"
+            alt="Professional car dealer standing with luxury vehicle"
+            className="w-full h-full object-cover rounded-2xl"
           />
         </div>
 
-        {/* Bottom Center - Dealer with Mercedes */}
-        <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-[350px] h-[400px] hidden md:block">
+        {/* Bottom Right - Ford Mustang */}
+        <div className="absolute right-0 bottom-0 w-[480px] h-[360px] hidden lg:block z-0">
           <img
-            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80"
-            alt="Business professional"
-            className="w-full h-full object-contain"
-          />
-        </div>
-
-        {/* Bottom Right - Mustang */}
-        <div className="absolute right-0 bottom-0 w-[450px] h-[350px] hidden lg:block">
-          <img
-            src="https://images.unsplash.com/photo-1584345604325-9d8f8e182551?auto=format&fit=crop&w=900&q=80"
+            src="https://images.unsplash.com/photo-1584345604325-9d8f8e182551?auto=format&fit=crop&w=1000&q=80"
             alt="Ford Mustang sports car"
             className="w-full h-full object-contain"
           />
