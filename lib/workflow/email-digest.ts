@@ -18,7 +18,7 @@ function getResendClient(): Resend {
   }
 
   // Create and cache new instance (closure captures this variable)
-  resendClient = new Resend(process.env.RESEND_API_KEY)
+  resendClient = new Resend(process.env.RESEND_API_KEY || "re_placeholder_for_build")
   return resendClient
 }
 
@@ -391,7 +391,7 @@ function buildVehicleCard(vehicle: VehicleMatch): string {
     price,
     mileage,
     auction_site,
-    listing_url,
+    url: listing_url,
     match_score,
     match_reasons,
     ai_classification,

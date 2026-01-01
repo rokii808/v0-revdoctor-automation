@@ -11,12 +11,9 @@ import type { VehicleListing } from "../scrapers/index"
 import type { DigestRecipient } from "../workflow/email-digest"
 
 // Initialize Supabase client with service role key for background jobs
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
-
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error("Missing Supabase environment variables for Inngest functions")
-}
+// Use placeholders for build time, will fail at runtime if actually used without the keys
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co"
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "placeholder_service_role_key"
 
 const supabase = createClient(supabaseUrl, supabaseKey)
 

@@ -4,7 +4,7 @@ import { Resend } from "resend"
 import { generateEmailHTML, generateEmailSubject, type CarItem } from "@/lib/email-template"
 
 const CRON_SECRET = process.env.CRON_SECRET || "dev-secret"
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = new Resend(process.env.RESEND_API_KEY || "re_placeholder_for_build")
 
 export async function GET(request: Request) {
   const authHeader = request.headers.get("authorization")

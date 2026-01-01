@@ -1,15 +1,13 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from 'next/navigation'
-import DashboardHeader from "@/components/dashboard/dashboard-header"
-import DashboardStats from "@/components/dashboard/dashboard-stats"
-import PreferencesCard from "@/components/dashboard/preferences-card"
-import SubscriptionCard from "@/components/dashboard/subscription-card"
-import AchievementsCard from "@/components/dashboard/achievements-card"
-import TodaysHealthyCars from "@/components/dashboard/todays-healthy-cars"
-import AlertsFeed from "@/components/dashboard/alerts-feed"
-import SavedSearches from "@/components/dashboard/saved-searches"
-import EmailSettings from "@/components/dashboard/email-settings"
-import ExportOptions from "@/components/dashboard/export-options"
+import { DashboardShell } from "@/components/dashboard/dashboard-shell"
+import { StatsCards } from "@/components/dashboard/stats-cards"
+import { VehicleGrid } from "@/components/dashboard/vehicle-grid"
+import { ActivityFeed, generateMockActivities } from "@/components/dashboard/activity-feed"
+import { QuickActions } from "@/components/dashboard/quick-actions"
+import { UsageOverview } from "@/components/dashboard/usage-overview"
+import { getPlanConfig, type PlanTier } from "@/lib/plans/config"
+import { getUsageStats } from "@/lib/plans/usage-tracker"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -34,7 +32,11 @@ export default async function DashboardPage() {
   }
 
   // Get or create dealer profile
-  let { data: dealer, error: dealerError } = await supabase.from("dealers").select("*").eq("user_id", user.id).single()
+  let { data: dealer, error: dealerError } = await supabase
+    .from("dealers")
+    .select("*")
+    .eq("user_id", user.id)
+    .single()
 
   // If no dealer profile exists, create one
   if (!dealer || dealerError) {
@@ -47,6 +49,7 @@ export default async function DashboardPage() {
         email: user.email!,
         subscription_status: subscription?.status || "trial",
         subscription_expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        plan: "trial",
       })
       .select()
       .single()
@@ -58,121 +61,152 @@ export default async function DashboardPage() {
     }
   }
 
-  // Get recent leads with error handling
-  const { data: recentLeads, error: leadsError } = await supabase
-    .from("leads")
-    .select("*")
-    .eq("dealer_id", dealer?.id || '')
-    .order("created_at", { ascending: false })
-    .limit(7)
+  // Determine plan tier
+  const planTier: PlanTier = (dealer?.plan as PlanTier) || 'trial'
+  const planConfig = getPlanConfig(planTier)
 
-  if (leadsError) {
-    console.error("[Dashboard] Error fetching leads:", leadsError.message)
-  }
+  // Get usage stats
+  const usageStats = dealer?.id
+    ? await getUsageStats(dealer.id, planTier)
+    : {
+        viewedToday: 0,
+        limit: 3,
+        remaining: 3,
+        canView: true,
+        percentage: 0,
+        resetAt: new Date(),
+      }
 
-  // Get today's healthy cars with error handling
+  // Get today's healthy cars
+  const today = new Date().toISOString().split('T')[0]
   const { data: healthyCars, error: healthyCarsError } = await supabase
     .from("vehicle_matches")
     .select("*")
     .eq("dealer_id", dealer?.id || '')
-    .gte("created_at", new Date().toISOString().split("T")[0])
-    .order("created_at", { ascending: false })
-    .limit(50)
+    .gte("created_at", `${today}T00:00:00`)
+    .order("match_score", { ascending: false })
+    .limit(planConfig.features.dailyCarLimit)
 
   if (healthyCarsError) {
     console.error("[Dashboard] Error fetching healthy cars:", healthyCarsError.message)
   }
 
-  // Get alerts with error handling
-  const { data: alerts, error: alertsError } = await supabase
-    .from("car_alerts")
-    .select("*")
+  // Get total vehicles found this week
+  const weekAgo = new Date()
+  weekAgo.setDate(weekAgo.getDate() - 7)
+  const weeklyResult = await supabase
+    .from("vehicle_matches")
+    .select("*", { count: 'exact', head: true })
     .eq("dealer_id", dealer?.id || '')
-    .eq("is_read", false)
-    .order("created_at", { ascending: false })
-    .limit(10)
+    .gte("created_at", weekAgo.toISOString())
+  const weeklyCount = (weeklyResult as any).count
 
-  if (alertsError) {
-    console.error("[Dashboard] Error fetching alerts:", alertsError.message)
+  // Get total healthy cars all time
+  const totalResult = await supabase
+    .from("vehicle_matches")
+    .select("*", { count: 'exact', head: true })
+    .eq("dealer_id", dealer?.id || '')
+  const totalHealthy = (totalResult as any).count
+
+  // Calculate stats
+  const stats = {
+    todaysCars: healthyCars?.length || 0,
+    weeklyScans: weeklyCount || 0,
+    totalHealthy: totalHealthy || 0,
+    averageRoi: healthyCars && healthyCars.length > 0
+      ? Math.round(
+          healthyCars
+            .filter((car: any) => car.ai_classification?.profit_potential)
+            .reduce((sum: number, car: any) => sum + (car.ai_classification?.profit_potential || 0), 0) /
+          healthyCars.length
+        )
+      : 0,
   }
 
-  // Get saved searches with error handling
-  const { data: savedSearches, error: searchesError } = await supabase
-    .from("saved_searches")
-    .select("*")
-    .eq("dealer_id", dealer?.id || '')
-    .order("created_at", { ascending: false })
+  // Transform vehicle data for VehicleGrid
+  const vehicles = (healthyCars || []).map((match: any) => ({
+    id: match.vehicle_id || match.id,
+    make: match.vehicle_data?.make || 'Unknown',
+    model: match.vehicle_data?.model || 'Unknown',
+    year: match.vehicle_data?.year || 2020,
+    price: match.vehicle_data?.price || 0,
+    mileage: match.vehicle_data?.mileage || 0,
+    location: match.vehicle_data?.location,
+    image_url: match.vehicle_data?.image_url,
+    url: match.vehicle_data?.url || match.listing_url,
+    condition: match.vehicle_data?.condition,
+    ai_classification: {
+      verdict: match.ai_classification?.verdict || 'REVIEW',
+      profit_potential: match.ai_classification?.profit_potential,
+      confidence: match.match_score ? Math.round(match.match_score * 100) : undefined,
+      issues: match.ai_classification?.issues,
+    },
+    viewed: false,
+  }))
 
-  if (searchesError) {
-    console.error("[Dashboard] Error fetching saved searches:", searchesError.message)
-  }
-
-  // Check if this is the user's first login (for welcome message)
-  const isFirstLogin = !dealer?.last_login_at || new Date(dealer.last_login_at).getTime() > Date.now() - 60000
+  // Generate activity feed (using mock data for now - replace with real activity later)
+  const activities = generateMockActivities()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-orange-50/20">
-      <DashboardHeader user={user} dealer={dealer} />
+    <DashboardShell
+      user={user}
+      dealer={dealer}
+      planTier={planTier}
+      usageStats={usageStats}
+    >
+      {/* Main Content Area */}
+      <div className="space-y-8">
+        {/* Stats Overview */}
+        <StatsCards
+          todaysCars={stats.todaysCars}
+          weeklyScans={stats.weeklyScans}
+          totalHealthy={stats.totalHealthy}
+          averageRoi={stats.averageRoi}
+          planTier={planTier}
+        />
 
-      <main className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* Welcome Banner */}
-        <div className="mb-8">
-          <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-3xl p-8 shadow-2xl shadow-orange-500/20 text-white">
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <div>
-                <h1 className="text-4xl font-bold mb-2">
-                  {isFirstLogin ? "Welcome" : "Welcome back"}, {dealer?.dealer_name || "Dealer"}! 🎉
-                </h1>
-                <p className="text-orange-100 text-lg">
-                  {isFirstLogin
-                    ? "Your dashboard is ready! Start exploring the best car deals from today's auctions."
-                    : "Here's your RevvDoctor dashboard with the latest healthy car picks and insights."}
-                </p>
-              </div>
-              {isFirstLogin && (
-                <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-6 py-4 border border-white/30">
-                  <p className="text-sm font-medium text-orange-50 mb-1">Quick Tip</p>
-                  <p className="text-sm text-white">
-                    Check "Today's Healthy Cars" below to see your personalized recommendations
-                  </p>
-                </div>
-              )}
+        {/* Main Grid Layout */}
+        <div className="grid lg:grid-cols-3 gap-6">
+          {/* Left Column - Main Content (2/3 width) */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Section Header */}
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">Today's Healthy Cars</h2>
+              <p className="text-slate-600">
+                AI-verified vehicles that match your criteria and have strong profit potential
+              </p>
+            </div>
+
+            {/* Vehicle Grid */}
+            <VehicleGrid
+              vehicles={vehicles}
+              planTier={planTier}
+              canViewMore={usageStats.canView}
+            />
+
+            {/* Activity Feed */}
+            <div className="pt-6">
+              <ActivityFeed
+                activities={activities}
+                compact={false}
+              />
             </div>
           </div>
-        </div>
 
-        <div className="grid gap-6 mb-8">
-          <DashboardStats dealer={dealer} recentLeads={recentLeads || []} />
-        </div>
-
-        <div className="grid lg:grid-cols-4 gap-6">
-          <div className="lg:col-span-3">
-            {/* Today's Healthy Cars - Main feature */}
-            <TodaysHealthyCars dealer={dealer} healthyCars={healthyCars || []} />
-
-            {/* Alerts Feed */}
-            <div className="mt-6">
-              <AlertsFeed dealer={dealer} alerts={alerts || []} />
-            </div>
-          </div>
-
+          {/* Right Column - Sidebar (1/3 width) */}
           <div className="space-y-6">
-            {/* Email Settings */}
-            <EmailSettings dealer={dealer} />
+            {/* Usage Overview */}
+            <UsageOverview
+              planTier={planTier}
+              stats={usageStats}
+              compact={false}
+            />
 
-            {/* Saved Searches */}
-            <SavedSearches dealer={dealer} savedSearches={savedSearches || []} />
-
-            {/* Export Options */}
-            <ExportOptions dealer={dealer} />
-
-            {/* Existing cards */}
-            <AchievementsCard dealer={dealer} />
-            <PreferencesCard dealer={dealer} />
-            <SubscriptionCard dealer={dealer} />
+            {/* Quick Actions */}
+            <QuickActions />
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </DashboardShell>
   )
 }

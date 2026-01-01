@@ -3,7 +3,7 @@ import { Resend } from "resend"
 import { demoRequestSchema, calculateMatchScore } from "@/lib/types/preferences"
 import { z } from "zod"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = new Resend(process.env.RESEND_API_KEY || "re_placeholder_for_build")
 
 // Mock vehicles for demo (replace with actual scraper call)
 const DEMO_VEHICLES = [

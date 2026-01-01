@@ -71,7 +71,7 @@ export async function POST(request: Request) {
 
     console.log("[v0] Email content rendered, subject:", subject)
 
-    const resend = new Resend(process.env.RESEND_API_KEY)
+    const resend = new Resend(process.env.RESEND_API_KEY || "re_placeholder_for_build")
 
     const result = await resend.emails.send({
       from: "Revvdoctor <onboarding@resend.dev>",
