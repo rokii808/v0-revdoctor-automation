@@ -86,54 +86,8 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* Hero Section with Car Grid Layout */}
-      <section className="py-32 px-6 hero-bg-motion bg-gradient-to-br from-slate-50 via-white to-orange-50/20 relative overflow-hidden min-h-[900px]">
-        {/* Background Cars and People */}
-        {/* Top Left - Professional with Volvo SUV */}
-        <div className="absolute left-0 top-20 w-[420px] h-[500px] hidden lg:block z-0">
-          <img
-            src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=900&q=80"
-            alt="Professional with Volvo luxury SUV"
-            className="w-full h-full object-contain bg-white"
-          />
-        </div>
-
-        {/* Top Right - Professional with Bentley */}
-        <div className="absolute right-0 top-20 w-[420px] h-[500px] hidden lg:block z-0">
-          <img
-            src="https://images.unsplash.com/photo-1617788138017-2332a441e683?auto=format&fit=crop&w=900&q=80"
-            alt="Professional with Bentley luxury sedan"
-            className="w-full h-full object-contain bg-white"
-          />
-        </div>
-
-        {/* Bottom Left - Mercedes-AMG front view */}
-        <div className="absolute left-0 bottom-0 w-[500px] h-[380px] hidden lg:block z-0">
-          <img
-            src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1000&q=80"
-            alt="Mercedes-AMG luxury performance car"
-            className="w-full h-full object-contain bg-white"
-          />
-        </div>
-
-        {/* Bottom Center - Professional in suit with Mercedes */}
-        <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-[400px] h-[500px] hidden md:block z-0">
-          <img
-            src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80"
-            alt="Professional businessman with Mercedes sedan"
-            className="w-full h-full object-contain bg-white"
-          />
-        </div>
-
-        {/* Bottom Right - Ford Mustang */}
-        <div className="absolute right-0 bottom-0 w-[500px] h-[380px] hidden lg:block z-0">
-          <img
-            src="https://images.unsplash.com/photo-1584345604476-8ec5f8f447a2?auto=format&fit=crop&w=1000&q=80"
-            alt="Ford Mustang sports car"
-            className="w-full h-full object-contain bg-white"
-          />
-        </div>
-
+      {/* Hero Section */}
+      <section className="py-32 px-6 hero-bg-motion bg-gradient-to-br from-slate-50 via-white to-orange-50/20 relative overflow-hidden">
         <div className="container mx-auto text-center max-w-5xl relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 backdrop-blur-sm border border-orange-100 shadow-sm mb-8 animate-fade-in signal-pill-pulse">
             <span className="relative flex h-3 w-3">
@@ -192,6 +146,57 @@ export default function HomePage() {
           >
             <p className="text-sm text-slate-500 mb-4 font-medium">Trusted by 100+ dealerships across the UK</p>
           </motion.div>
+
+          {/* Rising Cards Animation on Scroll */}
+          <div className="grid md:grid-cols-3 gap-8 mt-20">
+            <motion.div
+              className="bg-white p-8 rounded-3xl shadow-lg border border-slate-200"
+              initial={{ opacity: 0, y: 100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+            >
+              <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6">
+                <Filter className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">AI-Powered Filtering</h3>
+              <p className="text-slate-600 leading-relaxed">
+                Smart algorithms filter thousands of listings to show only the cars that match your exact criteria.
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="bg-white p-8 rounded-3xl shadow-lg border border-slate-200"
+              initial={{ opacity: 0, y: 100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true, margin: "-50px" }}
+            >
+              <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6">
+                <Shield className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Verified Conditions</h3>
+              <p className="text-slate-600 leading-relaxed">
+                Every vehicle is automatically screened for condition issues before reaching your inbox.
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="bg-white p-8 rounded-3xl shadow-lg border border-slate-200"
+              initial={{ opacity: 0, y: 100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true, margin: "-50px" }}
+            >
+              <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6">
+                <Zap className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Instant Updates</h3>
+              <p className="text-slate-600 leading-relaxed">
+                Get real-time notifications when new vehicles matching your preferences hit the market.
+              </p>
+            </motion.div>
+          </div>
         </div>
       </section>
 
