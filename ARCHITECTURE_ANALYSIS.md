@@ -12,13 +12,13 @@ Your Revvdoctor application follows a **multi-tenant architecture** where a sing
 ## Evidence of Multi-Tenant Architecture
 
 ### 1. **Shared Application Instance**
-```
+\`\`\`
 All dealers access: https://your-domain.com
 ├── Single Next.js application
 ├── Single codebase deployment
 ├── Shared infrastructure (Vercel/hosting)
 └── Same application version for all users
-```
+\`\`\`
 
 **NOT single-tenant because:**
 - You don't have separate application instances per dealer
@@ -31,7 +31,7 @@ All dealers access: https://your-domain.com
 
 **Database Structure (Supabase PostgreSQL):**
 
-```sql
+\`\`\`sql
 -- Single shared database
 ├── dealers table
 │   ├── id (primary key)
@@ -55,7 +55,7 @@ All dealers access: https://your-domain.com
     ├── user_id ← TENANT IDENTIFIER
     ├── stripe_customer_id
     └── status
-```
+\`\`\`
 
 **Multi-tenant characteristics:**
 - ✅ All dealers' data in the same database
@@ -71,7 +71,7 @@ All dealers access: https://your-domain.com
 
 ### 3. **Shared Authentication Service**
 
-```typescript
+\`\`\`typescript
 // All dealers use the same Supabase Auth instance
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,  // Same for all
@@ -80,7 +80,7 @@ const supabase = createClient(
 
 // Authentication is per-user, not per-instance
 const { data: { user } } = await supabase.auth.getUser()
-```
+\`\`\`
 
 **Multi-tenant because:**
 - Single Supabase project serves all dealers
@@ -92,7 +92,7 @@ const { data: { user } } = await supabase.auth.getUser()
 ### 4. **Shared Background Jobs**
 
 **Inngest Functions:**
-```typescript
+\`\`\`typescript
 // lib/inngest/functions.ts
 export const dailyScraperJob = inngest.createFunction(
   { id: "daily-scraper" },
@@ -113,7 +113,7 @@ export const dailyScraperJob = inngest.createFunction(
     }
   }
 )
-```
+\`\`\`
 
 **Multi-tenant because:**
 - Single scraper instance runs for all dealers
@@ -129,7 +129,7 @@ export const dailyScraperJob = inngest.createFunction(
 
 ### 5. **Shared Payment Processing**
 
-```typescript
+\`\`\`typescript
 // All dealers use the same Stripe account
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
@@ -140,7 +140,7 @@ export async function POST(req: NextRequest) {
   // Routes to specific customer via metadata
   const userId = session.client_reference_id
 }
-```
+\`\`\`
 
 **Multi-tenant because:**
 - Single Stripe account serves all dealers
@@ -151,7 +151,7 @@ export async function POST(req: NextRequest) {
 
 ## Multi-Tenant Architecture Diagram
 
-```
+\`\`\`
 ┌─────────────────────────────────────────────────────────────┐
 │                    INTERNET / USERS                          │
 └────────────────┬────────────────────────────────────────────┘
@@ -214,7 +214,7 @@ export async function POST(req: NextRequest) {
 │  • INSERT: WHERE dealer_id = auth.uid()                     │
 │  • UPDATE: WHERE dealer_id = auth.uid()                     │
 └─────────────────────────────────────────────────────────────┘
-```
+\`\`\`
 
 ---
 
@@ -224,7 +224,7 @@ export async function POST(req: NextRequest) {
 
 Your multi-tenant architecture relies on **Row-Level Security** for data isolation:
 
-```sql
+\`\`\`sql
 -- Example RLS policy
 CREATE POLICY "Users can only see their own vehicles"
 ON vehicle_matches
@@ -234,7 +234,7 @@ USING (dealer_id = (SELECT id FROM dealers WHERE user_id = auth.uid()));
 -- In practice, your queries do this:
 SELECT * FROM vehicle_matches
 WHERE dealer_id = current_user_dealer_id;
-```
+\`\`\`
 
 **How it works:**
 1. User logs in → Gets `user_id` in JWT token
@@ -288,14 +288,14 @@ WHERE dealer_id = current_user_dealer_id;
 **Issue:** One dealer's heavy usage affects others
 
 **Your Risk Areas:**
-```typescript
+\`\`\`typescript
 // Heavy scraping could slow database for all
 const vehicles = await scrapeAllSites() // 1000s of inserts
 
 // Large dealer could monopolize resources
 SELECT * FROM vehicle_matches
 WHERE dealer_id = 'heavy-user' // Returns 50,000 rows
-```
+\`\`\`
 
 **Mitigation Strategies:**
 - ✅ Rate limiting per dealer
@@ -307,7 +307,7 @@ WHERE dealer_id = 'heavy-user' // Returns 50,000 rows
 **Issue:** Critical to prevent data leakage between tenants
 
 **Your Current Protection:**
-```typescript
+\`\`\`typescript
 // ✅ GOOD: Uses authenticated user
 const { data: { user } } = await supabase.auth.getUser()
 const vehicles = await supabase
@@ -319,7 +319,7 @@ const vehicles = await supabase
 const vehicles = await supabase
   .from("vehicle_matches")
   .select("*") // No filter = sees everyone's data
-```
+\`\`\`
 
 **Best Practices:**
 - ✅ Always filter by `user_id` or `dealer_id`
@@ -390,7 +390,7 @@ You'd consider single-tenant if:
 
 Some SaaS platforms offer **both** models:
 
-```
+\`\`\`
 Multi-Tenant (Standard Plans)
 ├── Basic: £29/month
 ├── Startup: £59/month
@@ -405,7 +405,7 @@ Single-Tenant (Enterprise)
     └── Dedicated application instance
     └── Custom domain
     └── SLA guarantees
-```
+\`\`\`
 
 This could be your **Enterprise** tier in the future!
 
@@ -432,7 +432,7 @@ This could be your **Enterprise** tier in the future!
 
 ## Your Architecture Stack
 
-```
+\`\`\`
 ┌─────────────────────────────────────────┐
 │  FRONTEND (Shared)                      │
 │  • Next.js 15                           │
@@ -475,7 +475,7 @@ This could be your **Enterprise** tier in the future!
 │  • Resend (emails)                      │
 │  • Web scrapers                         │
 └─────────────────────────────────────────┘
-```
+\`\`\`
 
 ---
 

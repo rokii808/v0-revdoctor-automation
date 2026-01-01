@@ -3,7 +3,7 @@
 ## Phase 1: Database Setup (Critical - Do First)
 
 ### 1.1 Run SQL Migrations in Supabase
-```sql
+\`\`\`sql
 -- Copy and run ALL SQL from SECURITY_AUDIT.md section "Priority 1"
 -- Then add these new tables:
 
@@ -96,7 +96,7 @@ CREATE POLICY "Users can update own preferences"
 CREATE POLICY "Users can view own vehicle matches"
   ON vehicle_matches FOR SELECT
   USING (auth.uid() = user_id);
-```
+\`\`\`
 
 **Checklist:**
 - [ ] Run migrations in Supabase SQL Editor
@@ -109,7 +109,7 @@ CREATE POLICY "Users can view own vehicle matches"
 ## Phase 2: Environment Variables
 
 ### 2.1 Update .env.local
-```bash
+\`\`\`bash
 # Copy from .env.example and fill in:
 
 # Supabase (Required)
@@ -133,13 +133,13 @@ CRON_SECRET=generate_a_random_32_character_string_here
 
 # Base URL
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
-```
+\`\`\`
 
 **Generate CRON_SECRET:**
-```bash
+\`\`\`bash
 # Run in terminal:
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-```
+\`\`\`
 
 **Checklist:**
 - [ ] All environment variables set
@@ -156,10 +156,10 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 - [ ] Verify no "dev-secret" fallback in code
 
 ### 3.2 Add Rate Limiting
-```bash
+\`\`\`bash
 # Install dependencies
 npm install @upstash/ratelimit @upstash/redis
-```
+\`\`\`
 
 Create Upstash Redis (free tier):
 1. Go to https://upstash.com/
@@ -189,7 +189,7 @@ Create Upstash Redis (free tier):
 ### 4.1 Demo "See It In Action" Feature
 
 **Frontend Component:**
-```typescript
+\`\`\`typescript
 // components/landing/demo-form.tsx
 "use client"
 
@@ -245,10 +245,10 @@ export function DemoForm() {
     </form>
   )
 }
-```
+\`\`\`
 
 Add to landing page:
-```typescript
+\`\`\`typescript
 // app/page.tsx
 import { DemoForm } from "@/components/landing/demo-form"
 
@@ -258,7 +258,7 @@ import { DemoForm } from "@/components/landing/demo-form"
   <p>Enter your email to receive a sample daily digest</p>
   <DemoForm />
 </section>
-```
+\`\`\`
 
 **Checklist:**
 - [ ] Demo form component created
@@ -269,7 +269,7 @@ import { DemoForm } from "@/components/landing/demo-form"
 ### 4.2 User Onboarding Preferences
 
 **Frontend Component:**
-```typescript
+\`\`\`typescript
 // app/onboarding/page.tsx
 "use client"
 
@@ -349,7 +349,7 @@ export default function OnboardingPage() {
     </form>
   )
 }
-```
+\`\`\`
 
 **Checklist:**
 - [ ] Onboarding page created
@@ -360,7 +360,7 @@ export default function OnboardingPage() {
 ### 4.3 Dashboard Integration
 
 Update dashboard to show vehicle_matches instead of healthy_cars:
-```typescript
+\`\`\`typescript
 // app/dashboard/page.tsx (UPDATE)
 const { data: healthyCars, error: healthyCarsError } = await supabase
   .from("vehicle_matches") // Changed from healthy_cars
@@ -369,7 +369,7 @@ const { data: healthyCars, error: healthyCarsError } = await supabase
   .gte("created_at", new Date().toISOString().split("T")[0])
   .order("match_score", { ascending: false }) // Sort by match score
   .limit(50)
-```
+\`\`\`
 
 **Checklist:**
 - [ ] Dashboard reads from vehicle_matches
@@ -389,7 +389,7 @@ Setup checklist:
 - [ ] Test email sent successfully
 
 ### 5.2 Daily Digest Cron Job
-```typescript
+\`\`\`typescript
 // app/api/cron/send-daily-digests/route.ts (UPDATE)
 // Use the existing file, but update logic to:
 // 1. Get users with email_enabled=true
@@ -397,7 +397,7 @@ Setup checklist:
 // 3. Filter by user preferences
 // 4. Send email if count >= min_vehicles_to_send
 // 5. Mark as is_sent=true
-```
+\`\`\`
 
 **Checklist:**
 - [ ] Daily digest cron implemented
@@ -410,7 +410,7 @@ Setup checklist:
 
 ### 6.1 Vercel Cron Jobs
 Create `vercel.json`:
-```json
+\`\`\`json
 {
   "crons": [
     {
@@ -423,7 +423,7 @@ Create `vercel.json`:
     }
   ]
 }
-```
+\`\`\`
 
 **Checklist:**
 - [ ] vercel.json created
@@ -468,7 +468,7 @@ Recommended tools:
 
 ## Quick Start Commands
 
-```bash
+\`\`\`bash
 # Install dependencies
 npm install
 
@@ -492,7 +492,7 @@ curl -X POST http://localhost:3000/api/demo/scrape \
 # Test cron manually
 curl -H "Authorization: Bearer YOUR_CRON_SECRET" \
   http://localhost:3000/api/cron/scrape-raw2k
-```
+\`\`\`
 
 ---
 

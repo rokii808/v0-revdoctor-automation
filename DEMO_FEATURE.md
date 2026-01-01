@@ -22,7 +22,7 @@ The "See It in Action" demo feature allows **anyone** to experience Revvdoctor's
 
 ## How It Works
 
-```
+\`\`\`
 User visits /demo
     ↓
 Enters email address
@@ -38,7 +38,7 @@ Inngest workflow executes:
     4. Send demo email via Resend
     ↓
 User receives email in 2-3 minutes
-```
+\`\`\`
 
 ---
 
@@ -56,12 +56,12 @@ User receives email in 2-3 minutes
 - Real-time feedback
 
 **Usage:**
-```tsx
+\`\`\`tsx
 import { SeeItInActionForm } from "@/components/see-it-in-action-form"
 
 // In any page
 <SeeItInActionForm />
-```
+\`\`\`
 
 ### 2. Demo Page
 
@@ -82,27 +82,27 @@ import { SeeItInActionForm } from "@/components/see-it-in-action-form"
 **Endpoint:** `POST /api/demo/see-action`
 
 **Request:**
-```json
+\`\`\`json
 {
   "email": "user@example.com"
 }
-```
+\`\`\`
 
 **Response (Success):**
-```json
+\`\`\`json
 {
   "success": true,
   "message": "Demo email will be sent shortly! Check your inbox in 2-3 minutes.",
   "email": "user@example.com"
 }
-```
+\`\`\`
 
 **Response (Error):**
-```json
+\`\`\`json
 {
   "error": "Invalid email format"
 }
-```
+\`\`\`
 
 **Validation:**
 - Email required
@@ -239,7 +239,7 @@ User arrives at `/demo` page via:
 ## Configuration
 
 ### Environment Variables (Already Set):
-```bash
+\`\`\`bash
 # OpenAI (required)
 OPENAI_API_KEY=sk-xxxxx
 
@@ -249,7 +249,7 @@ RESEND_API_KEY=re_xxxxx
 # Inngest (required)
 INNGEST_EVENT_KEY=xxxxx
 INNGEST_SIGNING_KEY=xxxxx
-```
+\`\`\`
 
 **Note:** All variables already configured from enhanced workflow setup!
 
@@ -266,14 +266,14 @@ INNGEST_SIGNING_KEY=xxxxx
 ### Test the Full Flow:
 
 1. **Start Development Server:**
-```bash
+\`\`\`bash
 npm run dev
-```
+\`\`\`
 
 2. **Visit Demo Page:**
-```
+\`\`\`
 http://localhost:3000/demo
-```
+\`\`\`
 
 3. **Submit Form:**
 - Enter your email
@@ -296,11 +296,11 @@ http://localhost:3000/demo
 ### Test Error Handling:
 
 **Invalid Email:**
-```bash
+\`\`\`bash
 # Submit form with invalid email
 test@test  # Missing domain extension
 # Should show: "Invalid email format"
-```
+\`\`\`
 
 **Scraper Failure:**
 - Function falls back to mock vehicles
@@ -340,21 +340,21 @@ test@test  # Missing domain extension
 ### Change Number of Vehicles:
 
 **In `functions-demo.ts`:**
-```typescript
+\`\`\`typescript
 // Line 37: Change sample size
 const sampleVehicles = vehicles.slice(0, 5) // Change 5 to desired number
 
 // Line 100: Change demo email count
 const top2 = sorted.slice(0, 2) // Change 2 to desired number
-```
+\`\`\`
 
 ### Change Scraper Source:
 
 **In `functions-demo.ts`:**
-```typescript
+\`\`\`typescript
 // Line 39: Change scraper
 const vehicles = await scrapeRaw2k() // Change to scrapeBCA(), etc.
-```
+\`\`\`
 
 ### Customize Email Template:
 
@@ -390,9 +390,9 @@ const vehicles = await scrapeRaw2k() // Change to scrapeBCA(), etc.
 ## Marketing Use Cases
 
 ### 1. Landing Page CTA
-```tsx
+\`\`\`tsx
 <SeeItInActionForm />
-```
+\`\`\`
 
 ### 2. Pricing Page Teaser
 "Not sure yet? [Try it free](#demo)"

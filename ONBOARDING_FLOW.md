@@ -25,7 +25,7 @@ This document describes the complete user authentication and onboarding flow for
 **URL:** `/auth/callback`
 
 **Logic:**
-```typescript
+\`\`\`typescript
 if (no dealer profile exists) {
   → Redirect to /onboarding (NEW USER)
 } else if (trial active) {
@@ -35,7 +35,7 @@ if (no dealer profile exists) {
 } else {
   → Redirect to /pricing (NEEDS SUBSCRIPTION)
 }
-```
+\`\`\`
 
 ---
 
@@ -57,7 +57,7 @@ if (no dealer profile exists) {
 
 **What happens on click:**
 1. Creates dealer profile in `dealers` table:
-   ```typescript
+   \`\`\`typescript
    {
      user_id: userId,
      email: userEmail,
@@ -65,7 +65,7 @@ if (no dealer profile exists) {
      subscription_expires_at: Date.now() + 7 days,
      selected_plan: "startup", // User's choice
    }
-   ```
+   \`\`\`
 2. Sets trial expiry to 7 days from now
 3. Advances to Step 3
 
@@ -78,7 +78,7 @@ if (no dealer profile exists) {
 
 **What happens on save:**
 1. Saves preferences to Supabase:
-   ```typescript
+   \`\`\`typescript
    await savePrefs(userId, {
      makes: ["BMW", "Audi"],
      minYear: 2015,
@@ -87,7 +87,7 @@ if (no dealer profile exists) {
      maxBid: 15000,
      locations: ["London", "Manchester"]
    })
-   ```
+   \`\`\`
 2. Updates dealer profile with year/bid preferences
 3. Redirects to `/dashboard?onboarding=complete`
 
@@ -115,7 +115,7 @@ if (no dealer profile exists) {
 ### Trial Expiry
 **Checked in:** `middleware.ts`
 
-```typescript
+\`\`\`typescript
 if (subscription_status === "trial") {
   if (trial_expires_at > now) {
     // Allow dashboard access
@@ -123,7 +123,7 @@ if (subscription_status === "trial") {
     // Redirect to /pricing?trial_expired=true
   }
 }
-```
+\`\`\`
 
 ### After Trial Ends
 - User redirected to `/pricing?trial_expired=true`
@@ -136,7 +136,7 @@ if (subscription_status === "trial") {
 ## Database Schema
 
 ### dealers table
-```sql
+\`\`\`sql
 CREATE TABLE dealers (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID REFERENCES auth.users(id) UNIQUE,
@@ -149,10 +149,10 @@ CREATE TABLE dealers (
   max_bid INTEGER DEFAULT 15000,
   created_at TIMESTAMP DEFAULT NOW()
 );
-```
+\`\`\`
 
 ### dealers_v2 table (preferences)
-```sql
+\`\`\`sql
 CREATE TABLE dealers_v2 (
   id UUID PRIMARY KEY REFERENCES dealers(id),
   prefs JSONB DEFAULT '{
@@ -164,7 +164,7 @@ CREATE TABLE dealers_v2 (
     "locations": []
   }'::jsonb
 );
-```
+\`\`\`
 
 ---
 
@@ -192,7 +192,7 @@ CREATE TABLE dealers_v2 (
 
 ## Complete Flow Diagram
 
-```
+\`\`\`
 ┌─────────────────────────────────────────────────────────────┐
 │                         Landing Page (/)                       │
 └─────────────────┬───────────────────────────────────────────┘
@@ -252,7 +252,7 @@ CREATE TABLE dealers_v2 (
 │  After Trial Expires (Day 8+):                                │
 │  → Redirect to /pricing?trial_expired=true                    │
 └───────────────────────────────────────────────────────────────┘
-```
+\`\`\`
 
 ---
 

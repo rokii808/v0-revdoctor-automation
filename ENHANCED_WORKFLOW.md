@@ -31,7 +31,7 @@ This document describes the complete enhanced workflow that replaces basic heuri
 
 ## Workflow Architecture
 
-```
+\`\`\`
 ┌─────────────────────────────────────────────────────────────┐
 │                   ENHANCED DAILY WORKFLOW                    │
 │                                                               │
@@ -103,7 +103,7 @@ This document describes the complete enhanced workflow that replaces basic heuri
 │  ├─ Track: duration, dealers, vehicles, matches, emails     │
 │  └─ Output: Complete workflow metrics                       │
 └─────────────────────────────────────────────────────────────┘
-```
+\`\`\`
 
 ---
 
@@ -114,19 +114,19 @@ This document describes the complete enhanced workflow that replaces basic heuri
 **Purpose:** Get all dealers eligible for today's scraping
 
 **Query:**
-```sql
+\`\`\`sql
 SELECT id, user_id, email, dealer_name, subscription_status,
        subscription_expires_at, selected_plan, min_year, max_bid, prefs
 FROM dealers
 WHERE subscription_status IN ('active', 'trial')
-```
+\`\`\`
 
 **Filtering:**
 - Active subscriptions: Always included
 - Trial subscriptions: Only if `subscription_expires_at > NOW()`
 
 **Output Example:**
-```typescript
+\`\`\`typescript
 [
   {
     id: "dealer-1",
@@ -142,7 +142,7 @@ WHERE subscription_status IN ('active', 'trial')
     }
   }
 ]
-```
+\`\`\`
 
 ---
 
@@ -166,14 +166,14 @@ WHERE subscription_status IN ('active', 'trial')
    - Target: Major auction house
 
 **Parallel Execution:**
-```typescript
+\`\`\`typescript
 const results = await Promise.allSettled([
   scrapeRaw2k(),
   scrapeBCA(),
   scrapeAutorola(),
   scrapeManheim()
 ])
-```
+\`\`\`
 
 **Error Handling:**
 - Failed scraper doesn't block others
@@ -181,7 +181,7 @@ const results = await Promise.allSettled([
 - Empty results are skipped
 
 **Output:**
-```typescript
+\`\`\`typescript
 [
   {
     make: "BMW",
@@ -196,7 +196,7 @@ const results = await Promise.allSettled([
   },
   // ... more vehicles
 ]
-```
+\`\`\`
 
 ---
 
@@ -212,7 +212,7 @@ const results = await Promise.allSettled([
 - **Fallback:** If AI fails, use heuristic analysis
 
 **AI Prompt Structure:**
-```typescript
+\`\`\`typescript
 You are RevDoctor, an expert car auction analyst for UK dealers.
 
 VEHICLE DETAILS:
@@ -235,10 +235,10 @@ Respond ONLY with JSON:
   "repair_cost_estimate": estimated repair cost in pounds,
   "profit_potential": estimated profit after repairs in pounds
 }
-```
+\`\`\`
 
 **Response Example:**
-```json
+\`\`\`json
 {
   "verdict": "HEALTHY",
   "minor_fault_type": "Body",
@@ -248,7 +248,7 @@ Respond ONLY with JSON:
   "repair_cost_estimate": 2000,
   "profit_potential": 3500
 }
-```
+\`\`\`
 
 **Statistics Logged:**
 - Total vehicles classified
@@ -313,7 +313,7 @@ Respond ONLY with JSON:
 **Final Score:** Clamped to 0-100
 
 **Example:**
-```typescript
+\`\`\`typescript
 {
   vehicle: {
     make: "BMW",
@@ -330,7 +330,7 @@ Respond ONLY with JSON:
     "Preferred make"
   ]
 }
-```
+\`\`\`
 
 ---
 
@@ -341,7 +341,7 @@ Respond ONLY with JSON:
 **Table:** `vehicle_matches`
 
 **Schema:**
-```sql
+\`\`\`sql
 CREATE TABLE vehicle_matches (
   id UUID PRIMARY KEY,
   dealer_id UUID REFERENCES dealers(id),
@@ -357,7 +357,7 @@ CREATE TABLE vehicle_matches (
   ai_classification JSONB,  -- Full AI response
   created_at TIMESTAMP
 )
-```
+\`\`\`
 
 **Batch Insert:**
 - Insert 500 records at a time
@@ -391,11 +391,11 @@ CREATE TABLE vehicle_matches (
 - "Your Daily Vehicle Digest" title
 
 **Summary:**
-```
+\`\`\`
 Good morning, John!
 We found 5 healthy vehicles matching your preferences today.
 Showing top 10 matches
-```
+\`\`\`
 
 **Vehicle Cards (Top 10):**
 Each card includes:
@@ -413,7 +413,7 @@ Each card includes:
 - Unsubscribe link
 
 **Example Vehicle Card:**
-```html
+\`\`\`html
 ┌─────────────────────────────────────────────┐
 │ 2019 BMW 3 Series              [88% Match]  │
 ├─────────────────────────────────────────────┤
@@ -434,7 +434,7 @@ Each card includes:
 ├─────────────────────────────────────────────┤
 │           [View Listing →]                  │
 └─────────────────────────────────────────────┘
-```
+\`\`\`
 
 **Delivery:**
 - Service: Resend
@@ -455,7 +455,7 @@ Each card includes:
 **Table:** `workflow_stats`
 
 **Metrics Logged:**
-```typescript
+\`\`\`typescript
 {
   workflow_id: "inngest-event-id",
   run_date: "2025-12-29T06:00:00Z",
@@ -469,7 +469,7 @@ Each card includes:
   emails_sent: 22,
   emails_failed: 0
 }
-```
+\`\`\`
 
 **Used For:**
 - Admin dashboard charts
@@ -482,12 +482,12 @@ Each card includes:
 ## Error Handling & Retry Logic
 
 ### Inngest Retry Configuration:
-```typescript
+\`\`\`typescript
 {
   id: "daily-scraper-enhanced",
   retries: 3  // Retry entire workflow up to 3 times
 }
-```
+\`\`\`
 
 ### Per-Step Error Handling:
 
@@ -515,7 +515,7 @@ Each card includes:
 
 ## Environment Variables Required
 
-```bash
+\`\`\`bash
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=eyJxxx...
@@ -529,7 +529,7 @@ RESEND_API_KEY=re_xxx...
 # Inngest (existing)
 INNGEST_EVENT_KEY=xxx
 INNGEST_SIGNING_KEY=xxx
-```
+\`\`\`
 
 **Critical:** All variables must be configured in:
 1. ✅ Local `.env.local`
@@ -565,7 +565,7 @@ INNGEST_SIGNING_KEY=xxx
 Validates all services and environment variables:
 
 **Trigger:**
-```bash
+\`\`\`bash
 # Via Inngest dashboard
 Send event: "workflow/health-check"
 
@@ -574,7 +574,7 @@ POST /api/inngest
 {
   "name": "workflow/health-check"
 }
-```
+\`\`\`
 
 **Checks:**
 - ✅ NEXT_PUBLIC_SUPABASE_URL exists
@@ -585,7 +585,7 @@ POST /api/inngest
 - ✅ OpenAI key format valid
 
 **Response:**
-```json
+\`\`\`json
 {
   "healthy": true,
   "checks": {
@@ -597,13 +597,13 @@ POST /api/inngest
     "OpenAI Key Format": true
   }
 }
-```
+\`\`\`
 
 ### Manual Trigger:
 Test the workflow manually without waiting for cron:
 
 **Trigger:**
-```bash
+\`\`\`bash
 # Via Inngest dashboard
 Send event: "scraper/manual-trigger"
 {
@@ -611,7 +611,7 @@ Send event: "scraper/manual-trigger"
     "admin_user_id": "your-user-id"
   }
 }
-```
+\`\`\`
 
 ---
 

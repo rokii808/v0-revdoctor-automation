@@ -2,16 +2,16 @@
 
 ## System Overview
 
-```
+\`\`\`
 User Signs Up → Sets Preferences → Daily Scraper Runs → Matches Preferences → Email Digest
                                                                               ↓
                                                                        Dashboard View
-```
+\`\`\`
 
 ## Database Schema (Enhanced)
 
 ### 1. User Preferences Table
-```sql
+\`\`\`sql
 CREATE TABLE user_preferences (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -40,10 +40,10 @@ CREATE TABLE user_preferences (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
-```
+\`\`\`
 
 ### 2. Auction Sites Configuration Table
-```sql
+\`\`\`sql
 CREATE TABLE auction_sites (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   site_name TEXT UNIQUE NOT NULL, -- 'RAW2K', 'Autorola', 'BCA'
@@ -56,10 +56,10 @@ CREATE TABLE auction_sites (
   scraper_config JSONB, -- Store site-specific config
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
-```
+\`\`\`
 
 ### 3. Scraper Jobs Table (Job Queue)
-```sql
+\`\`\`sql
 CREATE TABLE scraper_jobs (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   auction_site_id UUID REFERENCES auction_sites(id),
@@ -70,10 +70,10 @@ CREATE TABLE scraper_jobs (
   error_message TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
-```
+\`\`\`
 
 ### 4. Vehicle Matches Table (Optimized)
-```sql
+\`\`\`sql
 CREATE TABLE vehicle_matches (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -113,12 +113,12 @@ CREATE TABLE vehicle_matches (
 CREATE INDEX idx_vehicle_matches_user ON vehicle_matches(user_id, is_sent);
 CREATE INDEX idx_vehicle_matches_dealer ON vehicle_matches(dealer_id, created_at);
 CREATE INDEX idx_vehicle_matches_listing ON vehicle_matches(listing_id);
-```
+\`\`\`
 
 ## Workflow Implementation
 
 ### 1. User Onboarding Flow
-```typescript
+\`\`\`typescript
 // app/api/onboarding/preferences/route.ts
 POST /api/onboarding/preferences
 {
@@ -128,10 +128,10 @@ POST /api/onboarding/preferences
   "enabled_auction_sites": ["RAW2K", "BCA"],
   "email_frequency": "daily"
 }
-```
+\`\`\`
 
 ### 2. Demo/Preview Flow (Non-registered users)
-```typescript
+\`\`\`typescript
 // app/api/preview/demo-scrape/route.ts
 POST /api/preview/demo-scrape
 {
@@ -143,10 +143,10 @@ POST /api/preview/demo-scrape
 }
 
 // Response: Send immediate email with sample vehicles
-```
+\`\`\`
 
 ### 3. Daily Scraper Cron Job
-```typescript
+\`\`\`typescript
 // Runs at 6 AM daily
 GET /api/cron/scrape-all-sites
 Authorization: Bearer CRON_SECRET
@@ -158,10 +158,10 @@ Flow:
 4. For each vehicle, match against ALL user preferences
 5. Insert matches into vehicle_matches table
 6. Trigger email digest job
-```
+\`\`\`
 
 ### 4. Email Digest Cron Job
-```typescript
+\`\`\`typescript
 // Runs at 7 AM daily (after scraper)
 GET /api/cron/send-daily-digests
 Authorization: Bearer CRON_SECRET
@@ -171,7 +171,7 @@ Flow:
 2. For each user, get unsent vehicle_matches from last 24h
 3. If count >= min_vehicles_to_send, send email
 4. Mark vehicles as is_sent=true
-```
+\`\`\`
 
 ## Scraper Strategy
 
@@ -212,17 +212,17 @@ Flow:
 ## Security & Performance Improvements
 
 ### 1. Rate Limiting
-```typescript
+\`\`\`typescript
 // Prevent abuse of demo scrape endpoint
 import { Ratelimit } from "@upstash/ratelimit"
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
   limiter: Ratelimit.slidingWindow(3, "1 h"), // 3 requests per hour
 })
-```
+\`\`\`
 
 ### 2. Job Queue (Recommended: Inngest or Trigger.dev)
-```typescript
+\`\`\`typescript
 // Instead of synchronous scraping in API route
 import { inngest } from "./inngest/client"
 
@@ -233,12 +233,12 @@ inngest.createFunction(
     // Scrape in background, with retries
   }
 )
-```
+\`\`\`
 
 ### 3. Caching Strategy
-```typescript
+\`\`\`typescript
 // Cache scraper results for 1 hour to avoid re-scraping
 const cacheKey = `scraper:${siteName}:${date}`
 const cached = await redis.get(cacheKey)
 if (cached) return cached
-```
+\`\`\`

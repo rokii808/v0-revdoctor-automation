@@ -108,4 +108,3 @@ function parsePrice(priceStr: string | null): number {
   if (!priceStr) return 0
   return Number.parseInt(priceStr.replace(/[^\d.]/g, ""))
 }
-

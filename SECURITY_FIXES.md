@@ -17,9 +17,9 @@ This document details the security vulnerabilities identified and fixed in the c
 
 **Vulnerability:**
 Multiple cron endpoint files used insecure fallback values:
-```typescript
+\`\`\`typescript
 const CRON_SECRET = process.env.CRON_SECRET || "dev-secret"
-```
+\`\`\`
 
 **Risk:**
 - Attackers could predict the CRON_SECRET in production if environment variable was not set
@@ -33,7 +33,7 @@ const CRON_SECRET = process.env.CRON_SECRET || "dev-secret"
 - `app/api/cron/scrape-all-sites/route.ts`
 
 **Fix Applied:**
-```typescript
+\`\`\`typescript
 const CRON_SECRET = process.env.CRON_SECRET
 
 // Validate before use
@@ -41,7 +41,7 @@ if (!CRON_SECRET) {
   console.error("[CRON] CRON_SECRET environment variable not set")
   return NextResponse.json({ error: "Server configuration error" }, { status: 500 })
 }
-```
+\`\`\`
 
 **Impact:** Server will now fail safely if CRON_SECRET is not configured, preventing unauthorized access.
 
@@ -54,14 +54,14 @@ if (!CRON_SECRET) {
 **Vulnerability:**
 The dashboard API accepted `userId` as a query parameter without verifying the authenticated user owned that data:
 
-```typescript
+\`\`\`typescript
 // VULNERABLE CODE
 const userId = searchParams.get("userId")
 const { data: insights } = await supabase
   .from("insights")
   .select("*")
   .eq("user_id", userId) // User could pass ANY userId!
-```
+\`\`\`
 
 **Risk:**
 - Any authenticated user could access other users' data
@@ -73,7 +73,7 @@ const { data: insights } = await supabase
 - `app/api/dashboard/route.ts`
 
 **Fix Applied:**
-```typescript
+\`\`\`typescript
 // SECURE CODE
 const { data: { user }, error: authError } = await supabase.auth.getUser()
 
@@ -84,7 +84,7 @@ if (authError || !user) {
 
 // Use authenticated user's ID only
 const userId = user.id
-```
+\`\`\`
 
 **Impact:** Users can now only access their own dashboard data.
 
@@ -97,7 +97,7 @@ const userId = user.id
 **Vulnerability:**
 The alerts API verified authentication but didn't verify ownership before updating:
 
-```typescript
+\`\`\`typescript
 // VULNERABLE CODE
 export async function PATCH(request: Request, { params }: { params: { id: string } }) {
   const { data: { user } } = await supabase.auth.getUser()
@@ -108,7 +108,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     .update({ is_read: true })
     .eq("id", params.id)
 }
-```
+\`\`\`
 
 **Risk:**
 - Users could mark other users' alerts as read
@@ -119,7 +119,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 - `app/api/alerts/[id]/route.ts`
 
 **Fix Applied:**
-```typescript
+\`\`\`typescript
 // SECURE CODE
 // Verify the user owns this alert
 const { data: alert } = await supabase
@@ -139,7 +139,7 @@ await supabase
   .update({ is_read: true })
   .eq("id", params.id)
   .eq("user_id", user.id)
-```
+\`\`\`
 
 **Impact:** Users can only update their own alerts.
 
@@ -154,11 +154,11 @@ await supabase
 **Vulnerability:**
 Stripe webhook secret used non-null assertion without validation:
 
-```typescript
+\`\`\`typescript
 // VULNERABLE CODE
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 // Could be undefined, causing runtime crash
-```
+\`\`\`
 
 **Risk:**
 - Server crash if environment variable not set
@@ -170,14 +170,14 @@ const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 - `app/api/stripe/webhook/route.ts`
 
 **Fix Applied:**
-```typescript
+\`\`\`typescript
 // SECURE CODE
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
 if (!webhookSecret) {
   console.error("[Stripe] STRIPE_WEBHOOK_SECRET environment variable not set")
   return NextResponse.json({ error: "Server configuration error" }, { status: 500 })
 }
-```
+\`\`\`
 
 **Impact:** Payment webhook will fail safely with proper error, preventing crashes.
 
@@ -197,12 +197,12 @@ Critical services (email, API keys) were initialized without checking if environ
 **Fix Applied:**
 Added validation for all critical environment variables at runtime:
 
-```typescript
+\`\`\`typescript
 if (!process.env.RESEND_API_KEY) {
   console.error("[CRON] RESEND_API_KEY environment variable not set")
   return NextResponse.json({ error: "Server configuration error" }, { status: 500 })
 }
-```
+\`\`\`
 
 **Impact:** Services fail safely with clear error messages.
 
@@ -219,12 +219,12 @@ Alert ID parameter wasn't validated before use.
 - `app/api/alerts/[id]/route.ts`
 
 **Fix Applied:**
-```typescript
+\`\`\`typescript
 // Validate alert ID format
 if (!params.id || typeof params.id !== 'string' || params.id.trim() === '') {
   return NextResponse.json({ error: "Invalid alert ID" }, { status: 400 })
 }
-```
+\`\`\`
 
 **Impact:** Prevents potential injection attacks and improves error handling.
 
@@ -249,7 +249,7 @@ if (!params.id || typeof params.id !== 'string' || params.id.trim() === '') {
 ## Testing Recommendations
 
 ### 1. Test CRON Endpoint Security
-```bash
+\`\`\`bash
 # Should return 401 Unauthorized
 curl -X GET https://your-domain.com/api/cron/scrape-all-sites
 
@@ -261,23 +261,23 @@ curl -X GET https://your-domain.com/api/cron/scrape-all-sites \
 # Should work with correct secret
 curl -X GET https://your-domain.com/api/cron/scrape-all-sites \
   -H "Authorization: Bearer ${CRON_SECRET}"
-```
+\`\`\`
 
 ### 2. Test Dashboard IDOR Fix
-```bash
+\`\`\`bash
 # Try to access another user's dashboard
 # Should return 401 (unauthenticated) or only your own data
 curl -X GET "https://your-domain.com/api/dashboard?userId=other-user-id" \
   -H "Cookie: your-session-cookie"
-```
+\`\`\`
 
 ### 3. Test Alerts Authorization
-```bash
+\`\`\`bash
 # Try to update another user's alert
 # Should return 403 Forbidden
 curl -X PATCH https://your-domain.com/api/alerts/some-other-users-alert-id \
   -H "Cookie: your-session-cookie"
-```
+\`\`\`
 
 ---
 

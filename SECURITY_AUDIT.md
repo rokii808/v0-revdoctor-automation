@@ -4,17 +4,17 @@
 
 ### 1. **Exposed Cron Secret** (High Risk)
 **Location:** `app/api/cron/scrape-raw2k/route.ts:4`
-```typescript
+\`\`\`typescript
 const CRON_SECRET = process.env.CRON_SECRET || "dev-secret"
-```
+\`\`\`
 **Risk:** Default "dev-secret" allows anyone to trigger expensive scraping operations
 **Fix:**
-```typescript
+\`\`\`typescript
 const CRON_SECRET = process.env.CRON_SECRET
 if (!CRON_SECRET) {
   throw new Error("CRON_SECRET environment variable is required")
 }
-```
+\`\`\`
 
 ### 2. **No Rate Limiting** (High Risk)
 **Location:** All API routes
@@ -25,7 +25,7 @@ if (!CRON_SECRET) {
 - Database overload
 
 **Fix:** Add rate limiting middleware
-```typescript
+\`\`\`typescript
 // middleware.ts
 import { Ratelimit } from "@upstash/ratelimit"
 import { Redis } from "@upstash/redis"
@@ -45,14 +45,14 @@ export async function middleware(request: NextRequest) {
 
   return NextResponse.next()
 }
-```
+\`\`\`
 
 ### 3. **Row Level Security (RLS) Not Enabled** (Critical)
 **Location:** Supabase database
 **Risk:** Users can access other users' data by manipulating queries
 
 **Fix:** Enable RLS on ALL tables
-```sql
+\`\`\`sql
 -- Enable RLS
 ALTER TABLE dealers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE vehicle_matches ENABLE ROW LEVEL SECURITY;
@@ -79,7 +79,7 @@ CREATE POLICY "Users can view own healthy_cars"
 
 -- Service role can bypass (for cron jobs)
 -- Already handled by using createAdminClient()
-```
+\`\`\`
 
 ### 4. **SQL Injection via User Input** (Medium Risk)
 **Location:** Anywhere user input is used in queries
@@ -87,7 +87,7 @@ CREATE POLICY "Users can view own healthy_cars"
 **Risk:** If you ever use raw SQL with user input
 
 **Prevention:** Always use parameterized queries
-```typescript
+\`\`\`typescript
 // ✅ SAFE - Using Supabase client
 await supabase.from('dealers').select('*').eq('id', userId)
 
@@ -98,43 +98,43 @@ await supabase.rpc('custom_query', {
 
 // ✅ SAFE - If using raw SQL, use parameters
 await supabase.rpc('get_dealer', { dealer_name: userInput })
-```
+\`\`\`
 
 ### 5. **Email Injection** (Medium Risk)
 **Location:** Demo scrape endpoint (when you build it)
 **Risk:** Attacker sends to multiple emails via header injection
 
 **Fix:** Validate email addresses
-```typescript
+\`\`\`typescript
 import { z } from "zod"
 
 const emailSchema = z.string().email().max(100)
 
 const { email } = emailSchema.parse(body)
 // Throws if invalid
-```
+\`\`\`
 
 ### 6. **No CSRF Protection** (Medium Risk)
 **Location:** All POST/PUT/DELETE routes
 **Risk:** Malicious sites can make requests on behalf of users
 
 **Fix:** Next.js 15 has built-in CSRF protection, but verify it's enabled
-```typescript
+\`\`\`typescript
 // next.config.ts
 export default {
   experimental: {
     csrfPrevention: true, // Should be default
   },
 }
-```
+\`\`\`
 
 ### 7. **Stripe Webhook Signature Not Verified** (Critical for Payments)
 **Location:** `app/api/stripe/webhook/route.ts`
 **Check if this exists:**
-```typescript
+\`\`\`typescript
 const sig = request.headers.get("stripe-signature")
 const event = stripe.webhooks.constructEvent(body, sig, webhookSecret)
-```
+\`\`\`
 **If not, anyone can fake payment confirmations!**
 
 ### 8. **Scraper Bot Detection** (Low Risk, High Impact)
@@ -147,7 +147,7 @@ const event = stripe.webhooks.constructEvent(body, sig, webhookSecret)
 - Same IP for all requests
 
 **Improvements:**
-```typescript
+\`\`\`typescript
 // Rotate User-Agents
 const userAgents = [
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64)...",
@@ -162,7 +162,7 @@ await new Promise(resolve =>
 )
 
 // Consider using proxy rotation for production
-```
+\`\`\`
 
 ---
 
@@ -171,15 +171,15 @@ await new Promise(resolve =>
 ### 9. **No Email Verification** (High Risk)
 **Risk:** Users can sign up with any email, send spam digests
 **Fix:** Enable email verification in Supabase
-```typescript
+\`\`\`typescript
 // Supabase Dashboard → Authentication → Settings
 // Enable "Confirm email" before allowing login
-```
+\`\`\`
 
 ### 10. **Missing Input Validation** (Medium Risk)
 **Location:** All API routes accepting user input
 **Fix:** Use Zod schemas
-```typescript
+\`\`\`typescript
 import { z } from "zod"
 
 const preferencesSchema = z.object({
@@ -193,13 +193,13 @@ const validated = preferencesSchema.safeParse(body)
 if (!validated.success) {
   return NextResponse.json({ error: validated.error }, { status: 400 })
 }
-```
+\`\`\`
 
 ### 11. **No Logging/Monitoring** (High Priority for Production)
 **Risk:** Can't debug issues, detect attacks, or monitor performance
 
 **Fix:** Add logging service
-```typescript
+\`\`\`typescript
 // Option A: Axiom (recommended for Vercel)
 import { Logger } from "next-axiom"
 const logger = new Logger()
@@ -208,14 +208,14 @@ logger.info("Scraper started", { site: "RAW2K", count: vehicles.length })
 // Option B: Sentry for error tracking
 import * as Sentry from "@sentry/nextjs"
 Sentry.captureException(error, { tags: { component: "scraper" } })
-```
+\`\`\`
 
 ### 12. **Hardcoded Admin Checks** (Medium Risk)
 **Location:** `app/admin/page.tsx` (if it checks user manually)
 **Risk:** If admin check is client-side or easily bypassed
 
 **Fix:** Server-side role checks
-```sql
+\`\`\`sql
 -- Add roles table
 CREATE TABLE user_roles (
   user_id UUID REFERENCES auth.users(id),
@@ -232,29 +232,29 @@ const { data: roles } = await supabase
 if (!roles?.some(r => r.role === 'admin')) {
   return new Response("Forbidden", { status: 403 })
 }
-```
+\`\`\`
 
 ### 13. **Sensitive Data in Logs** (Medium Risk)
 **Location:** Console.log statements throughout codebase
 **Risk:** API keys, emails, user data in logs
 
 **Fix:** Sanitize logs
-```typescript
+\`\`\`typescript
 // ❌ BAD
 console.log("User data:", user)
 
 // ✅ GOOD
 console.log("User logged in:", { id: user.id, email: user.email?.replace(/(?<=.).(?=[^@]*?@)/g, '*') })
-```
+\`\`\`
 
 ### 14. **No API Versioning** (Low Risk, High Future Impact)
 **Risk:** Breaking changes will break clients
 
 **Fix:** Version your API
-```typescript
+\`\`\`typescript
 // /api/v1/vehicles/route.ts
 // When you make breaking changes, create /api/v2/
-```
+\`\`\`
 
 ---
 
@@ -267,7 +267,7 @@ console.log("User logged in:", { id: user.id, email: user.email?.replace(/(?<=.)
 - [ ] Data export functionality
 - [ ] Data deletion functionality (Right to be forgotten)
 
-```typescript
+\`\`\`typescript
 // app/api/user/delete-data/route.ts
 export async function DELETE(request: Request) {
   const supabase = createClient()
@@ -280,7 +280,7 @@ export async function DELETE(request: Request) {
 
   return NextResponse.json({ success: true })
 }
-```
+\`\`\`
 
 ### 16. **PCI Compliance** (Critical if handling payments)
 **Current:** Using Stripe (handles PCI compliance)
@@ -292,17 +292,17 @@ export async function DELETE(request: Request) {
 
 ### 17. **Unbounded Database Queries** (High Cost Risk)
 **Location:** Dashboard fetching ALL vehicles
-```typescript
+\`\`\`typescript
 // ❌ BAD - Could return 100k rows
 .select("*")
 
 // ✅ GOOD - Always limit
 .select("*").limit(50)
-```
+\`\`\`
 
 ### 18. **No Pagination** (Performance Issue)
 **Fix:** Add cursor-based pagination
-```typescript
+\`\`\`typescript
 // app/api/vehicles/route.ts
 export async function GET(request: Request) {
   const url = new URL(request.url)
@@ -326,14 +326,14 @@ export async function GET(request: Request) {
     nextCursor: data[data.length - 1]?.created_at
   })
 }
-```
+\`\`\`
 
 ### 19. **Scraper Running in API Route** (Architecture Issue)
 **Problem:** Vercel has 10-second timeout for serverless functions
 **Risk:** Long-running scrapes will timeout and fail
 
 **Fix:** Use background jobs
-```typescript
+\`\`\`typescript
 // Option A: Vercel Cron + Queue
 // vercel.json
 {
@@ -358,7 +358,7 @@ await client.publishJSON({
   body: { site: "RAW2K" },
   retries: 3,
 })
-```
+\`\`\`
 
 ---
 
@@ -389,7 +389,7 @@ await client.publishJSON({
 
 Run these tests before going to production:
 
-```bash
+\`\`\`bash
 # 1. Test authentication bypass
 curl http://localhost:3000/api/dashboard -H "Authorization: Bearer fake"
 
@@ -405,4 +405,4 @@ for i in {1..100}; do curl http://localhost:3000/api/demo; done
 curl -X POST http://localhost:3000/api/preferences \
   -d '{"preferred_makes": ["<script>alert(1)</script>"]}' \
   -H "Content-Type: application/json"
-```
+\`\`\`

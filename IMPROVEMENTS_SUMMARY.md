@@ -51,10 +51,10 @@
 
 #### Priority 1 - Fix Today:
 - [ ] **Remove "dev-secret" fallback** in all cron routes
-  ```typescript
+  \`\`\`typescript
   // Currently: const CRON_SECRET = process.env.CRON_SECRET || "dev-secret"
   // Should be: const CRON_SECRET = process.env.CRON_SECRET; if (!CRON_SECRET) throw Error
-  ```
+  \`\`\`
 
 - [ ] **Enable Row Level Security (RLS)** on all Supabase tables
   - Run SQL from `SECURITY_AUDIT.md` section "Priority 1"
@@ -91,14 +91,14 @@
 #### Tables to Create in Supabase:
 Run this SQL in Supabase SQL Editor:
 
-```sql
+\`\`\`sql
 -- See IMPLEMENTATION_CHECKLIST.md Phase 1.1 for complete SQL
 -- Key tables:
 - user_preferences (NEW)
 - vehicle_matches (NEW - replaces healthy_cars long-term)
 - auction_sites (NEW - for multi-site support)
 - scraper_jobs (NEW - for job queue)
-```
+\`\`\`
 
 ### 3. Multi-Site Scraper Architecture (Major Improvement)
 
@@ -121,9 +121,9 @@ Run this SQL in Supabase SQL Editor:
   - Create site-specific scrapers
 
 - [ ] **Implement Puppeteer** for dynamic content
-  ```bash
+  \`\`\`bash
   npm install puppeteer
-  ```
+  \`\`\`
   - Better than regex for complex sites
   - Handles JavaScript-rendered content
 
@@ -203,10 +203,10 @@ Run this SQL in Supabase SQL Editor:
 ### 6. Performance Optimizations
 
 - [ ] **Add Database Indexes**
-  ```sql
+  \`\`\`sql
   CREATE INDEX idx_vehicles_dealer_date ON vehicle_matches(dealer_id, created_at DESC);
   CREATE INDEX idx_vehicles_sent ON vehicle_matches(is_sent, sent_at);
-  ```
+  \`\`\`
 
 - [ ] **Implement Pagination**
   - Dashboard should paginate vehicles
@@ -278,24 +278,24 @@ Run this SQL in Supabase SQL Editor:
 ## 🚀 Quick Wins (Can Do Today)
 
 ### 1. Add Loading Spinners
-```typescript
+\`\`\`typescript
 // In any component with async operations
 const [loading, setLoading] = useState(false)
 
 {loading && <div className="animate-spin">Loading...</div>}
-```
+\`\`\`
 
 ### 2. Better Error Messages
-```typescript
+\`\`\`typescript
 // Instead of: "Error"
 // Use: "Failed to load vehicles. Please refresh the page."
-```
+\`\`\`
 
 ### 3. Mobile Meta Tags
-```typescript
+\`\`\`typescript
 // Add to app/layout.tsx
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-```
+\`\`\`
 
 ### 4. Favicon
 - Add proper favicon to `public/` folder

@@ -66,7 +66,7 @@ All changes pushed to GitHub:
 
 Open `.env.local` and fill in:
 
-```bash
+\`\`\`bash
 # Get from Supabase Dashboard → Settings → API
 NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
@@ -78,13 +78,13 @@ CRON_SECRET=<generate-random-32-chars>
 # Optional for now (can add later)
 OPENAI_API_KEY=sk-...
 RESEND_API_KEY=re_...
-```
+\`\`\`
 
 **Generate CRON_SECRET:**
-```powershell
+\`\`\`powershell
 # PowerShell (Windows)
 -join ((48..57) + (65..90) + (97..122) | Get-Random -Count 32 | ForEach-Object {[char]$_})
-```
+\`\`\`
 
 ### Step 2: Run Database Migrations (2 minutes)
 
@@ -98,29 +98,29 @@ RESEND_API_KEY=re_...
 8. Click **Run** button
 
 Expected output:
-```
+\`\`\`
 ✓ user_preferences created | row_count: 0
 ✓ vehicle_matches created | row_count: 0
-```
+\`\`\`
 
 ### Step 3: Test Locally (5 minutes)
 
 **Terminal 1** - Start Next.js:
-```bash
+\`\`\`bash
 cd "C:\Users\taiwo\Downloads\v0-revdoctor-automation-main (1)\v0-revdoctor-automation-main"
 npm run dev
-```
+\`\`\`
 
 **Terminal 2** - Start Inngest:
-```bash
+\`\`\`bash
 cd "C:\Users\taiwo\Downloads\v0-revdoctor-automation-main (1)\v0-revdoctor-automation-main"
 npx inngest-cli@latest dev
-```
+\`\`\`
 
 **Browser** - Open Inngest dashboard:
-```
+\`\`\`
 http://localhost:8288
-```
+\`\`\`
 
 You should see:
 - 2 functions registered
@@ -135,11 +135,11 @@ In Inngest dashboard (http://localhost:8288):
 2. Click `manual-scraper`
 3. Click **Invoke Function**
 4. Use payload:
-   ```json
+   \`\`\`json
    {
      "sites": ["RAW2K"]
    }
-   ```
+   \`\`\`
 5. Click **Invoke**
 6. Watch execution in real-time!
 
@@ -153,7 +153,7 @@ You should see new rows with vehicles scraped from RAW2K! 🎉
 
 ## 🏗️ Architecture Overview
 
-```
+\`\`\`
 ┌─────────────────────────────────────────────────┐
 │         Inngest Cloud (Free Tier)               │
 │   - Triggers daily scrape at 6 AM UTC          │
@@ -199,7 +199,7 @@ You should see new rows with vehicles scraped from RAW2K! 🎉
 │  │ - Price ranges      │  │ - Email status   │ │
 │  └─────────────────────┘  └──────────────────┘ │
 └─────────────────────────────────────────────────┘
-```
+\`\`\`
 
 ---
 
@@ -207,7 +207,7 @@ You should see new rows with vehicles scraped from RAW2K! 🎉
 
 ### Daily Automatic Flow
 
-```
+\`\`\`
 1. 6:00 AM UTC → Inngest triggers dailyScraperJob
 2. Scraper runs scrapeAllSites() in parallel
    ├─ Fetches RAW2K vehicles
@@ -222,11 +222,11 @@ You should see new rows with vehicles scraped from RAW2K! 🎉
 5. Inserts healthy vehicles into vehicle_matches
 6. Sends email digest if enough vehicles found
 7. Logs results to Inngest dashboard
-```
+\`\`\`
 
 ### Match Scoring Algorithm
 
-```typescript
+\`\`\`typescript
 // Example: Dealer preferences
 {
   preferred_makes: ['BMW', 'Audi', 'Mercedes'],
@@ -252,7 +252,7 @@ You should see new rows with vehicles scraped from RAW2K! 🎉
 - Mileage within limit (45000 < 60000): +10 points
 
 Total match_score: 100% ✅ PERFECT MATCH
-```
+\`\`\`
 
 ---
 
@@ -341,7 +341,7 @@ Total match_score: 100% ✅ PERFECT MATCH
 - [ ] At least one scraper working (RAW2K ✅)
 
 ### Deploy to Vercel
-```bash
+\`\`\`bash
 # Install Vercel CLI
 npm i -g vercel
 
@@ -351,7 +351,7 @@ vercel --prod
 # Set environment variables in Vercel dashboard
 # - Copy all from .env.local
 # - Add to Vercel → Project Settings → Environment Variables
-```
+\`\`\`
 
 ### Configure Inngest
 1. Go to Inngest dashboard: https://app.inngest.com/

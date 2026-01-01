@@ -23,10 +23,10 @@ Inngest runs in a separate environment from your Next.js app, so you need to con
 3. Go to **Settings → Environment Variables**
 4. Add the following variables:
 
-```
+\`\`\`
 NEXT_PUBLIC_SUPABASE_URL=<your-supabase-project-url>
 SUPABASE_SERVICE_ROLE_KEY=<your-supabase-service-role-key>
-```
+\`\`\`
 
 **Where to find these values:**
 - Supabase Dashboard → Project Settings → API
@@ -44,7 +44,7 @@ I've prepared an improved version of the Inngest function with:
 
 Add this validation step at the beginning of the `dailyScraperJob`:
 
-```typescript
+\`\`\`typescript
 // Step 0: Validate environment variables
 await step.run("validate-config", async () => {
   const requiredEnvVars = {
@@ -65,13 +65,13 @@ await step.run("validate-config", async () => {
   console.log("[Inngest] Environment validation passed")
   return { validated: true }
 })
-```
+\`\`\`
 
 ### Step 3: Improve Error Handling in Database Queries
 
 Wrap the `get-active-dealers` step with better error handling:
 
-```typescript
+\`\`\`typescript
 const dealers = await step.run("get-active-dealers", async () => {
   try {
     const supabase = createAdminClient()
@@ -92,7 +92,7 @@ const dealers = await step.run("get-active-dealers", async () => {
     throw error
   }
 })
-```
+\`\`\`
 
 ### Step 4: Test the Fix
 
@@ -108,7 +108,7 @@ After setting environment variables in Inngest:
 
 If you want to test locally first:
 
-```bash
+\`\`\`bash
 # Set env vars in your terminal
 export NEXT_PUBLIC_SUPABASE_URL="your-url"
 export SUPABASE_SERVICE_ROLE_KEY="your-key"
@@ -119,7 +119,7 @@ npm run dev
 # In another terminal, trigger the Inngest function via API
 curl -X GET http://localhost:3000/api/cron/scrape-all-sites \
   -H "Authorization: Bearer ${CRON_SECRET}"
-```
+\`\`\`
 
 ## Common Issues
 
@@ -156,7 +156,7 @@ curl -X GET http://localhost:3000/api/cron/scrape-all-sites \
 
 For your reference, here's what the complete updated `dailyScraperJob` should look like:
 
-```typescript
+\`\`\`typescript
 export const dailyScraperJob = inngest.createFunction(
   { id: "daily-scraper", name: "Daily Multi-Site Vehicle Scraper" },
   { cron: "0 6 * * *" },
@@ -189,7 +189,7 @@ export const dailyScraperJob = inngest.createFunction(
     // ... rest of function ...
   }
 )
-```
+\`\`\`
 
 ## Next Steps
 

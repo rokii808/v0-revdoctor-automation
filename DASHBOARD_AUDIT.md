@@ -19,10 +19,10 @@
 **File:** `app/dashboard/page.tsx`
 
 ### Server-Side Data Fetching ✅ CORRECT
-```typescript
+\`\`\`typescript
 const supabase = createClient()  // ✅ Server-side client
 const { data: { user } } = await supabase.auth.getUser()  // ✅ Async/await
-```
+\`\`\`
 
 **Execution Flow:**
 1. ✅ Gets authenticated user
@@ -37,7 +37,7 @@ const { data: { user } } = await supabase.auth.getUser()  // ✅ Async/await
 All queries use proper error handling:
 
 **Query 1: Subscription Check**
-```typescript
+\`\`\`typescript
 const { data: subscription } = await supabase
   .from('subscriptions')
   .select('status, plan')
@@ -48,10 +48,10 @@ const { data: subscription } = await supabase
 if (!subscription || subscription.status !== 'active') {
   redirect("/pricing?required=true")
 }
-```
+\`\`\`
 
 **Query 2: Dealer Profile**
-```typescript
+\`\`\`typescript
 let { data: dealer, error: dealerError } = await supabase
   .from("dealers")
   .select("*")
@@ -66,10 +66,10 @@ if (!dealer || dealerError) {
     .select()
     .single()
 }
-```
+\`\`\`
 
 **Query 3: Recent Leads**
-```typescript
+\`\`\`typescript
 const { data: recentLeads, error: leadsError } = await supabase
   .from("leads")
   .select("*")
@@ -81,10 +81,10 @@ const { data: recentLeads, error: leadsError } = await supabase
 if (leadsError) {
   console.error("[Dashboard] Error fetching leads:", leadsError.message)
 }
-```
+\`\`\`
 
 **Query 4: Today's Healthy Cars**
-```typescript
+\`\`\`typescript
 const { data: healthyCars } = await supabase
   .from("vehicle_matches")
   .select("*")
@@ -95,10 +95,10 @@ const { data: healthyCars } = await supabase
 
 // ✅ Correct: Filters to today only
 // ✅ Correct: Limited to 50 results
-```
+\`\`\`
 
 **Query 5: Alerts**
-```typescript
+\`\`\`typescript
 const { data: alerts } = await supabase
   .from("car_alerts")
   .select("*")
@@ -106,16 +106,16 @@ const { data: alerts } = await supabase
   .eq("is_read", false)  // ✅ Only unread
   .order("created_at", { ascending: false })
   .limit(10)
-```
+\`\`\`
 
 **Query 6: Saved Searches**
-```typescript
+\`\`\`typescript
 const { data: savedSearches } = await supabase
   .from("saved_searches")
   .select("*")
   .eq("dealer_id", dealer?.id || '')
   .order("created_at", { ascending: false})
-```
+\`\`\`
 
 ### Error Handling ✅ ROBUST
 - All queries wrapped in try/catch (via Supabase client)
@@ -140,7 +140,7 @@ const { data: savedSearches } = await supabase
 - Save button with loading state
 
 **Button Functionality:**
-```typescript
+\`\`\`typescript
 const handleSave = async () => {
   setSaving(true)
   try {
@@ -154,7 +154,7 @@ const handleSave = async () => {
     setSaving(false)
   }
 }
-```
+\`\`\`
 
 **API Endpoint:** `/api/preferences` ✅ EXISTS
 **State Management:** ✅ React hooks properly scoped
@@ -180,7 +180,7 @@ const handleSave = async () => {
 **Button Functionality:**
 
 **Refresh Button:**
-```typescript
+\`\`\`typescript
 const handleRefresh = async () => {
   setIsRefreshing(true)
   try {
@@ -193,20 +193,20 @@ const handleRefresh = async () => {
     setIsRefreshing(false)
   }
 }
-```
+\`\`\`
 **API Endpoint:** `/api/vehicles` ✅ EXISTS
 **Loading State:** ✅ Spinner animation during refresh
 **Client-Side Filtering:** ✅ All filters work instantly
 
 **View Listing Button:**
-```typescript
+\`\`\`typescript
 <Button variant="outline" size="sm" asChild>
   <a href={car.source_link} target="_blank" rel="noopener noreferrer">
     <ExternalLink className="w-4 h-4 mr-2" />
     View Listing
   </a>
 </Button>
-```
+\`\`\`
 ✅ Opens auction site in new tab
 ✅ Security: Uses `rel="noopener noreferrer"`
 
@@ -227,7 +227,7 @@ const handleRefresh = async () => {
 **Button Functionality:**
 
 **Mark Read Button:**
-```typescript
+\`\`\`typescript
 const markAsRead = async (alertId: string) => {
   try {
     const res = await fetch(`/api/alerts/${alertId}`, { method: "PATCH" })
@@ -238,20 +238,20 @@ const markAsRead = async (alertId: string) => {
     console.error("Error marking alert as read:", error)
   }
 }
-```
+\`\`\`
 **API Endpoint:** `/api/alerts/[id]` ✅ EXISTS
 **State Update:** ✅ Alert removed from list immediately
 **Error Handling:** ✅ Try/catch with console logging
 
 **View Button:**
-```typescript
+\`\`\`typescript
 <Button variant="outline" size="sm" asChild>
   <a href={alert.source_link} target="_blank" rel="noopener noreferrer">
     <ExternalLink className="w-4 h-4 mr-2" />
     View
   </a>
 </Button>
-```
+\`\`\`
 ✅ Opens auction listing in new tab
 
 **Rating:** 🟢 Production Ready
@@ -269,7 +269,7 @@ const markAsRead = async (alertId: string) => {
 - "Manage Subscription" button (paid users)
 
 **Button Functionality:**
-```typescript
+\`\`\`typescript
 // Trial users
 <Button className="w-full" asChild>
   <a href="/dealer-admin">
@@ -285,7 +285,7 @@ const markAsRead = async (alertId: string) => {
     Manage Subscription
   </a>
 </Button>
-```
+\`\`\`
 ✅ Links to dealer admin page
 ✅ Different CTAs based on subscription status
 ✅ Trial countdown calculation correct
@@ -305,12 +305,12 @@ const markAsRead = async (alertId: string) => {
 - "Export to PDF" button
 
 **Current Implementation:**
-```typescript
+\`\`\`typescript
 const handleExport = async (format: "csv" | "pdf") => {
   // In real app, this would call API to generate export
   console.log("Exporting data as:", format)  // ⚠️ Just console.log
 }
-```
+\`\`\`
 
 **Buttons:** ✅ Render correctly
 **Functionality:** ⚠️ Only logs to console
@@ -338,7 +338,7 @@ const handleExport = async (format: "csv" | "pdf") => {
 - Delete button
 
 **Current Implementation:**
-```typescript
+\`\`\`typescript
 const handleSaveSearch = async () => {
   // In real app, this would call API to save search
   console.log("Saving search:", newSearch)  // ⚠️ Just console.log
@@ -353,7 +353,7 @@ const deleteSearch = async (searchId: string) => {
   // In real app, this would call API to delete search
   console.log("Deleting search:", searchId)  // ⚠️ Just console.log
 }
-```
+\`\`\`
 
 **Buttons:** ✅ All render correctly
 **Form:** ✅ State management works
@@ -431,7 +431,7 @@ const deleteSearch = async (searchId: string) => {
 
 ### Happy Path ✅ WORKS
 
-```
+\`\`\`
 1. User logs in
    ↓
 2. Dashboard page fetches data (server)
@@ -455,38 +455,38 @@ const deleteSearch = async (searchId: string) => {
 11. Client calls POST /api/preferences
     ↓
 12. Success (button shows "Saving...")
-```
+\`\`\`
 
 **All steps verified working** ✅
 
 ### Error Scenarios ✅ HANDLED
 
 **Scenario 1: API fails**
-```typescript
+\`\`\`typescript
 if (res.ok) {
   // Success path
 } else {
   console.error("Failed to...")  // ✅ Logged
 }
-```
+\`\`\`
 
 **Scenario 2: Network error**
-```typescript
+\`\`\`typescript
 } catch (error) {
   console.error("Error:", error)  // ✅ Caught
 } finally {
   setLoading(false)  // ✅ UI reset
 }
-```
+\`\`\`
 
 **Scenario 3: Empty data**
-```typescript
+\`\`\`typescript
 {healthyCars.length === 0 ? (
   <div>No healthy cars found</div>  // ✅ Empty state
 ) : (
   // Render cars
 )}
-```
+\`\`\`
 
 ---
 
