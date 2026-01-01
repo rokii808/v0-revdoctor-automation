@@ -4,11 +4,12 @@ import { scrapeRAW2K } from "../scrapers/raw2k"
 import { scrapeBCA } from "../scrapers/bca"
 import { scrapeAutorola } from "../scrapers/autorola"
 import { scrapeManheim } from "../scrapers/manheim"
-import { classifyVehiclesWithAI } from "../analysis/ai-classifier"
+import { classifyVehiclesWithAI } from "../analysis/ai-classifier-enhanced" // Use enhanced classifier
 import { matchVehiclesToDealers, getMatchStats, type VehicleMatch } from "../workflow/preference-matcher"
 import { sendDigestBatch, getDigestStats } from "../workflow/email-digest"
 import type { VehicleListing } from "../scrapers/index"
 import type { DigestRecipient } from "../workflow/email-digest"
+import type { Dealer } from "../types"
 
 // Initialize Supabase client with service role key for background jobs
 // Use placeholders for build time, will fail at runtime if actually used without the keys
