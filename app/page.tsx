@@ -20,6 +20,7 @@ import { AnimatedSection } from "@/components/animated-section"
 import { AnimatedCounter } from "@/components/animated-counter"
 import { LiveMetricsPreview } from "@/components/live-metrics-preview"
 import { InteractiveMapPreview } from "@/components/interactive-map-preview"
+import { motion } from "framer-motion"
 
 export default function HomePage() {
   return (
@@ -55,6 +56,7 @@ export default function HomePage() {
         </div>
       </header>
 
+      {/* Hero Section with Car Grid Layout */}
       <section className="py-32 px-6 hero-bg-motion bg-gradient-to-br from-slate-50 via-white to-orange-50/20 relative overflow-hidden">
         {/* Subtle Grid Pattern */}
         <div
@@ -84,19 +86,36 @@ export default function HomePage() {
             <span className="text-sm font-medium text-slate-700">Scanning live auctions</span>
           </div>
 
-          <h1 className="text-6xl md:text-8xl font-sans font-bold text-slate-900 mb-8 leading-[1.1] tracking-tight animate-slide-up">
-            Automate your car sourcing.
-            <br />
-            <span className="bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
-              Close deals faster.
-            </span>
-          </h1>
-          <p className="text-xl md:text-2xl text-slate-600 mb-14 max-w-3xl mx-auto leading-relaxed font-normal animate-slide-up delay-100">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <h1 className="text-6xl md:text-8xl font-sans font-bold text-slate-900 mb-8 leading-[1.1] tracking-tight">
+              Automate your car sourcing.
+              <br />
+              <span className="bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
+                Close deals faster.
+              </span>
+            </h1>
+          </motion.div>
+
+          <motion.p
+            className="text-xl md:text-2xl text-slate-600 mb-14 max-w-3xl mx-auto leading-relaxed font-normal"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          >
             RevvDoctor scans hundreds of auctions and sends pre-qualified, investment-ready vehicles directly to your
             inbox.
-          </p>
+          </motion.p>
 
-          <div className="flex flex-col sm:flex-row gap-6 justify-center mb-20 animate-slide-up delay-200">
+          <motion.div
+            className="flex flex-col sm:flex-row gap-6 justify-center mb-20"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+          >
             <Button
               size="lg"
               className="cta-enterprise bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white text-xl px-14 py-8 rounded-full shadow-xl shadow-orange-500/30 font-semibold group"
@@ -106,18 +125,29 @@ export default function HomePage() {
                 See It In Action <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-1 transition-transform" />
               </a>
             </Button>
-          </div>
+          </motion.div>
 
-          <div className="text-center mb-16">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+          >
             <p className="text-sm text-slate-500 mb-4 font-medium">Trusted by 100+ dealerships across the UK</p>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Live Metrics Dashboard Preview */}
       <section className="py-20 px-6 bg-gradient-to-b from-white via-slate-50 to-white">
         <div className="container mx-auto max-w-6xl">
-          <AnimatedSection className="text-center mb-12">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true, margin: "-100px" }}
+          >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-50 border border-orange-200 mb-6">
               <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
               <span className="text-sm font-semibold text-orange-700">LIVE DATA</span>
@@ -133,17 +163,29 @@ export default function HomePage() {
               Watch as our AI scans hundreds of auctions and delivers qualified vehicles to your inbox — updated every
               minute.
             </p>
-          </AnimatedSection>
+          </motion.div>
 
-          <AnimatedSection delay={200}>
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true, margin: "-100px" }}
+          >
             <LiveMetricsPreview />
-          </AnimatedSection>
+          </motion.div>
         </div>
       </section>
 
+      {/* Problems Section with 3-Column Layout */}
       <section className="py-28 px-6 bg-white">
         <div className="container mx-auto max-w-6xl">
-          <AnimatedSection className="text-center mb-20">
+          <motion.div
+            className="text-center mb-20"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true, margin: "-100px" }}
+          >
             <h2 className="text-5xl md:text-7xl font-sans font-bold text-slate-900 mb-6 leading-tight">
               Car sourcing shouldn't
               <br />
@@ -153,65 +195,107 @@ export default function HomePage() {
               Dealers waste time filtering auction sites, chasing leads and analyzing cars that don&#39;t meet their
               criteria. RevvDoctor removes that manual work so you can focus on deals that actually convert.
             </p>
-          </AnimatedSection>
+          </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-20">
-            <AnimatedSection delay={100}>
-              <div className="group relative text-center p-10 rounded-3xl border border-slate-200 bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-orange-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative z-10">
-                  <div className="w-20 h-20 bg-gradient-to-br from-orange-50 to-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
-                    <Clock className="w-10 h-10 text-orange-500 group-hover:text-orange-600 transition-colors" />
-                  </div>
-                  <h3 className="text-2xl font-sans font-bold text-slate-900 mb-4">Wasting hours scrolling</h3>
-                  <p className="text-slate-600 leading-relaxed text-lg">
-                    Manually checking multiple sites daily eats up valuable selling time
-                  </p>
-                </div>
-              </div>
-            </AnimatedSection>
+          <motion.div
+            className="grid md:grid-cols-3 gap-8 mb-20"
+            initial="hidden"
+            whileInView="visible"
+            transition={{ staggerChildren: 0.15, delayChildren: 0.1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            variants={{
+              visible: { transition: { staggerChildren: 0.15 } },
+              hidden: {},
+            }}
+          >
+            <motion.div
+              className="group relative text-center p-10 rounded-3xl border border-slate-200 bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden"
+              variants={{
+                hidden: { opacity: 0, y: 40 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+              }}
+              whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-orange-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <motion.div className="relative z-10" whileHover={{ scale: 1.02 }}>
+                <motion.div
+                  className="w-20 h-20 bg-gradient-to-br from-orange-50 to-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm"
+                  whileHover={{ scale: 1.15, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 200 }}
+                >
+                  <Clock className="w-10 h-10 text-orange-500 group-hover:text-orange-600 transition-colors" />
+                </motion.div>
+                <h3 className="text-2xl font-sans font-bold text-slate-900 mb-4">Wasting hours scrolling</h3>
+                <p className="text-slate-600 leading-relaxed text-lg">
+                  Manually checking multiple sites daily eats up valuable selling time
+                </p>
+              </motion.div>
+            </motion.div>
 
-            <AnimatedSection delay={200}>
-              <div className="group relative text-center p-10 rounded-3xl border border-slate-200 bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-orange-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative z-10">
-                  <div className="w-20 h-20 bg-gradient-to-br from-orange-50 to-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
-                    <Target className="w-10 h-10 text-orange-500 group-hover:text-orange-600 transition-colors" />
-                  </div>
-                  <h3 className="text-2xl font-sans font-bold text-slate-900 mb-4">Missing good vehicles</h3>
-                  <p className="text-slate-600 leading-relaxed text-lg">
-                    Quality cars slip through while you're busy with other tasks
-                  </p>
-                </div>
-              </div>
-            </AnimatedSection>
+            <motion.div
+              className="group relative text-center p-10 rounded-3xl border border-slate-200 bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden"
+              variants={{
+                hidden: { opacity: 0, y: 40 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+              }}
+              whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-orange-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <motion.div className="relative z-10" whileHover={{ scale: 1.02 }}>
+                <motion.div
+                  className="w-20 h-20 bg-gradient-to-br from-orange-50 to-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm"
+                  whileHover={{ scale: 1.15, rotate: -5 }}
+                  transition={{ type: "spring", stiffness: 200 }}
+                >
+                  <Target className="w-10 h-10 text-orange-500 group-hover:text-orange-600 transition-colors" />
+                </motion.div>
+                <h3 className="text-2xl font-sans font-bold text-slate-900 mb-4">Missing good vehicles</h3>
+                <p className="text-slate-600 leading-relaxed text-lg">
+                  Quality cars slip through while you're busy with other tasks
+                </p>
+              </motion.div>
+            </motion.div>
 
-            <AnimatedSection delay={300}>
-              <div className="group relative text-center p-10 rounded-3xl border border-slate-200 bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-orange-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative z-10">
-                  <div className="w-20 h-20 bg-gradient-to-br from-orange-50 to-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
-                    <Shield className="w-10 h-10 text-orange-500 group-hover:text-orange-600 transition-colors" />
-                  </div>
-                  <h3 className="text-2xl font-sans font-bold text-slate-900 mb-4">Unreliable condition data</h3>
-                  <p className="text-slate-600 leading-relaxed text-lg">
-                    Risky purchases from incomplete or misleading information
-                  </p>
-                </div>
-              </div>
-            </AnimatedSection>
-          </div>
+            <motion.div
+              className="group relative text-center p-10 rounded-3xl border border-slate-200 bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden"
+              variants={{
+                hidden: { opacity: 0, y: 40 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+              }}
+              whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-orange-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <motion.div className="relative z-10" whileHover={{ scale: 1.02 }}>
+                <motion.div
+                  className="w-20 h-20 bg-gradient-to-br from-orange-50 to-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm"
+                  whileHover={{ scale: 1.15, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 200 }}
+                >
+                  <Shield className="w-10 h-10 text-orange-500 group-hover:text-orange-600 transition-colors" />
+                </motion.div>
+                <h3 className="text-2xl font-sans font-bold text-slate-900 mb-4">Unreliable condition data</h3>
+                <p className="text-slate-600 leading-relaxed text-lg">
+                  Risky purchases from incomplete or misleading information
+                </p>
+              </motion.div>
+            </motion.div>
+          </motion.div>
 
-          <AnimatedSection delay={400}>
-            <div className="bg-gradient-to-br from-white via-orange-50/20 to-blue-50/10 border border-orange-100 p-12 rounded-3xl shadow-lg text-center relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
-              <h3 className="text-3xl font-sans font-bold text-slate-900 mb-6 relative z-10">The Solution</h3>
-              <p className="text-xl text-slate-700 leading-relaxed max-w-3xl mx-auto relative z-10">
-                RevvDoctor uses automation and data to filter, validate and deliver the cars you actually want — directly
-                to your inbox, twice a day.
-              </p>
-            </div>
-          </AnimatedSection>
+          <motion.div
+            className="bg-gradient-to-br from-white via-orange-50/20 to-blue-50/10 border border-orange-100 p-12 rounded-3xl shadow-lg text-center relative overflow-hidden group"
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true, margin: "-100px" }}
+            whileHover={{ boxShadow: "0 25px 50px rgba(249, 115, 22, 0.15)" }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
+            <h3 className="text-3xl font-sans font-bold text-slate-900 mb-6 relative z-10">The Solution</h3>
+            <p className="text-xl text-slate-700 leading-relaxed max-w-3xl mx-auto relative z-10">
+              RevvDoctor uses automation and data to filter, validate and deliver the cars you actually want — directly
+              to your inbox, twice a day.
+            </p>
+          </motion.div>
         </div>
       </section>
 
@@ -415,25 +499,12 @@ export default function HomePage() {
               <div className="absolute inset-0 bg-gradient-to-br from-orange-50/0 to-orange-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="relative z-10">
                 <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/25">
-                <Target className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Auction coverage</h3>
-              <p className="text-gray-600 leading-relaxed text-lg">
-                Searches multiple platforms simultaneously. Never miss a good deal again.
-              </p>
-              </div>
-            </div>
-
-            <div className="group relative bg-white p-12 rounded-3xl border border-slate-200 hover:border-orange-200 shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_20px_60px_rgb(249,115,22,0.15)] transition-all duration-500 hover:-translate-y-2 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-50/0 to-orange-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="relative z-10">
-                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/25">
-                <Mail className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Dealer-ready format</h3>
-              <p className="text-gray-600 leading-relaxed text-lg">
-                Clean, structured email reports. All the information you need at a glance.
-              </p>
+                  <Target className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Auction coverage</h3>
+                <p className="text-gray-600 leading-relaxed text-lg">
+                  Searches multiple platforms simultaneously. Never miss a good deal again.
+                </p>
               </div>
             </div>
 
@@ -441,12 +512,12 @@ export default function HomePage() {
               <div className="absolute inset-0 bg-gradient-to-br from-orange-50/0 to-orange-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="relative z-10">
                 <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/25">
-                <Zap className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Zero manual work</h3>
-              <p className="text-gray-600 leading-relaxed text-lg">
-                Save 30+ hours per week on sourcing. Focus on what matters closing deals.
-              </p>
+                  <Mail className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Dealer-ready format</h3>
+                <p className="text-gray-600 leading-relaxed text-lg">
+                  Clean, structured email reports. All the information you need at a glance.
+                </p>
               </div>
             </div>
 
@@ -454,12 +525,25 @@ export default function HomePage() {
               <div className="absolute inset-0 bg-gradient-to-br from-orange-50/0 to-orange-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="relative z-10">
                 <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/25">
-                <TrendingUp className="w-8 h-8 text-white" />
+                  <Zap className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Zero manual work</h3>
+                <p className="text-gray-600 leading-relaxed text-lg">
+                  Save 30+ hours per week on sourcing. Focus on what matters closing deals.
+                </p>
               </div>
-              <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Increase margins</h3>
-              <p className="text-gray-600 leading-relaxed text-lg">
-                Find better deals faster. Our dealers report 22% higher profit margins on average.
-              </p>
+            </div>
+
+            <div className="group relative bg-white p-12 rounded-3xl border border-slate-200 hover:border-orange-200 shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_20px_60px_rgb(249,115,22,0.15)] transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-50/0 to-orange-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative z-10">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/25">
+                  <TrendingUp className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Increase margins</h3>
+                <p className="text-gray-600 leading-relaxed text-lg">
+                  Find better deals faster. Our dealers report 22% higher profit margins on average.
+                </p>
               </div>
             </div>
           </div>
@@ -554,13 +638,14 @@ export default function HomePage() {
 
       <section className="py-28 px-6 bg-gradient-to-br from-gray-50 to-purple-50/20">
         <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-7xl font-serif font-bold text-gray-900 text-center mb-6 leading-tight">
-              Built for every type
-              <br />
-              of dealership.
-            </h2>
-          </div>
+          <h2 className="text-5xl md:text-7xl font-serif font-bold text-gray-900 text-center mb-6 leading-tight">
+            Built for every type
+            <br />
+            of dealership.
+          </h2>
+          <p className="text-xl text-gray-600 mb-20 max-w-2xl mx-auto leading-relaxed">
+            We're built specifically for dealers who want to save time and increase margins.
+          </p>
 
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white p-10 rounded-3xl border-2 border-gray-200 hover:border-orange-300 shadow-lg hover:shadow-2xl transition-all duration-300 text-left hover:-translate-y-2">
