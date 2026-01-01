@@ -54,13 +54,13 @@ export async function POST(req: NextRequest) {
           stripe_sub_id: subscriptionId,
           plan,
           status: subscription.status,
-          current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+          current_period_end: new Date((subscription as any).current_period_end * 1000).toISOString(),
         })
 
         // Update dealer status
         await supabase.from("dealers").update({
           subscription_status: "active",
-          subscription_expires_at: new Date(subscription.current_period_end * 1000).toISOString(),
+          subscription_expires_at: new Date((subscription as any).current_period_end * 1000).toISOString(),
         }).eq("user_id", userId)
 
         // Call n8n webhook to start agent (if N8N_WEBHOOK_URL is configured)
@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
             .from("subscriptions")
             .update({
               status: subscription.status,
-              current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+              current_period_end: new Date((subscription as any).current_period_end * 1000).toISOString(),
             })
             .eq("stripe_customer_id", customerId)
 
@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
           const dealerStatus = subscription.status === "active" ? "active" : "cancelled"
           await supabase.from("dealers").update({
             subscription_status: dealerStatus,
-            subscription_expires_at: new Date(subscription.current_period_end * 1000).toISOString(),
+            subscription_expires_at: new Date((subscription as any).current_period_end * 1000).toISOString(),
           }).eq("user_id", existingSubscription.user_id)
 
           // Stop agent if subscription cancelled

@@ -20,7 +20,7 @@ interface Dealer {
   prefs?: DealerPreferences
 }
 
-interface VehicleMatch extends ClassificationResult {
+export interface VehicleMatch extends ClassificationResult {
   match_score: number
   match_reasons: string[]
   dealer_id: string

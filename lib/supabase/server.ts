@@ -13,27 +13,32 @@ export const isSupabaseConfigured =
   supabaseAnonKey.length > 0
 
 // Minimal type for dummy client to maintain type safety
+interface DummyQueryBuilder {
+  select: (columns?: string) => DummyQueryBuilder
+  insert: (values: unknown) => DummyQueryBuilder
+  update: (values: unknown) => DummyQueryBuilder
+  delete: () => DummyQueryBuilder
+  eq: (column: string, value: unknown) => DummyQueryBuilder
+  not: (column: string, operator: string, value: unknown) => DummyQueryBuilder
+  in: (column: string, values: unknown[]) => DummyQueryBuilder
+  upsert: (values: unknown) => DummyQueryBuilder
+  order: (column: string, options?: { ascending?: boolean }) => DummyQueryBuilder
+  limit: (count: number) => DummyQueryBuilder
+  range: (from: number, to: number) => DummyQueryBuilder
+  gte: (column: string, value: unknown) => DummyQueryBuilder
+  lte: (column: string, value: unknown) => DummyQueryBuilder
+  gt: (column: string, value: unknown) => DummyQueryBuilder
+  lt: (column: string, value: unknown) => DummyQueryBuilder
+  single: () => Promise<{ data: null; error: null }>
+  then: <T>(resolve: (value: { data: any; error: null }) => T) => Promise<T>
+}
+
 interface DummySupabaseClient {
   auth: {
     getUser: () => Promise<{ data: { user: null }; error: null }>
     getSession: () => Promise<{ data: { session: null }; error: null }>
   }
-  from: (table: string) => {
-    select: (columns?: string) => Promise<{ data: unknown[]; error: null }>
-    insert: (values: unknown) => Promise<{ data: null; error: null }>
-    update: (values: unknown) => Promise<{ data: null; error: null }>
-    delete: () => Promise<{ data: null; error: null }>
-    eq: (column: string, value: unknown) => {
-      select: (columns?: string) => Promise<{ data: unknown[]; error: null }>
-      single: () => Promise<{ data: null; error: null }>
-      update: (values: unknown) => Promise<{ data: null; error: null }>
-    }
-    upsert: (values: unknown) => Promise<{ data: null; error: null }>
-    order: (column: string, options?: { ascending?: boolean }) => {
-      limit: (count: number) => Promise<{ data: unknown[]; error: null }>
-    }
-    single: () => Promise<{ data: null; error: null }>
-  }
+  from: (table: string) => DummyQueryBuilder
 }
 
 /**
@@ -46,22 +51,33 @@ export async function createClient(): Promise<SupabaseClient | DummySupabaseClie
     console.warn("Supabase environment variables are not set. Using dummy client.")
 
     // Safe dummy client to prevent runtime errors during development
-    const dummyFrom = (table: string) => ({
-      select: async () => ({ data: [], error: null }),
-      insert: async () => ({ data: null, error: null }),
-      update: async () => ({ data: null, error: null }),
-      delete: async () => ({ data: null, error: null }),
-      eq: (column: string, value: unknown) => ({
-        select: async () => ({ data: [], error: null }),
+    const createDummyQueryBuilder = (): DummyQueryBuilder => {
+      const builder = {
+        select: () => builder,
+        insert: () => builder,
+        update: () => builder,
+        delete: () => builder,
+        eq: () => builder,
+        not: () => builder,
+        in: () => builder,
+        upsert: () => builder,
+        order: () => builder,
+        limit: () => builder,
+        range: () => builder,
+        gte: () => builder,
+        lte: () => builder,
+        gt: () => builder,
+        lt: () => builder,
         single: async () => ({ data: null, error: null }),
-        update: async () => ({ data: null, error: null }),
-      }),
-      upsert: async () => ({ data: null, error: null }),
-      order: (column: string, options?: { ascending?: boolean }) => ({
-        limit: async () => ({ data: [], error: null }),
-      }),
-      single: async () => ({ data: null, error: null }),
-    })
+        then: (resolve: any) => {
+          resolve({ data: [], error: null })
+          return Promise.resolve({ data: [], error: null })
+        },
+      } as DummyQueryBuilder
+      return builder
+    }
+
+    const dummyFrom = (table: string) => createDummyQueryBuilder()
 
     return {
       auth: {

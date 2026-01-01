@@ -10,19 +10,31 @@ export const isSupabaseConfigured =
   serviceRoleKey.length > 0
 
 // Minimal type for dummy client to maintain type safety
+interface DummyQueryBuilder {
+  select: (columns?: string) => DummyQueryBuilder
+  insert: (values: unknown) => DummyQueryBuilder
+  update: (values: unknown) => DummyQueryBuilder
+  delete: () => DummyQueryBuilder
+  eq: (column: string, value: unknown) => DummyQueryBuilder
+  not: (column: string, operator: string, value: unknown) => DummyQueryBuilder
+  in: (column: string, values: unknown[]) => DummyQueryBuilder
+  upsert: (values: unknown) => DummyQueryBuilder
+  order: (column: string, options?: { ascending?: boolean }) => DummyQueryBuilder
+  limit: (count: number) => DummyQueryBuilder
+  range: (from: number, to: number) => DummyQueryBuilder
+  gte: (column: string, value: unknown) => DummyQueryBuilder
+  lte: (column: string, value: unknown) => DummyQueryBuilder
+  gt: (column: string, value: unknown) => DummyQueryBuilder
+  lt: (column: string, value: unknown) => DummyQueryBuilder
+  single: () => Promise<{ data: null; error: null }>
+  then: <T>(resolve: (value: { data: any; error: null }) => T) => Promise<T>
+}
+
 interface DummySupabaseClient {
   auth: {
     getUser: () => Promise<{ data: { user: null }; error: null }>
   }
-  from: (table: string) => {
-    select: (columns?: string) => Promise<{ data: unknown[]; error: null }>
-    insert: (values: unknown) => Promise<{ data: null; error: null }>
-    update: (values: unknown) => Promise<{ data: null; error: null }>
-    delete: () => Promise<{ data: null; error: null }>
-    upsert: (values: unknown) => Promise<{ data: null; error: null }>
-    single: () => Promise<{ data: null; error: null }>
-    eq: (column: string, value: unknown) => DummySupabaseClient['from'] extends (table: string) => infer R ? R : never
-  }
+  from: (table: string) => DummyQueryBuilder
 }
 
 /**
@@ -32,15 +44,35 @@ interface DummySupabaseClient {
 export function createAdminClient(): SupabaseClient | DummySupabaseClient {
   if (!isSupabaseConfigured) {
     console.warn("Supabase environment variables are not set. Using dummy client.")
-    const dummyFrom = (table: string) => ({
-      select: async () => ({ data: [], error: null }),
-      insert: async () => ({ data: null, error: null }),
-      update: async () => ({ data: null, error: null }),
-      delete: async () => ({ data: null, error: null }),
-      upsert: async () => ({ data: null, error: null }),
-      single: async () => ({ data: null, error: null }),
-      eq: function() { return this },
-    })
+
+    const createDummyQueryBuilder = (): DummyQueryBuilder => {
+      const builder = {
+        select: () => builder,
+        insert: () => builder,
+        update: () => builder,
+        delete: () => builder,
+        eq: () => builder,
+        not: () => builder,
+        in: () => builder,
+        upsert: () => builder,
+        order: () => builder,
+        limit: () => builder,
+        range: () => builder,
+        gte: () => builder,
+        lte: () => builder,
+        gt: () => builder,
+        lt: () => builder,
+        single: async () => ({ data: null, error: null }),
+        then: (resolve: any) => {
+          resolve({ data: [], error: null })
+          return Promise.resolve({ data: [], error: null })
+        },
+      } as DummyQueryBuilder
+      return builder
+    }
+
+    const dummyFrom = (table: string) => createDummyQueryBuilder()
+
     return {
       auth: {
         getUser: async () => ({ data: { user: null }, error: null }),

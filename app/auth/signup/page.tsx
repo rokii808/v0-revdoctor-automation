@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import SignUpForm from "@/components/auth/signup-form"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, Car } from "lucide-react"
 import Link from "next/link"
 
 export default async function SignUpPage() {
@@ -16,23 +16,36 @@ export default async function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex">
-      {/* Left side - Image */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-orange-50/20 flex">
+      {/* Left side - Image with overlay */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         <img
           src="/professional-car-dealer-reviewing-auction-listings.jpg"
           alt="Car dealership professional"
           className="object-cover w-full h-full"
         />
-        {/* Overlay gradient for better text visibility if needed */}
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-purple-500/10"></div>
+        {/* Orange gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-orange-600/5"></div>
+
+        {/* Branding overlay */}
+        <div className="absolute inset-0 flex items-center justify-center p-12">
+          <div className="text-center text-white space-y-6">
+            <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-3xl flex items-center justify-center mx-auto shadow-2xl">
+              <Car className="w-12 h-12 text-white" />
+            </div>
+            <h2 className="text-5xl font-bold drop-shadow-lg">RevvDoctor</h2>
+            <p className="text-xl text-white/90 drop-shadow-md max-w-md">
+              AI-powered car auction screening for smarter sourcing
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Right side - Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-gradient-to-br from-white via-pink-50/30 to-purple-50/20">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
           <div className="mb-6">
-            <Button variant="ghost" size="sm" asChild>
+            <Button variant="ghost" size="sm" className="text-slate-600 hover:text-slate-900" asChild>
               <Link href="/">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Home
@@ -40,10 +53,6 @@ export default async function SignUpPage() {
             </Button>
           </div>
 
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-serif font-bold text-gray-900 mb-2">Revvdoctor</h1>
-            <p className="text-gray-600">AI-powered car auction screening</p>
-          </div>
           <SignUpForm />
         </div>
       </div>

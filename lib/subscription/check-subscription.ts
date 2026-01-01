@@ -94,7 +94,7 @@ export async function checkSubscriptionStatus(): Promise<SubscriptionStatus> {
   const plan = (dealer.selected_plan || 'trial') as SubscriptionStatus['plan']
 
   return {
-    isActive: isActive && !paymentFailed,
+    isActive: Boolean(isActive && !paymentFailed),
     status,
     plan,
     expiresAt,
@@ -188,17 +188,19 @@ export async function getCurrentUsage(userId: string) {
   const today = new Date().toISOString().split('T')[0]
 
   // Get today's vehicle matches count
-  const { count: vehiclesToday } = await supabase
+  const vehicleResult = await supabase
     .from("vehicle_matches")
     .select("*", { count: 'exact', head: true })
     .eq("dealer_id", userId)
     .gte("created_at", today)
+  const vehiclesToday = (vehicleResult as any).count
 
   // Get saved searches count
-  const { count: savedSearches } = await supabase
+  const searchResult = await supabase
     .from("saved_searches")
     .select("*", { count: 'exact', head: true })
     .eq("dealer_id", userId)
+  const savedSearches = (searchResult as any).count
 
   return {
     vehicles_per_day: vehiclesToday || 0,
