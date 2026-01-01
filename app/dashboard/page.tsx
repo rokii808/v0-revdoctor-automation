@@ -121,47 +121,34 @@ export default async function DashboardPage() {
     averageRoi: healthyCars && healthyCars.length > 0
       ? Math.round(
           healthyCars
-            .filter((car: any) => car.ai_classification?.profit_potential)
-            .reduce((sum: number, car: any) => sum + (car.ai_classification?.profit_potential || 0), 0) /
-          healthyCars.length
+            .filter((car: any) => car.profit_estimate && car.profit_estimate > 0)
+            .reduce((sum: number, car: any) => sum + (car.profit_estimate || 0), 0) /
+          healthyCars.filter((car: any) => car.profit_estimate && car.profit_estimate > 0).length || 1
         )
       : 0,
   }
 
   // Transform vehicle data for VehicleGrid
-  const vehicles = (healthyCars || []).map((match: any) => {
-    // Get image URL - check multiple possible locations
-    let imageUrl = null
-    if (match.vehicle_data?.image_url) {
-      imageUrl = match.vehicle_data.image_url
-    } else if (match.vehicle_data?.images && match.vehicle_data.images.length > 0) {
-      imageUrl = match.vehicle_data.images[0]
-    } else if (match.images && match.images.length > 0) {
-      imageUrl = match.images[0]
-    } else if (match.image_url) {
-      imageUrl = match.image_url
-    }
-
-    return {
-      id: match.vehicle_id || match.id,
-      make: match.vehicle_data?.make || match.make || 'Unknown',
-      model: match.vehicle_data?.model || match.model || 'Unknown',
-      year: match.vehicle_data?.year || match.year || 2020,
-      price: match.vehicle_data?.price || match.price || 0,
-      mileage: match.vehicle_data?.mileage || match.mileage || 0,
-      location: match.vehicle_data?.location || match.location,
-      image_url: imageUrl,
-      url: match.vehicle_data?.url || match.url || match.listing_url,
-      condition: match.vehicle_data?.condition || match.condition,
-      ai_classification: {
-        verdict: match.ai_classification?.verdict || 'REVIEW',
-        profit_potential: match.ai_classification?.profit_potential,
-        confidence: match.match_score ? Math.round(match.match_score * 100) : undefined,
-        issues: match.ai_classification?.issues,
-      },
-      viewed: false,
-    }
-  })
+  // Database schema has flat structure: make, model, year, price, mileage, image_url, listing_url, verdict, profit_estimate
+  const vehicles = (healthyCars || []).map((match: any) => ({
+    id: match.id,
+    make: match.make || 'Unknown',
+    model: match.model || 'Unknown',
+    year: match.year || 2020,
+    price: match.price || 0,
+    mileage: match.mileage || 0,
+    location: null, // Not in current schema
+    image_url: match.image_url, // Single image URL field
+    url: match.listing_url, // listing_url field
+    condition: match.condition,
+    ai_classification: {
+      verdict: (match.verdict || 'REVIEW') as "HEALTHY" | "AVOID" | "REVIEW",
+      profit_potential: match.profit_estimate,
+      confidence: match.match_score,
+      issues: match.reason ? [match.reason] : undefined,
+    },
+    viewed: false,
+  }))
 
   // Generate activity feed (using mock data for now - replace with real activity later)
   const activities = generateMockActivities()
