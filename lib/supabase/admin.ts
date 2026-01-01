@@ -16,6 +16,7 @@ interface DummyQueryBuilder {
   update: (values: unknown) => DummyQueryBuilder
   delete: () => DummyQueryBuilder
   eq: (column: string, value: unknown) => DummyQueryBuilder
+  not: (column: string, operator: string, value: unknown) => DummyQueryBuilder
   upsert: (values: unknown) => DummyQueryBuilder
   order: (column: string, options?: { ascending?: boolean }) => DummyQueryBuilder
   limit: (count: number) => DummyQueryBuilder
@@ -50,6 +51,7 @@ export function createAdminClient(): SupabaseClient | DummySupabaseClient {
         update: () => builder,
         delete: () => builder,
         eq: () => builder,
+        not: () => builder,
         upsert: () => builder,
         order: () => builder,
         limit: () => builder,

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Check, X } from "lucide-react"
 import Link from "next/link"
+import { motion, AnimatePresence } from "framer-motion"
 
 export default function SignUpForm() {
   const [email, setEmail] = useState("")
@@ -39,14 +40,29 @@ export default function SignUpForm() {
   }
 
   return (
-    <div className="w-full">
-      <div className="text-center mb-8">
+    <motion.div
+      className="w-full"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div
+        className="text-center mb-8"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
         <h1 className="text-4xl font-bold text-slate-900 mb-3">Welcome to RevvDoctor!</h1>
         <p className="text-slate-600 text-lg">Create your account to get started</p>
-      </div>
+      </motion.div>
 
       {/* Tab switcher */}
-      <div className="flex gap-3 justify-center mb-8">
+      <motion.div
+        className="flex gap-3 justify-center mb-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+      >
         <div className="px-8 py-3 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold shadow-lg shadow-orange-500/30">
           SIGN UP
         </div>
@@ -55,14 +71,28 @@ export default function SignUpForm() {
             LOG IN
           </button>
         </Link>
-      </div>
+      </motion.div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        {error && (
-          <Alert className="border-red-200 bg-red-50 rounded-xl shadow-sm">
-            <AlertDescription className="text-red-800">{error}</AlertDescription>
-          </Alert>
-        )}
+      <motion.form
+        onSubmit={handleSubmit}
+        className="space-y-5"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.4 }}
+      >
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+            >
+              <Alert className="border-red-200 bg-red-50 rounded-xl shadow-sm">
+                <AlertDescription className="text-red-800">{error}</AlertDescription>
+              </Alert>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <div className="space-y-2">
           <label htmlFor="dealerName" className="text-sm font-semibold text-slate-700">
@@ -84,19 +114,27 @@ export default function SignUpForm() {
                     : "border-slate-200 focus:border-orange-400 hover:border-orange-300"
               }`}
             />
-            {dealerName && (
-              <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                {isDealerNameValid ? (
-                  <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center shadow-md">
-                    <Check className="w-4 h-4 text-white" />
-                  </div>
-                ) : (
-                  <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center shadow-md">
-                    <X className="w-4 h-4 text-white" />
-                  </div>
-                )}
-              </div>
-            )}
+            <AnimatePresence>
+              {dealerName && (
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  exit={{ scale: 0, rotate: 180 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                >
+                  {isDealerNameValid ? (
+                    <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center shadow-md">
+                      <Check className="w-4 h-4 text-white" />
+                    </div>
+                  ) : (
+                    <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center shadow-md">
+                      <X className="w-4 h-4 text-white" />
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
@@ -120,19 +158,27 @@ export default function SignUpForm() {
                     : "border-slate-200 focus:border-orange-400 hover:border-orange-300"
               }`}
             />
-            {email && (
-              <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                {isEmailValid ? (
-                  <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center shadow-md">
-                    <Check className="w-4 h-4 text-white" />
-                  </div>
-                ) : (
-                  <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center shadow-md">
-                    <X className="w-4 h-4 text-white" />
-                  </div>
-                )}
-              </div>
-            )}
+            <AnimatePresence>
+              {email && (
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  exit={{ scale: 0, rotate: 180 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                >
+                  {isEmailValid ? (
+                    <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center shadow-md">
+                      <Check className="w-4 h-4 text-white" />
+                    </div>
+                  ) : (
+                    <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center shadow-md">
+                      <X className="w-4 h-4 text-white" />
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
@@ -157,19 +203,27 @@ export default function SignUpForm() {
                     : "border-slate-200 focus:border-orange-400 hover:border-orange-300"
               }`}
             />
-            {password && (
-              <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                {isPasswordValid ? (
-                  <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center shadow-md">
-                    <Check className="w-4 h-4 text-white" />
-                  </div>
-                ) : (
-                  <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center shadow-md">
-                    <X className="w-4 h-4 text-white" />
-                  </div>
-                )}
-              </div>
-            )}
+            <AnimatePresence>
+              {password && (
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  exit={{ scale: 0, rotate: 180 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                >
+                  {isPasswordValid ? (
+                    <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center shadow-md">
+                      <Check className="w-4 h-4 text-white" />
+                    </div>
+                  ) : (
+                    <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center shadow-md">
+                      <X className="w-4 h-4 text-white" />
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
@@ -188,21 +242,28 @@ export default function SignUpForm() {
           </label>
         </div>
 
-        <Button
-          type="submit"
-          disabled={!isEmailValid || !isPasswordValid || !isDealerNameValid}
-          className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-base h-14 rounded-2xl shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
-        >
-          Continue to Plan Selection
-        </Button>
-      </form>
+        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <Button
+            type="submit"
+            disabled={!isEmailValid || !isPasswordValid || !isDealerNameValid}
+            className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-base h-14 rounded-2xl shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Continue to Plan Selection
+          </Button>
+        </motion.div>
+      </motion.form>
 
-      <div className="mt-8 text-center text-sm text-slate-600">
+      <motion.div
+        className="mt-8 text-center text-sm text-slate-600"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6 }}
+      >
         Already have an account?{" "}
         <Link href="/auth/login" className="font-semibold text-orange-600 hover:text-orange-700">
           Sign in
         </Link>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   )
 }

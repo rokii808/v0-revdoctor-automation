@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { CheckCircle2, ArrowLeft, Sparkles } from "lucide-react"
 import Link from "next/link"
+import { motion } from "framer-motion"
 
 const plans = [
   {
@@ -66,6 +67,22 @@ export default function SelectPlanPage() {
     router.push("/auth/create-account")
   }
 
+  // Animation variants for staggered children
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  }
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    show: { opacity: 1, y: 0 },
+  }
+
   if (!signupData) {
     return null
   }
@@ -74,7 +91,7 @@ export default function SelectPlanPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-orange-50/20 py-12 px-6">
       <div className="container mx-auto max-w-6xl">
         {/* Header */}
-        <div className="mb-8">
+        <motion.div className="mb-8" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
           <Button variant="ghost" size="sm" className="text-slate-600 hover:text-slate-900 mb-6" asChild>
             <Link href="/auth/signup">
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -82,41 +99,69 @@ export default function SelectPlanPage() {
             </Link>
           </Button>
 
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-50 border border-orange-200 mb-4">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.3, type: "spring" }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-50 border border-orange-200 mb-4"
+            >
               <Sparkles className="w-4 h-4 text-orange-600" />
               <span className="text-sm font-semibold text-orange-700">7-DAY FREE TRIAL</span>
-            </div>
+            </motion.div>
             <h1 className="text-5xl font-bold text-slate-900 mb-4">Choose Your Plan</h1>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
               Start your 7-day free trial. Cancel anytime, no questions asked.
             </p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Plans */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
+        <motion.div
+          className="grid md:grid-cols-3 gap-6 mb-12"
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+        >
           {plans.map((plan) => (
-            <button
+            <motion.button
               key={plan.name}
+              variants={cardVariants}
+              whileHover={{ scale: 1.05, y: -10 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => setSelectedPlan(plan.name)}
               className={`relative p-8 rounded-3xl text-left transition-all duration-300 ${
                 selectedPlan === plan.name
-                  ? "bg-white border-3 border-orange-500 shadow-2xl shadow-orange-500/20 -translate-y-2"
-                  : "bg-white border-2 border-slate-200 shadow-lg hover:shadow-xl hover:-translate-y-1"
+                  ? "bg-white border-3 border-orange-500 shadow-2xl shadow-orange-500/20"
+                  : "bg-white border-2 border-slate-200 shadow-lg"
               } ${plan.popular ? "ring-2 ring-orange-400" : ""}`}
             >
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full text-xs font-bold shadow-lg shadow-orange-500/40 px-6 py-2">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.5, type: "spring" }}
+                  className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full text-xs font-bold shadow-lg shadow-orange-500/40 px-6 py-2"
+                >
                   MOST POPULAR
-                </div>
+                </motion.div>
               )}
 
               {/* Selection indicator */}
               {selectedPlan === plan.name && (
-                <div className="absolute top-6 right-6 w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center shadow-lg">
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                  className="absolute top-6 right-6 w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center shadow-lg"
+                >
                   <CheckCircle2 className="w-5 h-5 text-white" />
-                </div>
+                </motion.div>
               )}
 
               <h3 className="text-2xl font-bold text-slate-900 mb-3 mt-4">{plan.name}</h3>
@@ -135,22 +180,29 @@ export default function SelectPlanPage() {
                   </li>
                 ))}
               </ul>
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
 
         {/* Continue button */}
-        <div className="max-w-2xl mx-auto text-center">
-          <Button
-            onClick={handleContinue}
-            className="w-full max-w-md bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-lg h-16 rounded-2xl shadow-xl shadow-orange-500/30 hover:shadow-2xl hover:shadow-orange-500/40 transition-all hover:-translate-y-1"
-          >
-            Start 7-Day Free Trial with {selectedPlan}
-          </Button>
+        <motion.div
+          className="max-w-2xl mx-auto text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+        >
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              onClick={handleContinue}
+              className="w-full max-w-md bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-lg h-16 rounded-2xl shadow-xl shadow-orange-500/30 hover:shadow-2xl hover:shadow-orange-500/40 transition-all"
+            >
+              Start 7-Day Free Trial with {selectedPlan}
+            </Button>
+          </motion.div>
           <p className="text-sm text-slate-500 mt-4">
             No payment required during trial • Cancel anytime before trial ends
           </p>
-        </div>
+        </motion.div>
       </div>
     </div>
   )
