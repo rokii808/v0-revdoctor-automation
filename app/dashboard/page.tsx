@@ -1,7 +1,8 @@
 "use client"
 
-import { createClient } from "@/lib/supabase/server"
-import { redirect } from "next/navigation"
+import { createBrowserClient } from "@supabase/ssr"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { DashboardShell } from "@/components/dashboard/dashboard-shell"
 import { VehicleGrid } from "@/components/dashboard/vehicle-grid"
 import { ActivityFeed, generateMockActivities } from "@/components/dashboard/activity-feed"
@@ -14,61 +15,89 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Settings, Car, Eye, TrendingUp } from "lucide-react"
 
-export default async function DashboardPage() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+export default function DashboardPage() {
+  const router = useRouter()
+  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState(null)
+  const [subscription, setSubscription] = useState(null)
+  const [dealer, setDealer] = useState(null)
+  const [vehicles, setVehicles] = useState([])
 
-  if (!user) {
-    redirect("/auth/login")
-  }
+  useEffect(() => {
+    const initializeDashboard = async () => {
+      const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      )
 
-  const { data: subscription } = await supabase
-    .from("subscriptions")
-    .select("status, plan")
-    .eq("user_id", user.id)
-    .single()
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser()
 
-  // Allow new users to access dashboard (they're on free trial)
-  // Only redirect to pricing if subscription is explicitly cancelled
-  if (subscription && subscription.status === "cancelled") {
-    redirect("/pricing?required=true")
-  }
+      if (authError || !user) {
+        router.push("/auth/login")
+        return
+      }
 
-  // Get or create dealer profile
-  let { data: dealer, error: dealerError } = await supabase.from("dealers").select("*").eq("user_id", user.id).single()
+      setUser(user)
 
-  // If no dealer profile exists, create one
-  if (!dealer || dealerError) {
-    console.log("[Dashboard] Creating new dealer profile for user:", user.id)
-    const { data: newDealer, error: createError } = await supabase
-      .from("dealers")
-      .insert({
-        user_id: user.id,
-        dealer_name: user.user_metadata?.dealer_name || user.email?.split("@")[0] || "Your Dealership",
-        email: user.email!,
-        subscription_status: subscription?.status || "trial",
-        subscription_expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-        plan: "trial",
-      })
-      .select()
-      .single()
+      const { data: subscriptionData } = await supabase
+        .from("subscriptions")
+        .select("status, plan")
+        .eq("user_id", user.id)
+        .single()
 
-    if (createError) {
-      console.error("[Dashboard] Error creating dealer profile:", createError)
-    } else {
-      dealer = newDealer
+      if (subscriptionData?.status === "cancelled") {
+        router.push("/pricing?required=true")
+        return
+      }
+
+      setSubscription(subscriptionData)
+
+      let { data: dealerData } = await supabase.from("dealers").select("*").eq("user_id", user.id).single()
+
+      if (!dealerData) {
+        const { data: newDealer } = await supabase
+          .from("dealers")
+          .insert({ user_id: user.id, email: user.email })
+          .select()
+          .single()
+        dealerData = newDealer
+      }
+
+      setDealer(dealerData)
+
+      const { data: vehiclesData } = await supabase
+        .from("vehicle_matches")
+        .select("*")
+        .eq("dealer_id", dealerData?.id)
+        .order("created_at", { ascending: false })
+        .limit(20)
+
+      setVehicles(vehiclesData || [])
+      setLoading(false)
     }
+
+    initializeDashboard()
+  }, [router])
+
+  if (loading) {
+    return <DashboardShell>Loading...</DashboardShell>
   }
 
-  // Determine plan tier
-  const planTier: PlanTier = (dealer?.plan as PlanTier) || "trial"
-  const planConfig = getPlanConfig(planTier)
+  if (!user || !dealer) {
+    return null
+  }
+
+  const plan = (subscription?.plan || "trial") as PlanTier
+  const planConfig = getPlanConfig(plan)
+
+  const mockActivities = generateMockActivities()
 
   // Get usage stats
   const usageStats = dealer?.id
-    ? await getUsageStats(dealer.id, planTier)
+    ? getUsageStats(dealer.id, plan)
     : {
         viewedToday: 0,
         limit: 3,
@@ -78,61 +107,25 @@ export default async function DashboardPage() {
         resetAt: new Date(),
       }
 
-  // Get today's healthy cars
-  const today = new Date().toISOString().split("T")[0]
-  const { data: healthyCars, error: healthyCarsError } = await supabase
-    .from("vehicle_matches")
-    .select("*")
-    .eq("dealer_id", dealer?.id || "")
-    .gte("created_at", `${today}T00:00:00`)
-    .order("match_score", { ascending: false })
-    .limit(planConfig.features.dailyCarLimit)
-
-  if (healthyCarsError) {
-    console.error("[Dashboard] Error fetching healthy cars:", healthyCarsError.message)
-  }
-
-  // Debug: Log the first vehicle to see data structure
-  if (healthyCars && healthyCars.length > 0) {
-    console.log("[Dashboard] Sample vehicle data:", JSON.stringify(healthyCars[0], null, 2))
-  }
-
-  // Get total vehicles found this week
-  const weekAgo = new Date()
-  weekAgo.setDate(weekAgo.getDate() - 7)
-  const weeklyResult = await supabase
-    .from("vehicle_matches")
-    .select("*", { count: "exact", head: true })
-    .eq("dealer_id", dealer?.id || "")
-    .gte("created_at", weekAgo.toISOString())
-  const weeklyCount = (weeklyResult as any).count
-
-  // Get total healthy cars all time
-  const totalResult = await supabase
-    .from("vehicle_matches")
-    .select("*", { count: "exact", head: true })
-    .eq("dealer_id", dealer?.id || "")
-  const totalHealthy = (totalResult as any).count
-
   // Calculate stats
   const stats = {
-    todaysCars: healthyCars?.length || 0,
-    weeklyScans: weeklyCount || 0,
-    totalHealthy: totalHealthy || 0,
+    todaysCars: vehicles.length,
+    weeklyScans: 0, // Placeholder for weekly scans calculation
+    totalHealthy: 0, // Placeholder for total healthy cars calculation
     averageRoi:
-      healthyCars && healthyCars.length > 0
+      vehicles && vehicles.length > 0
         ? Math.round(
-            healthyCars
+            vehicles
               .filter((car: any) => car.profit_estimate && car.profit_estimate > 0)
               .reduce((sum: number, car: any) => sum + (car.profit_estimate || 0), 0) /
-              healthyCars.filter((car: any) => car.profit_estimate && car.profit_estimate > 0).length || 1,
+              vehicles.filter((car: any) => car.profit_estimate && car.profit_estimate > 0).length || 1,
           )
         : 0,
   }
 
   // Transform vehicle data for VehicleGrid
   // Database schema has flat structure: make, model, year, price, mileage, image_url, listing_url, verdict, profit_estimate
-  const vehicles = (healthyCars || []).map((match: any) => ({
+  const transformedVehicles = vehicles.map((match: any) => ({
     id: match.id,
     make: match.make || "Unknown",
     model: match.model || "Unknown",
@@ -152,11 +145,8 @@ export default async function DashboardPage() {
     viewed: false,
   }))
 
-  // Generate activity feed (using mock data for now - replace with real activity later)
-  const activities = generateMockActivities()
-
   return (
-    <DashboardShell user={user} dealer={dealer} planTier={planTier} usageStats={usageStats}>
+    <DashboardShell user={user} dealer={dealer} planTier={plan} usageStats={usageStats}>
       {/* Main Content Area */}
       <div className="space-y-8">
         {/* Welcome Section - Hero Area */}
@@ -255,7 +245,7 @@ export default async function DashboardPage() {
             </div>
 
             {/* Vehicle Grid */}
-            <VehicleGrid vehicles={vehicles} planTier={planTier} canViewMore={usageStats.canView} />
+            <VehicleGrid vehicles={transformedVehicles} planTier={plan} canViewMore={usageStats.canView} />
           </div>
 
           {/* Right Column - Sidebar Widgets (1/3 width) */}
@@ -309,7 +299,7 @@ export default async function DashboardPage() {
             </motion.div>
 
             {/* Usage Overview */}
-            <UsageOverview planTier={planTier} stats={usageStats} compact={true} />
+            <UsageOverview planTier={plan} stats={usageStats} compact={true} />
 
             {/* Quick Actions */}
             <QuickActions />
@@ -329,7 +319,7 @@ export default async function DashboardPage() {
               View All
             </Button>
           </div>
-          <ActivityFeed activities={activities} compact={true} />
+          <ActivityFeed activities={mockActivities} compact={true} />
         </motion.div>
       </div>
     </DashboardShell>
