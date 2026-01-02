@@ -132,8 +132,10 @@
 }
 
 @layer components {
-  /* Bold 3D text effects for headings */
+  /* Bold 3D text effects for headings with white outline */
   .text-3d-bold {
+    -webkit-text-stroke: 2px white;
+    paint-order: stroke fill;
     text-shadow:
       3px 3px 0 #000,
       4px 4px 0 #000,
