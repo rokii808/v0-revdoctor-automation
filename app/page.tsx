@@ -50,30 +50,14 @@ export default function HomePage() {
           </nav>
 
           <div className="flex items-center gap-4">
-            <div className="relative group">
-              <Button
-                variant="ghost"
-                size="lg"
-                className="text-gray-700 hover:text-gray-900 font-medium"
-              >
-                Login
-              </Button>
-              {/* Dropdown Menu */}
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                <a
-                  href="/auth/login"
-                  className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-t-xl transition-colors"
-                >
-                  Dealer Login
-                </a>
-                <a
-                  href="/demo-login"
-                  className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-b-xl transition-colors border-t border-gray-100"
-                >
-                  Demo Login
-                </a>
-              </div>
-            </div>
+            <Button
+              variant="ghost"
+              size="lg"
+              className="text-gray-700 hover:text-gray-900 font-medium"
+              asChild
+            >
+              <a href="/auth/login">Login</a>
+            </Button>
 
             <Button
               size="lg"
