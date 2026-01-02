@@ -90,12 +90,22 @@ export async function middleware(request: NextRequest) {
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
 
   if (isProtectedRoute) {
-    // Check dealer profile exists
-    const { data: dealer } = await supabase
-      .from('dealers')
-      .select('subscription_status, subscription_expires_at')
-      .eq('user_id', session.user.id)
-      .single()
+    // Run dealer and subscription queries in parallel
+    const [dealerResult, subscriptionResult] = await Promise.all([
+      supabase
+        .from('dealers')
+        .select('subscription_status, subscription_expires_at')
+        .eq('user_id', session.user.id)
+        .single(),
+      supabase
+        .from('subscriptions')
+        .select('status')
+        .eq('user_id', session.user.id)
+        .single()
+    ])
+
+    const dealer = dealerResult.data
+    const subscription = subscriptionResult.data
 
     // If no dealer profile, redirect to onboarding
     if (!dealer) {
@@ -120,13 +130,6 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(redirectUrl)
       }
     }
-
-    // Check if user has active subscription
-    const { data: subscription } = await supabase
-      .from('subscriptions')
-      .select('status')
-      .eq('user_id', session.user.id)
-      .single()
 
     // If no active subscription and not on trial, redirect to pricing
     if (!subscription || (subscription.status !== 'active' && dealer.subscription_status !== 'active')) {

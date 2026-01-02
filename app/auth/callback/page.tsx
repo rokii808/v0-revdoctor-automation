@@ -23,12 +23,22 @@ export default function AuthCallback() {
         if (data.session) {
           const userId = data.session.user.id
 
-          // Check if user has completed onboarding (dealer profile exists)
-          const { data: dealer } = await supabase
-            .from("dealers")
-            .select("id, subscription_status, user_id")
-            .eq("user_id", userId)
-            .single()
+          // Run both queries in parallel for faster loading
+          const [dealerResult, subscriptionResult] = await Promise.all([
+            supabase
+              .from("dealers")
+              .select("id, subscription_status, user_id")
+              .eq("user_id", userId)
+              .single(),
+            supabase
+              .from("subscriptions")
+              .select("status, current_period_end")
+              .eq("user_id", userId)
+              .single()
+          ])
+
+          const dealer = dealerResult.data
+          const subscription = subscriptionResult.data
 
           if (!dealer) {
             // New user - redirect to onboarding
@@ -36,13 +46,6 @@ export default function AuthCallback() {
             router.push("/onboarding")
             return
           }
-
-          // Check subscription status
-          const { data: subscription } = await supabase
-            .from("subscriptions")
-            .select("status, current_period_end")
-            .eq("user_id", userId)
-            .single()
 
           // User has dealer profile
           if (dealer.subscription_status === "trial") {

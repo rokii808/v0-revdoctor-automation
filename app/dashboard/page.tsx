@@ -29,33 +29,29 @@ export default function DashboardPage() {
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       )
 
+      // Middleware already validated auth - just get user data
       const {
         data: { user },
-        error: authError,
       } = await supabase.auth.getUser()
 
-      if (authError || !user) {
+      if (!user) {
         router.push("/auth/login")
         return
       }
 
       setUser(user)
 
-      const { data: subscriptionData } = await supabase
-        .from("subscriptions")
-        .select("status, plan")
-        .eq("user_id", user.id)
-        .single()
+      // Run all queries in parallel for faster loading
+      const [subscriptionResult, dealerResult] = await Promise.all([
+        supabase.from("subscriptions").select("status, plan").eq("user_id", user.id).single(),
+        supabase.from("dealers").select("*").eq("user_id", user.id).single(),
+      ])
 
-      if (subscriptionData?.status === "cancelled") {
-        router.push("/pricing?required=true")
-        return
-      }
+      setSubscription(subscriptionResult.data)
 
-      setSubscription(subscriptionData)
+      let dealerData = dealerResult.data
 
-      let { data: dealerData } = await supabase.from("dealers").select("*").eq("user_id", user.id).single()
-
+      // If no dealer found (shouldn't happen due to middleware), create one
       if (!dealerData) {
         const { data: newDealer } = await supabase
           .from("dealers")
@@ -67,6 +63,7 @@ export default function DashboardPage() {
 
       setDealer(dealerData)
 
+      // Fetch vehicles (can run after dealer is confirmed)
       const { data: vehiclesData } = await supabase
         .from("vehicle_matches")
         .select("*")
