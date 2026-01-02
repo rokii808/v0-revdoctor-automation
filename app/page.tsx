@@ -156,26 +156,14 @@ export default function HomePage() {
 
       {/* Live Metrics Dashboard Preview */}
       <motion.section
-        className="py-24 px-6 bg-slate-900 text-white relative overflow-hidden -mt-20 pt-32 rounded-t-[3rem] shadow-2xl"
+        className="py-24 px-6 bg-white text-slate-900 relative overflow-hidden -mt-20 pt-32 rounded-t-[3rem] shadow-2xl"
         initial={{ opacity: 0, y: 60 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
         viewport={{ once: true, margin: "-100px" }}
       >
-        {/* Animated grid background - very subtle */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `
-              linear-gradient(to right, #fff 1px, transparent 1px),
-              linear-gradient(to bottom, #fff 1px, transparent 1px)
-            `,
-            backgroundSize: "40px 40px",
-          }}
-        ></div>
-
         {/* Orange accent glow */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-orange-600/30 rounded-full blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl"></div>
 
         <div className="container mx-auto max-w-6xl relative z-10">
           <motion.div
@@ -185,16 +173,16 @@ export default function HomePage() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true, margin: "-100px" }}
           >
-            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-orange-600 border-2 border-white mb-8">
+            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-orange-600 border-2 border-black mb-8">
               <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
               <span className="text-sm font-black text-white tracking-wider">LIVE DATA</span>
             </div>
-            <h2 className="text-6xl md:text-8xl font-black text-white mb-8 leading-tight tracking-tighter">
+            <h2 className="text-6xl md:text-8xl font-black text-black mb-8 leading-tight tracking-tighter">
               SEE RESULTS IN
               <br />
-              <span className="text-orange-500">REAL-TIME</span>
+              <span className="text-orange-600">REAL-TIME</span>
             </h2>
-            <p className="text-2xl text-white/80 max-w-3xl mx-auto leading-relaxed font-semibold">
+            <p className="text-2xl text-black/70 max-w-3xl mx-auto leading-relaxed font-semibold">
               Watch as our AI scans hundreds of auctions and delivers qualified vehicles — updated every minute.
             </p>
           </motion.div>
