@@ -1,7 +1,9 @@
-import { createClient } from "@/lib/supabase/server"
-import { redirect } from 'next/navigation'
+"use client"
+
+import { createBrowserClient } from "@supabase/ssr"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { DashboardShell } from "@/components/dashboard/dashboard-shell"
-import { StatsCards } from "@/components/dashboard/stats-cards"
 import { VehicleGrid } from "@/components/dashboard/vehicle-grid"
 import { ActivityFeed, generateMockActivities } from "@/components/dashboard/activity-feed"
 import { QuickActions } from "@/components/dashboard/quick-actions"
@@ -58,222 +60,201 @@ export default function DashboardPage() {
           .single()
         dealerData = newDealer
       }
-import { getUsageStats } from "@/lib/plans/usage-tracker"
 
-export default async function DashboardPage() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+      setDealer(dealerData)
 
-  if (!user) {
-    redirect("/auth/login")
-  }
+      // Fetch vehicles (can run after dealer is confirmed)
+      const { data: vehiclesData } = await supabase
+        .from("vehicle_matches")
+        .select("*")
+        .eq("dealer_id", dealerData?.id)
+        .order("created_at", { ascending: false })
+        .limit(20)
 
-  const { data: subscription } = await supabase
-    .from('subscriptions')
-    .select('status, plan')
-    .eq('user_id', user.id)
-    .single()
-
-  // Allow new users to access dashboard (they're on free trial)
-  // Only redirect to pricing if subscription is explicitly cancelled
-  if (subscription && subscription.status === 'cancelled') {
-    redirect("/pricing?required=true")
-  }
-
-  // Get or create dealer profile
-  let { data: dealer, error: dealerError } = await supabase
-    .from("dealers")
-    .select("*")
-    .eq("user_id", user.id)
-    .single()
-
-  // If no dealer profile exists, create one
-  if (!dealer || dealerError) {
-    console.log("[Dashboard] Creating new dealer profile for user:", user.id)
-    const { data: newDealer, error: createError } = await supabase
-      .from("dealers")
-      .insert({
-        user_id: user.id,
-        dealer_name: user.user_metadata?.dealer_name || user.email?.split('@')[0] || "Your Dealership",
-        email: user.email!,
-        subscription_status: subscription?.status || "trial",
-        subscription_expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-        plan: "trial",
-      })
-      .select()
-      .single()
-
-    if (createError) {
-      console.error("[Dashboard] Error creating dealer profile:", createError)
-    } else {
-      dealer = newDealer
+      setVehicles(vehiclesData || [])
+      setLoading(false)
     }
+
+    initializeDashboard()
+  }, [router])
+
+  if (loading || !user || !dealer) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
   }
 
-  // Determine plan tier
-  const planTier: PlanTier = (dealer?.plan as PlanTier) || 'trial'
-  const planConfig = getPlanConfig(planTier)
+  const plan = (subscription?.plan || "trial") as PlanTier
+  const planConfig = getPlanConfig(plan)
 
-  // Get usage stats
-  const usageStats = dealer?.id
-    ? await getUsageStats(dealer.id, planTier)
-    : {
-        viewedToday: 0,
-        limit: 3,
-        remaining: 3,
-        canView: true,
-        percentage: 0,
-        resetAt: new Date(),
-      }
+  const mockActivities = generateMockActivities()
 
-  // Get today's healthy cars
-  const today = new Date().toISOString().split('T')[0]
-  const { data: healthyCars, error: healthyCarsError } = await supabase
-    .from("vehicle_matches")
-    .select("*")
-    .eq("dealer_id", dealer?.id || '')
-    .gte("created_at", `${today}T00:00:00`)
-    .order("match_score", { ascending: false })
-    .limit(planConfig.features.dailyCarLimit)
-
-  if (healthyCarsError) {
-    console.error("[Dashboard] Error fetching healthy cars:", healthyCarsError.message)
+  // Mock usage stats for client-side rendering
+  const usageStats = {
+    viewedToday: 0,
+    limit: planConfig.features.dailyCarLimit,
+    remaining: planConfig.features.dailyCarLimit,
+    canView: true,
+    percentage: 0,
+    resetAt: new Date(),
   }
-
-  // Debug: Log the first vehicle to see data structure
-  if (healthyCars && healthyCars.length > 0) {
-    console.log("[Dashboard] Sample vehicle data:", JSON.stringify(healthyCars[0], null, 2))
-  }
-
-  // Get total vehicles found this week
-  const weekAgo = new Date()
-  weekAgo.setDate(weekAgo.getDate() - 7)
-  const weeklyResult = await supabase
-    .from("vehicle_matches")
-    .select("*", { count: 'exact', head: true })
-    .eq("dealer_id", dealer?.id || '')
-    .gte("created_at", weekAgo.toISOString())
-  const weeklyCount = (weeklyResult as any).count
-
-  // Get total healthy cars all time
-  const totalResult = await supabase
-    .from("vehicle_matches")
-    .select("*", { count: 'exact', head: true })
-    .eq("dealer_id", dealer?.id || '')
-  const totalHealthy = (totalResult as any).count
 
   // Calculate stats
   const stats = {
-    todaysCars: healthyCars?.length || 0,
-    weeklyScans: weeklyCount || 0,
-    totalHealthy: totalHealthy || 0,
-    averageRoi: healthyCars && healthyCars.length > 0
-      ? Math.round(
-          healthyCars
-            .filter((car: any) => car.ai_classification?.profit_potential)
-            .reduce((sum: number, car: any) => sum + (car.ai_classification?.profit_potential || 0), 0) /
-          healthyCars.length
-        )
-      : 0,
+    todaysCars: vehicles.length,
+    weeklyScans: 0, // Placeholder for weekly scans calculation
+    totalHealthy: 0, // Placeholder for total healthy cars calculation
+    averageRoi:
+      vehicles && vehicles.length > 0
+        ? Math.round(
+            vehicles
+              .filter((car: any) => car.profit_estimate && car.profit_estimate > 0)
+              .reduce((sum: number, car: any) => sum + (car.profit_estimate || 0), 0) /
+              vehicles.filter((car: any) => car.profit_estimate && car.profit_estimate > 0).length || 1,
+          )
+        : 0,
   }
 
   // Transform vehicle data for VehicleGrid
-  const vehicles = (healthyCars || []).map((match: any) => {
-    // Get image URL - check multiple possible locations
-    let imageUrl = null
-    if (match.vehicle_data?.image_url) {
-      imageUrl = match.vehicle_data.image_url
-    } else if (match.vehicle_data?.images && match.vehicle_data.images.length > 0) {
-      imageUrl = match.vehicle_data.images[0]
-    } else if (match.images && match.images.length > 0) {
-      imageUrl = match.images[0]
-    } else if (match.image_url) {
-      imageUrl = match.image_url
-    }
-
-    return {
-      id: match.vehicle_id || match.id,
-      make: match.vehicle_data?.make || match.make || 'Unknown',
-      model: match.vehicle_data?.model || match.model || 'Unknown',
-      year: match.vehicle_data?.year || match.year || 2020,
-      price: match.vehicle_data?.price || match.price || 0,
-      mileage: match.vehicle_data?.mileage || match.mileage || 0,
-      location: match.vehicle_data?.location || match.location,
-      image_url: imageUrl,
-      url: match.vehicle_data?.url || match.url || match.listing_url,
-      condition: match.vehicle_data?.condition || match.condition,
-      ai_classification: {
-        verdict: match.ai_classification?.verdict || 'REVIEW',
-        profit_potential: match.ai_classification?.profit_potential,
-        confidence: match.match_score ? Math.round(match.match_score * 100) : undefined,
-        issues: match.ai_classification?.issues,
-      },
-      viewed: false,
-    }
-  })
-
-  // Generate activity feed (using mock data for now - replace with real activity later)
-  const activities = generateMockActivities()
+  // Database schema has flat structure: make, model, year, price, mileage, image_url, listing_url, verdict, profit_estimate
+  const transformedVehicles = vehicles.map((match: any) => ({
+    id: match.id,
+    make: match.make || "Unknown",
+    model: match.model || "Unknown",
+    year: match.year || 2020,
+    price: match.price || 0,
+    mileage: match.mileage || 0,
+    location: undefined, // Not in current schema
+    image_url: match.image_url, // Single image URL field
+    url: match.listing_url, // listing_url field
+    condition: match.condition,
+    ai_classification: {
+      verdict: (match.verdict || "REVIEW") as "HEALTHY" | "AVOID" | "REVIEW",
+      profit_potential: match.profit_estimate,
+      confidence: match.match_score,
+      issues: match.reason ? match.reason.split("; ").filter(Boolean) : undefined, // Split semicolon-separated reasons
+    },
+    viewed: false,
+  }))
 
   return (
-    <DashboardShell
-      user={user}
-      dealer={dealer}
-      planTier={planTier}
-      usageStats={usageStats}
-    >
+    <DashboardShell user={user} dealer={dealer} planTier={plan} usageStats={usageStats}>
       {/* Main Content Area */}
-      <div className="space-y-8">
-        {/* Stats Overview */}
-        <StatsCards
-          todaysCars={stats.todaysCars}
-          weeklyScans={stats.weeklyScans}
-          totalHealthy={stats.totalHealthy}
-          averageRoi={stats.averageRoi}
-          planTier={planTier}
-        />
+      <div className="space-y-6">
+        {/* Welcome Section */}
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">Welcome back, {dealer?.dealer_name?.split(" ")[0] || "Dealer"}! 👋</h1>
+          <p className="text-slate-600 mt-1">Here's what your AI scout found today</p>
+        </div>
 
-        {/* Main Grid Layout */}
-        <div className="grid lg:grid-cols-3 gap-6">
-          {/* Left Column - Main Content (2/3 width) */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Section Header */}
-            <div>
-              <h2 className="text-2xl font-bold text-slate-900 mb-2">Today's Healthy Cars</h2>
-              <p className="text-slate-600">
-                AI-verified vehicles that match your criteria and have strong profit potential
-              </p>
+        {/* Metrics Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Today's Vehicles Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200 hover:shadow-xl transition-all"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center">
+                <Car className="w-6 h-6 text-orange-600" />
+              </div>
+              <span className="text-2xl">🚗</span>
             </div>
+            <p className="text-3xl font-bold text-slate-900 mb-1">{stats.todaysCars}</p>
+            <p className="text-sm text-slate-600">Today's Vehicles</p>
+          </motion.div>
 
-            {/* Vehicle Grid */}
-            <VehicleGrid
-              vehicles={vehicles}
-              planTier={planTier}
-              canViewMore={usageStats.canView}
-            />
+          {/* Weekly Scans Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200 hover:shadow-xl transition-all"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
+                <Eye className="w-6 h-6 text-blue-600" />
+              </div>
+              <span className="text-2xl">📊</span>
+            </div>
+            <p className="text-3xl font-bold text-slate-900 mb-1">{stats.weeklyScans}</p>
+            <p className="text-sm text-slate-600">Weekly Scans</p>
+          </motion.div>
 
-            {/* Activity Feed */}
-            <div className="pt-6">
-              <ActivityFeed
-                activities={activities}
-                compact={false}
-              />
+          {/* Healthy Cars Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200 hover:shadow-xl transition-all"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-green-600" />
+              </div>
+              <span className="text-2xl">✅</span>
+            </div>
+            <p className="text-3xl font-bold text-slate-900 mb-1">{stats.totalHealthy}</p>
+            <p className="text-sm text-slate-600">Healthy Matches</p>
+          </motion.div>
+
+          {/* Average ROI Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-6 shadow-lg text-white"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-white" />
+              </div>
+              <span className="text-2xl">💰</span>
+            </div>
+            <p className="text-3xl font-bold mb-1">£{stats.averageRoi.toLocaleString()}</p>
+            <p className="text-sm text-orange-100">Avg. Profit/Vehicle</p>
+          </motion.div>
+        </div>
+
+        {/* Main Grid: Vehicles + Sidebar */}
+        <div className="grid lg:grid-cols-3 gap-6">
+          {/* Left Column - Vehicles (2/3 width) */}
+          <div className="lg:col-span-2 space-y-6">
+
+            {/* Vehicles Section */}
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-xl font-bold text-slate-900">Today's Best Picks</h2>
+                  <p className="text-sm text-slate-600 mt-1">AI-verified vehicles with strong profit potential</p>
+                </div>
+                <Link href="/dashboard?view=all">
+                  <Button variant="outline" size="sm">
+                    View All
+                  </Button>
+                </Link>
+              </div>
+
+              {/* Vehicle Grid */}
+              <VehicleGrid vehicles={transformedVehicles} planTier={plan} canViewMore={usageStats.canView} />
             </div>
           </div>
 
-          {/* Right Column - Sidebar (1/3 width) */}
+          {/* Right Column - Sidebar Widgets (1/3 width) */}
           <div className="space-y-6">
             {/* Usage Overview */}
-            <UsageOverview
-              planTier={planTier}
-              stats={usageStats}
-              compact={false}
-            />
+            <UsageOverview planTier={plan} stats={usageStats} compact={true} />
 
             {/* Quick Actions */}
             <QuickActions />
+
+            {/* Activity Feed */}
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold text-slate-900">Recent Activity</h3>
+              </div>
+              <ActivityFeed activities={mockActivities} compact={true} />
+            </div>
           </div>
         </div>
       </div>
