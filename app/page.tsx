@@ -44,50 +44,39 @@ export default function HomePage() {
             <a href="#pricing" className="text-gray-600 hover:text-gray-900 transition-colors font-medium text-base">
               Pricing
             </a>
-            <a href="/about" className="text-gray-600 hover:text-gray-900 transition-colors font-medium text-base">
-              About Us
-            </a>
           </nav>
 
-          <div className="flex items-center gap-4">
-            <div className="relative group">
-              <Button
-                variant="ghost"
-                size="lg"
-                className="text-gray-700 hover:text-gray-900 font-medium"
-              >
-                Login
-              </Button>
-              {/* Dropdown Menu */}
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                <a
-                  href="/auth/login"
-                  className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-t-xl transition-colors"
-                >
-                  Dealer Login
-                </a>
-                <a
-                  href="/demo-login"
-                  className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-b-xl transition-colors border-t border-gray-100"
-                >
-                  Demo Login
-                </a>
-              </div>
-            </div>
-
-            <Button
-              size="lg"
-              className="cta-enterprise bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg shadow-orange-500/25 text-base rounded-full font-semibold px-8 py-4"
-              asChild
-            >
-              <a href="/auth/signup">Start Free Trial</a>
-            </Button>
-          </div>
+          <Button
+            size="lg"
+            className="cta-enterprise bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg shadow-orange-500/25 text-base rounded-full font-semibold px-8 py-4"
+            asChild
+          >
+            <a href="/auth/signup">Start Free Trial</a>
+          </Button>
         </div>
       </header>
 
       {/* Hero Section */}
       <section className="py-32 px-6 hero-bg-motion bg-gradient-to-br from-slate-50 via-white to-orange-50/20 relative overflow-hidden">
+        {/* Subtle Grid Pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.15]"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, rgb(148 163 184 / 0.15) 1px, transparent 1px),
+              linear-gradient(to bottom, rgb(148 163 184 / 0.15) 1px, transparent 1px)
+            `,
+            backgroundSize: "48px 48px",
+          }}
+        ></div>
+
+        {/* Glowing Orbs */}
+        <div className="absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-orange-400/15 to-blue-400/10 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute bottom-20 left-10 w-80 h-80 bg-gradient-to-br from-blue-400/10 to-orange-400/15 rounded-full blur-3xl animate-pulse-slow delay-1000"></div>
+
+        {/* Accent Glow */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-orange-500/5 to-transparent rounded-full blur-3xl"></div>
+
         <div className="container mx-auto text-center max-w-5xl relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 backdrop-blur-sm border border-orange-100 shadow-sm mb-8 animate-fade-in signal-pill-pulse">
             <span className="relative flex h-3 w-3">
@@ -150,17 +139,8 @@ export default function HomePage() {
       </section>
 
       {/* Live Metrics Dashboard Preview */}
-      <section className="py-20 px-6 bg-gradient-to-b from-white via-slate-50 to-white relative overflow-hidden">
-        {/* Mustang on the Right - Subtle/Faded */}
-        <div className="absolute right-0 bottom-0 w-[500px] h-[400px] opacity-20 hidden lg:block pointer-events-none">
-          <img
-            src="https://images.unsplash.com/photo-1584345604325-9d8f8e182551?auto=format&fit=crop&w=1000&q=80"
-            alt="Luxury sports car"
-            className="w-full h-full object-contain"
-          />
-        </div>
-
-        <div className="container mx-auto max-w-6xl relative z-10">
+      <section className="py-20 px-6 bg-gradient-to-b from-white via-slate-50 to-white">
+        <div className="container mx-auto max-w-6xl">
           <motion.div
             className="text-center mb-12"
             initial={{ opacity: 0, y: 30 }}
@@ -197,17 +177,8 @@ export default function HomePage() {
       </section>
 
       {/* Problems Section with 3-Column Layout */}
-      <section className="py-28 px-6 bg-white relative overflow-hidden">
-        {/* Mercedes-AMG on the Left */}
-        <div className="absolute left-0 bottom-0 w-[500px] h-[400px] hidden lg:block">
-          <img
-            src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1000&q=80"
-            alt="Mercedes-AMG luxury performance car"
-            className="w-full h-full object-contain"
-          />
-        </div>
-
-        <div className="container mx-auto max-w-6xl relative z-10">
+      <section className="py-28 px-6 bg-white">
+        <div className="container mx-auto max-w-6xl">
           <motion.div
             className="text-center mb-20"
             initial={{ opacity: 0, y: 30 }}
@@ -398,13 +369,33 @@ export default function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Dealer with Car - Left Side */}
-            <div className="relative">
-              <img
-                src="https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&w=800&q=80"
-                alt="Professional car dealer reviewing vehicle listings"
-                className="w-full h-auto rounded-3xl shadow-2xl"
-              />
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-8 rounded-3xl border-2 border-gray-200 shadow-2xl">
+              <div className="bg-white p-6 rounded-2xl shadow-lg mb-4">
+                <div className="flex items-center gap-3 mb-4 pb-4 border-b">
+                  <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
+                    <Mail className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-900">Today's Healthy Cars</p>
+                    <p className="text-sm text-gray-500">7:00 AM Daily Digest</p>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                    <p className="font-bold text-gray-900 mb-1">2019 BMW 3 Series</p>
+                    <p className="text-sm text-gray-600">45,000 miles • £12,500 • Excellent</p>
+                  </div>
+                  <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                    <p className="font-bold text-gray-900 mb-1">2020 Audi A4</p>
+                    <p className="text-sm text-gray-600">32,000 miles • £15,800 • Very Good</p>
+                  </div>
+                  <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                    <p className="font-bold text-gray-900 mb-1">2018 Mercedes C-Class</p>
+                    <p className="text-sm text-gray-600">58,000 miles • £11,200 • Good</p>
+                  </div>
+                </div>
+              </div>
+              <p className="text-center text-sm text-gray-500">Sample email preview</p>
             </div>
 
             <div className="space-y-6">
