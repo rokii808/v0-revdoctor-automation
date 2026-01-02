@@ -93,12 +93,12 @@ export default function HomePage() {
         <div className="absolute bottom-40 right-32 w-24 h-24 bg-black/5 rotate-12"></div>
 
         <div className="container mx-auto text-center max-w-6xl relative z-10">
-          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white border-2 border-black box-3d mb-12 animate-fade-in">
+          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white border-2 border-slate-700 box-3d mb-12 animate-fade-in">
             <span className="relative flex h-4 w-4">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-4 w-4 bg-orange-600"></span>
             </span>
-            <span className="text-base font-bold text-black tracking-wide">SCANNING LIVE AUCTIONS 24/7</span>
+            <span className="text-base font-bold text-slate-700 tracking-wide">SCANNING LIVE AUCTIONS 24/7</span>
           </div>
 
           <motion.div
@@ -106,7 +106,7 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h1 className="text-7xl md:text-9xl font-black text-black mb-10 leading-[1.15] tracking-tight text-3d-bold">
+            <h1 className="text-7xl md:text-9xl font-black text-slate-700 mb-10 leading-[1.15] tracking-tight text-3d-bold">
               AUTOMATE
               <br />
               CAR SOURCING.
@@ -118,7 +118,7 @@ export default function HomePage() {
           </motion.div>
 
           <motion.p
-            className="text-2xl md:text-3xl text-black/80 mb-16 max-w-4xl mx-auto leading-relaxed font-semibold"
+            className="text-2xl md:text-3xl text-slate-600 mb-16 max-w-4xl mx-auto leading-relaxed font-semibold"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
@@ -134,7 +134,7 @@ export default function HomePage() {
           >
             <Button
               size="lg"
-              className="bg-orange-600 hover:bg-orange-700 text-white text-2xl px-16 py-10 rounded-2xl border-4 border-black box-3d-hover font-black tracking-wide group shadow-xl"
+              className="bg-orange-600 hover:bg-orange-700 text-white text-2xl px-16 py-10 rounded-2xl border-4 border-slate-700 box-3d-hover font-black tracking-wide group shadow-xl"
               asChild
             >
               <a href="/test-email">
@@ -149,7 +149,7 @@ export default function HomePage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            <p className="text-lg text-black/60 font-bold tracking-wide">★ TRUSTED BY 100+ UK DEALERSHIPS ★</p>
+            <p className="text-lg text-slate-500 font-bold tracking-wide">★ TRUSTED BY 100+ UK DEALERSHIPS ★</p>
           </motion.div>
         </div>
       </section>
@@ -173,16 +173,16 @@ export default function HomePage() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true, margin: "-100px" }}
           >
-            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-orange-600 border-2 border-black mb-8">
+            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-orange-600 border-2 border-slate-700 mb-8">
               <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
               <span className="text-sm font-black text-white tracking-wider">LIVE DATA</span>
             </div>
-            <h2 className="text-6xl md:text-8xl font-black text-black mb-8 leading-tight tracking-tighter">
+            <h2 className="text-6xl md:text-8xl font-black text-slate-700 mb-8 leading-tight tracking-tighter">
               SEE RESULTS IN
               <br />
               <span className="text-orange-600">REAL-TIME</span>
             </h2>
-            <p className="text-2xl text-black/70 max-w-3xl mx-auto leading-relaxed font-semibold">
+            <p className="text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-semibold">
               Watch as our AI scans hundreds of auctions and delivers qualified vehicles — updated every minute.
             </p>
           </motion.div>
@@ -485,12 +485,12 @@ export default function HomePage() {
         <div className="absolute bottom-20 left-20 w-32 h-32 bg-black/5 -rotate-12"></div>
 
         <div className="container mx-auto max-w-6xl relative z-10">
-          <h2 className="text-6xl md:text-8xl font-black text-black mb-8 leading-tight tracking-tighter text-center">
+          <h2 className="text-6xl md:text-8xl font-black text-slate-700 mb-8 leading-tight tracking-tighter text-center">
             EVERYTHING YOU
             <br />
             NEED TO <span className="text-orange-600">WIN.</span>
           </h2>
-          <p className="text-2xl text-black/70 mb-20 max-w-3xl mx-auto leading-relaxed font-semibold text-center">
+          <p className="text-2xl text-slate-600 mb-20 max-w-3xl mx-auto leading-relaxed font-semibold text-center">
             Built for dealers who want to save time and increase margins.
           </p>
 
@@ -664,12 +664,12 @@ export default function HomePage() {
 
       <section className="py-28 px-6 bg-white">
         <div className="container mx-auto max-w-6xl">
-          <h2 className="text-6xl md:text-8xl font-black text-black text-center mb-8 leading-tight tracking-tighter">
+          <h2 className="text-6xl md:text-8xl font-black text-slate-700 text-center mb-8 leading-tight tracking-tighter">
             BUILT FOR EVERY
             <br />
             <span className="text-orange-600">DEALERSHIP.</span>
           </h2>
-          <p className="text-2xl text-black/70 mb-20 max-w-3xl mx-auto leading-relaxed font-semibold text-center">
+          <p className="text-2xl text-slate-600 mb-20 max-w-3xl mx-auto leading-relaxed font-semibold text-center">
             Save time and increase margins — no matter your size.
           </p>
 
@@ -915,10 +915,10 @@ export default function HomePage() {
 
       <section className="py-28 px-6 bg-gradient-to-br from-orange-50 via-white to-black/5">
         <div className="container mx-auto text-center max-w-4xl">
-          <h2 className="text-6xl md:text-8xl font-black text-black text-center mb-8 leading-tight tracking-tighter">
+          <h2 className="text-6xl md:text-8xl font-black text-slate-700 text-center mb-8 leading-tight tracking-tighter">
             GOT <span className="text-orange-600">QUESTIONS?</span>
           </h2>
-          <p className="text-2xl text-black/70 text-center mb-20 leading-relaxed font-semibold">
+          <p className="text-2xl text-slate-600 text-center mb-20 leading-relaxed font-semibold">
             Everything you need to know before getting started.
           </p>
 
