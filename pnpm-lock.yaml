@@ -218,6 +218,9 @@ importers:
       sonner:
         specifier: ^1.7.4
         version: 1.7.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      srvx:
+        specifier: latest
+        version: 0.10.0
       stripe:
         specifier: latest
         version: 20.1.0(@types/node@22.0.0)
