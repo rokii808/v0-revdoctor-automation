@@ -139,64 +139,13 @@ export default function HomePage() {
           </motion.div>
 
           <motion.div
-            className="text-center mb-16"
+            className="text-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            <p className="text-sm text-slate-500 mb-4 font-medium">Trusted by 100+ dealerships across the UK</p>
+            <p className="text-sm text-slate-500 font-medium">Trusted by 100+ dealerships across the UK</p>
           </motion.div>
-
-          {/* Rising Cards Animation on Scroll */}
-          <div className="grid md:grid-cols-3 gap-8 mt-20">
-            <motion.div
-              className="bg-white p-8 rounded-3xl shadow-lg border border-slate-200"
-              initial={{ opacity: 0, y: 100 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-            >
-              <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6">
-                <Filter className="w-7 h-7 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">AI-Powered Filtering</h3>
-              <p className="text-slate-600 leading-relaxed">
-                Smart algorithms filter thousands of listings to show only the cars that match your exact criteria.
-              </p>
-            </motion.div>
-
-            <motion.div
-              className="bg-white p-8 rounded-3xl shadow-lg border border-slate-200"
-              initial={{ opacity: 0, y: 100 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true, margin: "-50px" }}
-            >
-              <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6">
-                <Shield className="w-7 h-7 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Verified Conditions</h3>
-              <p className="text-slate-600 leading-relaxed">
-                Every vehicle is automatically screened for condition issues before reaching your inbox.
-              </p>
-            </motion.div>
-
-            <motion.div
-              className="bg-white p-8 rounded-3xl shadow-lg border border-slate-200"
-              initial={{ opacity: 0, y: 100 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              viewport={{ once: true, margin: "-50px" }}
-            >
-              <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6">
-                <Zap className="w-7 h-7 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Instant Updates</h3>
-              <p className="text-slate-600 leading-relaxed">
-                Get real-time notifications when new vehicles matching your preferences hit the market.
-              </p>
-            </motion.div>
-          </div>
         </div>
       </section>
 
