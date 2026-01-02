@@ -155,7 +155,13 @@ export default function HomePage() {
       </section>
 
       {/* Live Metrics Dashboard Preview */}
-      <section className="py-24 px-6 bg-black text-white relative overflow-hidden">
+      <motion.section
+        className="py-24 px-6 bg-slate-900 text-white relative overflow-hidden -mt-20 pt-32 rounded-t-[3rem] shadow-2xl"
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+        viewport={{ once: true, margin: "-100px" }}
+      >
         {/* Animated grid background - very subtle */}
         <div
           className="absolute inset-0 opacity-[0.03]"
@@ -202,7 +208,7 @@ export default function HomePage() {
             <LiveMetricsPreview />
           </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Problems Section with 3-Column Layout */}
       <section className="py-28 px-6 bg-white">
