@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Mail, Clock, Bell } from "lucide-react"
@@ -66,16 +66,32 @@ export default function EmailSettings({ dealer }: EmailSettingsProps) {
       <CardContent className="space-y-4">
         <div>
           <Label className="text-sm font-medium">Digest Frequency</Label>
-          <div className="mt-1 p-2 border rounded-md">
-            {settings.frequency}
-          </div>
+          <Select value={settings.frequency} onValueChange={(value) => setSettings({ ...settings, frequency: value })}>
+            <SelectTrigger className="mt-1">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="instant">Instant (as they arrive)</SelectItem>
+              <SelectItem value="hourly">Hourly</SelectItem>
+              <SelectItem value="daily">Daily</SelectItem>
+              <SelectItem value="weekly">Weekly</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div>
           <Label className="text-sm font-medium">Daily Digest Time</Label>
-          <div className="mt-1 p-2 border rounded-md">
-            {settings.time}
-          </div>
+          <Select value={settings.time} onValueChange={(value) => setSettings({ ...settings, time: value })}>
+            <SelectTrigger className="mt-1">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="06:00">6:00 AM</SelectItem>
+              <SelectItem value="07:00">7:00 AM</SelectItem>
+              <SelectItem value="08:00">8:00 AM</SelectItem>
+              <SelectItem value="09:00">9:00 AM</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="space-y-3">
