@@ -72,9 +72,9 @@ export default function HomePage() {
 
       {/* Hero Section - Bold & Distinctive */}
       <section className="relative py-40 px-6 overflow-hidden bg-gradient-to-br from-orange-50 via-white to-black/5">
-        {/* Bold geometric pattern background */}
+        {/* Bold geometric pattern background - very subtle */}
         <div
-          className="absolute inset-0 opacity-[0.03]"
+          className="absolute inset-0 opacity-[0.01]"
           style={{
             backgroundImage: `
               linear-gradient(to right, #000 2px, transparent 2px),
@@ -156,9 +156,9 @@ export default function HomePage() {
 
       {/* Live Metrics Dashboard Preview */}
       <section className="py-24 px-6 bg-black text-white relative overflow-hidden">
-        {/* Animated grid background */}
+        {/* Animated grid background - very subtle */}
         <div
-          className="absolute inset-0 opacity-10"
+          className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: `
               linear-gradient(to right, #fff 1px, transparent 1px),
