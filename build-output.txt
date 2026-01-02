@@ -1,0 +1,119 @@
+
+> my-v0-project@0.1.0 build
+> next build
+
+   ▲ Next.js 15.1.6
+
+   Creating an optimized production build ...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (130kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ⚠ Compiled with warnings
+
+./node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js
+A Node.js API is used (process.versions at line: 39) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js
+./node_modules/@supabase/realtime-js/dist/module/index.js
+./node_modules/@supabase/supabase-js/dist/index.mjs
+./node_modules/@supabase/ssr/dist/module/createBrowserClient.js
+./node_modules/@supabase/ssr/dist/module/index.js
+
+./node_modules/@supabase/supabase-js/dist/index.mjs
+A Node.js API is used (process.version at line: 395) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/@supabase/supabase-js/dist/index.mjs
+./node_modules/@supabase/ssr/dist/module/createBrowserClient.js
+./node_modules/@supabase/ssr/dist/module/index.js
+
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/56) ...
+Supabase environment variables are not set. Using dummy client.
+Supabase environment variables are not set. Using dummy client.
+Supabase environment variables are not set. Using dummy client.
+   Generating static pages (14/56) 
+   Generating static pages (28/56) 
+Supabase environment variables are not set. Using dummy client.
+Supabase environment variables are not set. Using dummy client.
+Supabase environment variables are not set. Using dummy client.
+Supabase environment variables are not set. Using dummy client.
+   Generating static pages (42/56) 
+Supabase environment variables are not set. Using dummy client.
+Supabase environment variables are not set. Using dummy client.
+ ✓ Generating static pages (56/56)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    12.3 kB         216 kB
+├ ○ /_not-found                          983 B           106 kB
+├ ○ /about                               4.38 kB         158 kB
+├ ○ /admin                               2.72 kB         201 kB
+├ ○ /agents                              5.68 kB         125 kB
+├ ƒ /api/agent/start                     232 B           106 kB
+├ ƒ /api/agent/stop                      232 B           106 kB
+├ ƒ /api/alerts/[id]                     232 B           106 kB
+├ ƒ /api/checkout                        232 B           106 kB
+├ ƒ /api/cron/scrape-all-sites           232 B           106 kB
+├ ƒ /api/cron/scrape-raw2k               232 B           106 kB
+├ ƒ /api/cron/send-digests               232 B           106 kB
+├ ƒ /api/cron/test                       232 B           106 kB
+├ ƒ /api/dashboard                       232 B           106 kB
+├ ƒ /api/demo-request                    232 B           106 kB
+├ ƒ /api/demo/scrape                     232 B           106 kB
+├ ƒ /api/demo/see-action                 232 B           106 kB
+├ ƒ /api/digests                         232 B           106 kB
+├ ƒ /api/export                          232 B           106 kB
+├ ƒ /api/inngest                         232 B           106 kB
+├ ƒ /api/insights                        232 B           106 kB
+├ ƒ /api/market-intelligence/predict     232 B           106 kB
+├ ƒ /api/preferences                     232 B           106 kB
+├ ƒ /api/preview                         232 B           106 kB
+├ ƒ /api/render-digest                   232 B           106 kB
+├ ƒ /api/saved-searches                  232 B           106 kB
+├ ƒ /api/saved-searches/[id]             232 B           106 kB
+├ ƒ /api/send-test-email                 232 B           106 kB
+├ ƒ /api/stripe/webhook                  232 B           106 kB
+├ ƒ /api/subscription/check-limit        232 B           106 kB
+├ ƒ /api/subscription/status             232 B           106 kB
+├ ƒ /api/user/profile                    232 B           106 kB
+├ ƒ /api/vehicles                        232 B           106 kB
+├ ƒ /api/workflow/dealers                232 B           106 kB
+├ ƒ /api/workflow/digest                 232 B           106 kB
+├ ƒ /api/workflow/insights               232 B           106 kB
+├ ƒ /api/workflow/status                 232 B           106 kB
+├ ƒ /api/workflow/webhook                232 B           106 kB
+├ ○ /auth/callback                       1.56 kB         161 kB
+├ ○ /auth/create-account                 4.84 kB         175 kB
+├ ○ /auth/login                          5.29 kB         212 kB
+├ ○ /auth/preferences                    4.81 kB         175 kB
+├ ○ /auth/select-plan                    3.46 kB         157 kB
+├ ○ /auth/signup                         5.16 kB         159 kB
+├ ○ /customer-dashboard                  4.19 kB         121 kB
+├ ○ /dashboard                           12.5 kB         230 kB
+├ ○ /dashboard/map                       2.3 kB          220 kB
+├ ○ /dealer-admin                        741 B           204 kB
+├ ○ /demo                                2.56 kB         112 kB
+├ ○ /demo-login                          2.02 kB         115 kB
+├ ○ /leaderboard                         5.42 kB         122 kB
+├ ○ /onboarding                          6.33 kB         180 kB
+├ ○ /pricing                             6.61 kB         123 kB
+├ ○ /reports                             204 B           201 kB
+├ ○ /settings                            6.84 kB         130 kB
+├ ○ /test-email                          7.49 kB         124 kB
+└ ƒ /vehicle/[id]                        175 B           109 kB
++ First Load JS shared by all            105 kB
+  ├ chunks/1517-c3d939e7f3085f6c.js      50.5 kB
+  ├ chunks/4bd1b696-2c327a8e0c5a127a.js  52.9 kB
+  └ other shared chunks (total)          1.92 kB
+
+
+ƒ Middleware                             77.3 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
