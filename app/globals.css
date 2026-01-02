@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -38,9 +39,9 @@
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #e2e8f0;
   --sidebar-ring: rgba(249, 115, 22, 0.5);
-  /* Updated to use Inter for professional sans-serif typography */
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Inter", ui-sans-serif, system-ui, sans-serif; /* Remove serif, use sans everywhere */
+  /* Bold, distinctive typography with Poppins */
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Poppins", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
@@ -131,6 +132,38 @@
 }
 
 @layer components {
+  /* Bold 3D text effects for headings */
+  .text-3d-bold {
+    text-shadow:
+      3px 3px 0 #000,
+      4px 4px 0 #000,
+      5px 5px 0 rgba(0, 0, 0, 0.7);
+  }
+
+  .text-3d-orange {
+    text-shadow:
+      2px 2px 0 #ea580c,
+      3px 3px 0 #c2410c,
+      4px 4px 5px rgba(0, 0, 0, 0.3);
+  }
+
+  .box-3d {
+    box-shadow:
+      4px 4px 0 #000,
+      5px 5px 0 rgba(0, 0, 0, 0.9);
+  }
+
+  .box-3d-hover {
+    transition: all 0.2s ease;
+  }
+
+  .box-3d-hover:hover {
+    box-shadow:
+      6px 6px 0 #000,
+      7px 7px 0 rgba(0, 0, 0, 0.9);
+    transform: translate(-2px, -2px);
+  }
+
   /* Professional button system - consistent, minimal */
   .btn-primary {
     @apply bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5;
