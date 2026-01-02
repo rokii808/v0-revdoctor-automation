@@ -12,20 +12,20 @@
   --card-foreground: #0f172a;
   --popover: #ffffff;
   --popover-foreground: #0f172a;
-  --primary: #f97316; /* orange-500 for CTAs */
+  --primary: #e89968; /* Soft muted orange for CTAs */
   --primary-foreground: #ffffff;
   --secondary: #1e40af; /* blue-700 for trust elements */
   --secondary-foreground: #ffffff;
   --muted: #f8fafc; /* slate-50 */
   --muted-foreground: #64748b; /* slate-500 */
-  --accent: #f97316; /* orange-500 */
+  --accent: #e89968; /* Soft muted orange */
   --accent-foreground: #ffffff;
   --destructive: #dc2626;
   --destructive-foreground: #ffffff;
   --border: #e2e8f0; /* slate-200 */
   --input: #f1f5f9; /* slate-100 */
-  --ring: rgba(249, 115, 22, 0.5); /* orange focus ring */
-  --chart-1: #f97316;
+  --ring: rgba(232, 153, 104, 0.5); /* Soft orange focus ring */
+  --chart-1: #e89968;
   --chart-2: #1e40af;
   --chart-3: #0891b2;
   --chart-4: #10b981;
@@ -35,10 +35,10 @@
   --sidebar-foreground: #0f172a;
   --sidebar-primary: #f8fafc;
   --sidebar-primary-foreground: #0f172a;
-  --sidebar-accent: #f97316;
+  --sidebar-accent: #e89968;
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #e2e8f0;
-  --sidebar-ring: rgba(249, 115, 22, 0.5);
+  --sidebar-ring: rgba(232, 153, 104, 0.5);
   /* Bold, distinctive typography with Poppins */
   --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Poppins", ui-sans-serif, system-ui, sans-serif;
@@ -52,20 +52,20 @@
   --card-foreground: #f1f5f9;
   --popover: #0f172a;
   --popover-foreground: #f1f5f9;
-  --primary: #f97316;
+  --primary: #e89968;
   --primary-foreground: #ffffff;
   --secondary: #3b82f6;
   --secondary-foreground: #ffffff;
   --muted: #1e293b;
   --muted-foreground: #94a3b8;
-  --accent: #f97316;
+  --accent: #e89968;
   --accent-foreground: #0f172a;
   --destructive: #ef4444;
   --destructive-foreground: #f1f5f9;
   --border: #334155;
   --input: #1e293b;
-  --ring: rgba(249, 115, 22, 0.5);
-  --chart-1: #f97316;
+  --ring: rgba(232, 153, 104, 0.5);
+  --chart-1: #e89968;
   --chart-2: #3b82f6;
   --chart-3: #06b6d4;
   --chart-4: #10b981;
@@ -77,7 +77,7 @@
   --sidebar-accent: #334155;
   --sidebar-accent-foreground: #f1f5f9;
   --sidebar-border: #334155;
-  --sidebar-ring: rgba(249, 115, 22, 0.5);
+  --sidebar-ring: rgba(232, 153, 104, 0.5);
 }
 
 @theme inline {
@@ -142,8 +142,8 @@
 
   .text-3d-orange {
     text-shadow:
-      2px 2px 0 #ea580c,
-      3px 3px 0 #c2410c,
+      2px 2px 0 #d4875c,
+      3px 3px 0 #c07850,
       4px 4px 5px rgba(0, 0, 0, 0.3);
   }
 
