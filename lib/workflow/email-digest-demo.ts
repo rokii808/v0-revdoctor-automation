@@ -1,26 +1,5 @@
-import { Resend } from "resend"
+import { sendEmail } from "../email/providers"
 import type { VehicleMatch } from "./preference-matcher"
-
-// Singleton pattern: Cache Resend client instance using closure
-// This prevents creating a new instance on every call while avoiding
-// module-level initialization errors when RESEND_API_KEY is missing
-let resendClient: Resend | null = null
-
-function getResendClient(): Resend {
-  // Return cached instance if it exists
-  if (resendClient) {
-    return resendClient
-  }
-
-  // Validate API key exists
-  if (!process.env.RESEND_API_KEY) {
-    throw new Error("RESEND_API_KEY environment variable is required")
-  }
-
-  // Create and cache new instance (closure captures this variable)
-  resendClient = new Resend(process.env.RESEND_API_KEY || "re_placeholder_for_build")
-  return resendClient
-}
 
 interface DemoEmailData {
   email: string
@@ -40,9 +19,9 @@ export async function sendDemoEmail(data: DemoEmailData): Promise<{
     console.log(`[Demo] Sending demo email to ${data.email} with ${data.vehicles.length} vehicles`)
 
     const html = buildDemoEmailHTML(data)
-    const resend = getResendClient()
 
-    const { data: resendData, error } = await resend.emails.send({
+    // Send via configured email provider (Brevo, SES, or Resend)
+    const result = await sendEmail({
       from: "Revvdoctor <digest@revvdoctor.com>",
       to: data.email,
       subject: "🚗 See Revvdoctor in Action - AI-Powered Vehicle Analysis",
@@ -53,18 +32,18 @@ export async function sendDemoEmail(data: DemoEmailData): Promise<{
       ],
     })
 
-    if (error) {
-      console.error(`[Demo] Failed to send to ${data.email}:`, error)
+    if (!result.success) {
+      console.error(`[Demo] Failed to send to ${data.email}:`, result.error)
       return {
         success: false,
-        error: error.message,
+        error: result.error,
       }
     }
 
-    console.log(`[Demo] Successfully sent to ${data.email} (ID: ${resendData?.id})`)
+    console.log(`[Demo] Successfully sent to ${data.email} (ID: ${result.messageId})`)
     return {
       success: true,
-      message_id: resendData?.id,
+      message_id: result.messageId,
     }
   } catch (err) {
     console.error(`[Demo] Unexpected error sending to ${data.email}:`, err)
@@ -106,13 +85,13 @@ function buildDemoEmailHTML(data: DemoEmailData): string {
     }
     .header {
       text-align: center;
-      border-bottom: 3px solid #ec4899;
+      border-bottom: 3px solid #f97316;
       padding-bottom: 20px;
       margin-bottom: 30px;
     }
     .header h1 {
       margin: 0;
-      color: #ec4899;
+      color: #f97316;
       font-size: 28px;
     }
     .header p {
@@ -121,7 +100,7 @@ function buildDemoEmailHTML(data: DemoEmailData): string {
       font-size: 16px;
     }
     .demo-badge {
-      background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+      background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
       color: white;
       padding: 12px 20px;
       border-radius: 8px;
@@ -131,8 +110,8 @@ function buildDemoEmailHTML(data: DemoEmailData): string {
       font-size: 16px;
     }
     .intro {
-      background-color: #fdf2f8;
-      border-left: 4px solid #ec4899;
+      background-color: #fff7ed;
+      border-left: 4px solid #f97316;
       padding: 15px;
       margin-bottom: 30px;
       border-radius: 4px;
@@ -140,7 +119,7 @@ function buildDemoEmailHTML(data: DemoEmailData): string {
     .intro h2 {
       margin: 0 0 10px 0;
       font-size: 18px;
-      color: #ec4899;
+      color: #f97316;
     }
     .intro p {
       margin: 8px 0;
@@ -272,7 +251,7 @@ function buildDemoEmailHTML(data: DemoEmailData): string {
       color: #374151;
     }
     .cta-section {
-      background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+      background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
       color: white;
       padding: 30px;
       border-radius: 8px;
@@ -291,7 +270,7 @@ function buildDemoEmailHTML(data: DemoEmailData): string {
     .cta-button {
       display: inline-block;
       background-color: white;
-      color: #ec4899;
+      color: #f97316;
       padding: 14px 32px;
       text-decoration: none;
       border-radius: 8px;
@@ -317,7 +296,7 @@ function buildDemoEmailHTML(data: DemoEmailData): string {
       font-size: 13px;
     }
     .footer a {
-      color: #ec4899;
+      color: #f97316;
       text-decoration: none;
     }
   </style>

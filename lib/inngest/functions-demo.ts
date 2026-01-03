@@ -1,5 +1,5 @@
 import { inngest } from "./client"
-import { scrapeRAW2K } from "../scrapers/raw2k"
+import { createMockScraper } from "../scrapers/mock-scraper"
 import { classifyVehiclesWithAI } from "../analysis/ai-classifier"
 import { sendDemoEmail } from "../workflow/email-digest-demo"
 import type { VehicleListing } from "../scrapers/index"
@@ -33,33 +33,21 @@ export const sendDemoAction = inngest.createFunction(
 
     console.log(`🎬 [Demo] Starting "See It in Action" for ${email}`)
 
-    // STEP 1: Quick scrape (just 5 cars from one site)
-    // Note: Using 'let' instead of 'const' to allow fallback reassignment
-    let scrapedVehicles = await step.run("scrape-sample-vehicles", async () => {
-      console.log("🕷️  [Demo] Scraping sample vehicles from RAW2K...")
+    // STEP 1: Get sample vehicles using mock scraper
+    const scrapedVehicles = await step.run("scrape-sample-vehicles", async () => {
+      console.log("🕷️  [Demo] Getting sample vehicles...")
 
-      try {
-        // Scrape RAW2K (fastest scraper)
-        const vehicles = await scrapeRAW2K()
+      // Use mock scraper for reliable demo experience
+      const mockVehicles = await createMockScraper("DEMO")
 
-        // Take first 5 vehicles for demo
-        const sampleVehicles = vehicles.slice(0, 5)
+      // Randomly select 5 vehicles for variety
+      const shuffled = mockVehicles.sort(() => Math.random() - 0.5)
+      const sampleVehicles = shuffled.slice(0, 5)
 
-        console.log(`✅ [Demo] Scraped ${sampleVehicles.length} sample vehicles`)
+      console.log(`✅ [Demo] Got ${sampleVehicles.length} sample vehicles`)
 
-        return sampleVehicles
-      } catch (err) {
-        console.error("❌ [Demo] Scraping failed:", err)
-        // Fallback: return mock data if scraping fails
-        return getMockVehicles()
-      }
+      return sampleVehicles
     })
-
-    // Fallback: Use mock data if no vehicles were scraped
-    if (scrapedVehicles.length === 0) {
-      console.log("⚠️  [Demo] No vehicles scraped, using mock data")
-      scrapedVehicles = getMockVehicles()
-    }
 
     // STEP 2: Classify with AI
     const classifiedVehicles = await step.run("ai-classification", async () => {
@@ -228,38 +216,3 @@ function generateDemoMatchReasons(vehicle: any): string[] {
   return reasons
 }
 
-/**
- * Mock vehicles as fallback if scraping fails
- */
-function getMockVehicles(): VehicleListing[] {
-  return [
-    {
-      listing_id: "raw2k-001",
-      lot_number: "LOT-001",
-      make: "BMW",
-      model: "3 Series",
-      year: 2019,
-      price: 12500,
-      mileage: 45000,
-      condition: "CAT S",
-      auction_site: "RAW2K",
-      auction_date: new Date().toISOString(),
-      url: "https://www.raw2k.com",
-      images: [],
-    },
-    {
-      listing_id: "raw2k-002",
-      lot_number: "LOT-002",
-      make: "Mercedes-Benz",
-      model: "C-Class",
-      year: 2018,
-      price: 14000,
-      mileage: 52000,
-      condition: "CAT N",
-      auction_site: "RAW2K",
-      auction_date: new Date().toISOString(),
-      url: "https://www.raw2k.com",
-      images: [],
-    },
-  ]
-}
