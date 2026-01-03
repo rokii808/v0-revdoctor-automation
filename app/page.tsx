@@ -894,22 +894,22 @@ export default function HomePage() {
 
             {/* START OF UPDATED CODE */}
             <div
-              className="bg-white border border-gray-200 p-10 rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-opacity-80 backdrop-blur-sm relative"
+              className="bg-orange-50 border-2 border-orange-600 p-10 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 relative"
               style={{ boxShadow: "0 20px 40px rgba(229, 153, 104, 0.15)" }}
             >
-              <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-black text-white rounded-full text-sm font-black px-8 py-3 border-2 border-white whitespace-nowrap">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-orange-600 text-white rounded-full text-xs font-bold px-6 py-2 border-3 border-white whitespace-nowrap">
                 ★ MOST POPULAR ★
               </div>
-              <h3 className="text-2xl font-sans font-bold text-gray-900 mb-3 mt-2">Premium</h3>
+              <h3 className="text-2xl font-sans font-bold text-gray-900 mb-3 mt-4">Premium</h3>
               <p className="text-gray-600 mb-6 text-base">Up to 10 cars daily</p>
-              <p className="text-6xl font-sans font-bold text-gray-900 mb-2">£299</p>
+              <p className="text-5xl font-sans font-bold text-gray-900 mb-2">£299</p>
               <p className="text-base text-gray-500 mb-8">/month</p>
               <Button
                 size="lg"
-                className="w-full mb-8 bg-orange-600 hover:bg-orange-700 text-white border-2 border-orange-600 rounded-full text-base py-6 hover:scale-105 transition-all"
+                className="w-full mb-8 bg-orange-600 hover:bg-orange-700 text-white border-2 border-orange-600 rounded-full text-base py-6 hover:scale-105 transition-all font-semibold"
                 asChild
               >
-                <a href="/test-email">GET STARTED NOW</a>
+                <a href="/test-email">See it in action</a>
               </Button>
               <ul className="text-left space-y-4 text-base text-gray-600">
                 <li className="flex items-start gap-2">
