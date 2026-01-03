@@ -386,7 +386,7 @@ export default function HomePage() {
 
       <section className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 bg-gradient-to-b from-white to-gray-50" id="how-it-works">
         <div className="container mx-auto text-center max-w-5xl">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold text-gray-900 mb-4 sm:mb-6 leading-tight px-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-sans font-bold text-gray-900 mb-4 sm:mb-6 leading-tight px-4">
             Start sourcing in minutes,
             <br />
             not weeks.
@@ -400,7 +400,7 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform duration-300">
                 <span className="text-2xl font-bold text-white">1</span>
               </div>
-              <h3 className="text-xl font-serif font-bold text-gray-900 mb-3">Set preferences</h3>
+              <h3 className="text-xl font-sans font-bold text-gray-900 mb-3">Set preferences</h3>
               <p className="text-gray-600 leading-relaxed text-sm">
                 Tell us what you're looking for — make, model, mileage, budget and more.
               </p>
@@ -410,7 +410,7 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform duration-300">
                 <span className="text-2xl font-bold text-white">2</span>
               </div>
-              <h3 className="text-xl font-serif font-bold text-gray-900 mb-3">We scan auctions</h3>
+              <h3 className="text-xl font-sans font-bold text-gray-900 mb-3">We scan auctions</h3>
               <p className="text-gray-600 leading-relaxed text-sm">
                 Our system checks multiple marketplaces and identifies qualified listings.
               </p>
@@ -420,7 +420,7 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform duration-300">
                 <span className="text-2xl font-bold text-white">3</span>
               </div>
-              <h3 className="text-xl font-serif font-bold text-gray-900 mb-3">Get healthy cars</h3>
+              <h3 className="text-xl font-sans font-bold text-gray-900 mb-3">Get healthy cars</h3>
               <p className="text-gray-600 leading-relaxed text-sm">
                 You'll get clean, pre-filtered car lists in your inbox twice a day.
               </p>
@@ -430,7 +430,7 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform duration-300">
                 <span className="text-2xl font-bold text-white">4</span>
               </div>
-              <h3 className="text-xl font-serif font-bold text-gray-900 mb-3">Focus on deals</h3>
+              <h3 className="text-xl font-sans font-bold text-gray-900 mb-3">Focus on deals</h3>
               <p className="text-gray-600 leading-relaxed text-sm">
                 Close profitable deals faster without wasting time on unsuitable listings.
               </p>
@@ -442,7 +442,7 @@ export default function HomePage() {
       <section className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 bg-white">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12 sm:mb-14 md:mb-16">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold text-gray-900 mb-4 sm:mb-6 leading-tight px-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-sans font-bold text-gray-900 mb-4 sm:mb-6 leading-tight px-4">
               Here's exactly what
               <br />
               you'll receive.
@@ -564,7 +564,7 @@ export default function HomePage() {
                 <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/25">
                   <Filter className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">AI powered filtering</h3>
+                <h3 className="text-3xl font-sans font-bold text-gray-900 mb-4">AI powered filtering</h3>
                 <p className="text-gray-600 leading-relaxed text-lg">
                   Only see cars that match your exact criteria. No more wasting time on unsuitable vehicles.
                 </p>
@@ -577,7 +577,7 @@ export default function HomePage() {
                 <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/25">
                   <Shield className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Condition validation</h3>
+                <h3 className="text-3xl font-sans font-bold text-gray-900 mb-4">Condition validation</h3>
                 <p className="text-gray-600 leading-relaxed text-lg">
                   Automatically flags potential risks before you bid. Make confident purchasing decisions.
                 </p>
@@ -590,7 +590,7 @@ export default function HomePage() {
                 <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/25">
                   <Target className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Auction coverage</h3>
+                <h3 className="text-3xl font-sans font-bold text-gray-900 mb-4">Auction coverage</h3>
                 <p className="text-gray-600 leading-relaxed text-lg">
                   Searches multiple platforms simultaneously. Never miss a good deal again.
                 </p>
@@ -603,7 +603,7 @@ export default function HomePage() {
                 <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/25">
                   <Mail className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Dealer-ready format</h3>
+                <h3 className="text-3xl font-sans font-bold text-gray-900 mb-4">Dealer-ready format</h3>
                 <p className="text-gray-600 leading-relaxed text-lg">
                   Clean, structured email reports. All the information you need at a glance.
                 </p>
@@ -616,7 +616,7 @@ export default function HomePage() {
                 <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/25">
                   <Zap className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Zero manual work</h3>
+                <h3 className="text-3xl font-sans font-bold text-gray-900 mb-4">Zero manual work</h3>
                 <p className="text-gray-600 leading-relaxed text-lg">
                   Save 30+ hours per week on sourcing. Focus on what matters closing deals.
                 </p>
@@ -629,7 +629,7 @@ export default function HomePage() {
                 <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/25">
                   <TrendingUp className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Increase margins</h3>
+                <h3 className="text-3xl font-sans font-bold text-gray-900 mb-4">Increase margins</h3>
                 <p className="text-gray-600 leading-relaxed text-lg">
                   Find better deals faster. Our dealers report 22% higher profit margins on average.
                 </p>
@@ -642,7 +642,7 @@ export default function HomePage() {
       <section className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 bg-white">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12 sm:mb-16 md:mb-20">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold text-gray-900 mb-4 sm:mb-6 leading-tight px-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-sans font-bold text-gray-900 mb-4 sm:mb-6 leading-tight px-4">
               Trusted by dealerships
               <br />
               across the UK.
@@ -847,7 +847,7 @@ export default function HomePage() {
 
       <section className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 bg-white" id="pricing">
         <div className="container mx-auto text-center max-w-6xl">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold text-gray-900 mb-4 sm:mb-6 leading-tight px-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-sans font-bold text-gray-900 mb-4 sm:mb-6 leading-tight px-4">
             Simple pricing.
             <br />
             Maximum value.
@@ -858,9 +858,9 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-4 gap-6">
             <div className="bg-white border-2 border-gray-200 p-10 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-              <h3 className="text-2xl font-serif font-bold text-gray-900 mb-3">Starter</h3>
+              <h3 className="text-2xl font-sans font-bold text-gray-900 mb-3">Starter</h3>
               <p className="text-gray-600 mb-6 text-base">Up to 5 cars daily</p>
-              <p className="text-5xl font-serif font-bold text-gray-900 mb-2">£97</p>
+              <p className="text-5xl font-sans font-bold text-gray-900 mb-2">£97</p>
               <p className="text-base text-gray-500 mb-8">/month</p>
               <Button
                 size="lg"
@@ -914,9 +914,9 @@ export default function HomePage() {
             </div>
 
             <div className="bg-white border-2 border-gray-200 p-10 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-              <h3 className="text-2xl font-serif font-bold text-gray-900 mb-3">Pro</h3>
+              <h3 className="text-2xl font-sans font-bold text-gray-900 mb-3">Pro</h3>
               <p className="text-gray-600 mb-6 text-base">Up to 25 cars daily</p>
-              <p className="text-5xl font-serif font-bold text-gray-900 mb-2">£599</p>
+              <p className="text-5xl font-sans font-bold text-gray-900 mb-2">£599</p>
               <p className="text-base text-gray-500 mb-8">/month</p>
               <Button
                 size="lg"
@@ -943,9 +943,9 @@ export default function HomePage() {
             </div>
 
             <div className="bg-white border-2 border-gray-200 p-10 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-              <h3 className="text-2xl font-serif font-bold text-gray-900 mb-3">Enterprise</h3>
+              <h3 className="text-2xl font-sans font-bold text-gray-900 mb-3">Enterprise</h3>
               <p className="text-gray-600 mb-6 text-base">Unlimited cars</p>
-              <p className="text-5xl font-serif font-bold text-gray-900 mb-2">Custom</p>
+              <p className="text-5xl font-sans font-bold text-gray-900 mb-2">Custom</p>
               <p className="text-base text-gray-500 mb-8">pricing</p>
               <Button
                 size="lg"
@@ -1017,7 +1017,7 @@ export default function HomePage() {
 
       <section className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 bg-white">
         <div className="container mx-auto text-center max-w-4xl">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold text-gray-900 mb-6 sm:mb-8 leading-tight px-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-sans font-bold text-gray-900 mb-6 sm:mb-8 leading-tight px-4">
             Start sourcing healthy
             <br />
             cars today.
