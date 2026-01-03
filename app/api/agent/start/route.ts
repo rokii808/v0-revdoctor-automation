@@ -1,44 +1,57 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createAdminClient } from "@/lib/supabase/admin"
+import { createClient } from "@/lib/supabase/server"
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = await req.json()
+    const supabase = await createClient()
 
-    if (!userId) {
-      return NextResponse.json({ error: "Missing userId" }, { status: 400 })
+    // Get authenticated user
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const supabase = createAdminClient()
-
-    // Check if user has active subscription
-    const { data: subscription } = await supabase
-      .from("subscriptions")
-      .select("status, plan")
-      .eq("user_id", userId)
-      .eq("status", "active")
+    // Get dealer record
+    const { data: dealer, error: dealerError } = await supabase
+      .from("dealers")
+      .select("id, subscription_status, subscription_expires_at")
+      .eq("user_id", user.id)
       .single()
 
-    if (!subscription) {
-      return NextResponse.json({ error: "No active subscription found" }, { status: 403 })
+    if (dealerError) {
+      return NextResponse.json({ error: "Dealer not found" }, { status: 404 })
     }
 
-    // Call n8n webhook to start agent
-    if (!process.env.N8N_WEBHOOK_URL) {
-      return NextResponse.json({ error: "N8N webhook not configured" }, { status: 500 })
+    // Check if user has active subscription or valid trial
+    const now = new Date()
+    const isActiveSubscription = dealer.subscription_status === "active"
+    const isValidTrial =
+      dealer.subscription_status === "trial" &&
+      dealer.subscription_expires_at &&
+      new Date(dealer.subscription_expires_at) > now
+
+    if (!isActiveSubscription && !isValidTrial) {
+      return NextResponse.json(
+        { error: "Active subscription required to start agent" },
+        { status: 403 }
+      )
     }
 
-    const response = await fetch(`${process.env.N8N_WEBHOOK_URL}/webhook/startAgent`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        user_id: userId,
-        plan: subscription.plan,
-      }),
-    })
+    // Activate agent by setting agent_active to true
+    const { error: updateError } = await supabase
+      .from("dealers")
+      .update({
+        agent_active: true,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", dealer.id)
 
-    if (!response.ok) {
-      throw new Error("Failed to start agent")
+    if (updateError) {
+      throw updateError
     }
 
     return NextResponse.json({ success: true, message: "Agent started successfully" })

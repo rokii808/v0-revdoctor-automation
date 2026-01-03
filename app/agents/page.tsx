@@ -46,28 +46,32 @@ export default function AgentsPage() {
   const [isStarting, setIsStarting] = useState(false)
   const [isStopping, setIsStopping] = useState(false)
 
-  // Mock user ID - in real app, get from auth context
-  const userId = "placeholder-user-id"
-
   useEffect(() => {
     loadAgentStatus()
   }, [])
 
   const loadAgentStatus = async () => {
     setIsLoading(true)
-    // Mock data - in real app, fetch from API
-    setTimeout(() => {
-      setAgentStatus({
-        isActive: true,
-        lastRun: "2024-01-15T07:00:00Z",
-        totalRuns: 23,
-        carsFound: 156,
-        healthyCars: 47,
-        plan: "pro",
-        subscriptionStatus: "active",
-      })
+    try {
+      const response = await fetch("/api/agent/status")
+      const data = await response.json()
+
+      if (response.ok) {
+        setAgentStatus({
+          isActive: data.isActive,
+          lastRun: data.lastRun,
+          totalRuns: data.totalRuns,
+          carsFound: data.carsFound,
+          healthyCars: data.healthyCars,
+          plan: data.plan || "trial",
+          subscriptionStatus: data.hasActiveSubscription ? "active" : "inactive",
+        })
+      }
+    } catch (error) {
+      console.error("Failed to load agent status:", error)
+    } finally {
       setIsLoading(false)
-    }, 1000)
+    }
   }
 
   const startAgent = async () => {
@@ -76,7 +80,6 @@ export default function AgentsPage() {
       const response = await fetch("/api/agent/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
       })
 
       const result = await response.json()
@@ -101,7 +104,6 @@ export default function AgentsPage() {
       const response = await fetch("/api/agent/stop", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
       })
 
       const result = await response.json()

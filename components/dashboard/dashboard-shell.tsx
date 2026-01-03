@@ -32,9 +32,31 @@ export function DashboardShell({ user, dealer, planTier, usageStats, children }:
     router.refresh()
   }
 
-  const handleSendMessage = async (message: string) => {
-    // TODO: Integrate with actual AI agent backend
-    console.log("Message sent to agent:", message)
+  const handleSendMessage = async (message: string): Promise<{ response: string; suggestions?: string[] }> => {
+    try {
+      const response = await fetch("/api/agent/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to send message")
+      }
+
+      return {
+        response: data.response,
+        suggestions: data.suggestions,
+      }
+    } catch (error) {
+      console.error("Chat error:", error)
+      return {
+        response: "Sorry, I'm having trouble connecting right now. Please try again.",
+        suggestions: ["Check agent status", "View dashboard"],
+      }
+    }
   }
 
   return (
