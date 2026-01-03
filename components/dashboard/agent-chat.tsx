@@ -18,7 +18,7 @@ interface Message {
 interface AgentChatProps {
   isOpen: boolean
   onClose: () => void
-  onSendMessage?: (message: string) => Promise<void>
+  onSendMessage?: (message: string) => Promise<{ response: string; suggestions?: string[] }>
 }
 
 export function AgentChat({ isOpen, onClose, onSendMessage }: AgentChatProps) {
@@ -59,25 +59,48 @@ export function AgentChat({ isOpen, onClose, onSendMessage }: AgentChatProps) {
     }
 
     setMessages((prev) => [...prev, userMessage])
+    const currentInput = input
     setInput("")
     setIsLoading(true)
 
-    // Call the provided onSendMessage handler
-    if (onSendMessage) {
-      await onSendMessage(input)
-    } else {
-      // Mock response for demo
-      setTimeout(() => {
+    try {
+      // Call the provided onSendMessage handler
+      if (onSendMessage) {
+        const result = await onSendMessage(currentInput)
         const agentMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: "agent",
-          content: getMockResponse(input),
+          content: result.response,
           timestamp: new Date(),
-          suggestions: getContextualSuggestions(input),
+          suggestions: result.suggestions,
         }
         setMessages((prev) => [...prev, agentMessage])
-        setIsLoading(false)
-      }, 1500)
+      } else {
+        // Mock response for demo
+        setTimeout(() => {
+          const agentMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            role: "agent",
+            content: getMockResponse(currentInput),
+            timestamp: new Date(),
+            suggestions: getContextualSuggestions(currentInput),
+          }
+          setMessages((prev) => [...prev, agentMessage])
+          setIsLoading(false)
+        }, 1500)
+        return
+      }
+    } catch (error) {
+      console.error("Failed to send message:", error)
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "agent",
+        content: "Sorry, I encountered an error. Please try again.",
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, errorMessage])
+    } finally {
+      setIsLoading(false)
     }
   }
 

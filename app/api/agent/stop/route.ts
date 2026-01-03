@@ -1,26 +1,42 @@
 import { type NextRequest, NextResponse } from "next/server"
+import { createClient } from "@/lib/supabase/server"
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = await req.json()
+    const supabase = await createClient()
 
-    if (!userId) {
-      return NextResponse.json({ error: "Missing userId" }, { status: 400 })
+    // Get authenticated user
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    // Call n8n webhook to stop agent
-    if (!process.env.N8N_WEBHOOK_URL) {
-      return NextResponse.json({ error: "N8N webhook not configured" }, { status: 500 })
+    // Get dealer record
+    const { data: dealer, error: dealerError } = await supabase
+      .from("dealers")
+      .select("id")
+      .eq("user_id", user.id)
+      .single()
+
+    if (dealerError) {
+      return NextResponse.json({ error: "Dealer not found" }, { status: 404 })
     }
 
-    const response = await fetch(`${process.env.N8N_WEBHOOK_URL}/webhook/stopAgent`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_id: userId }),
-    })
+    // Deactivate agent by setting agent_active to false
+    const { error: updateError } = await supabase
+      .from("dealers")
+      .update({
+        agent_active: false,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", dealer.id)
 
-    if (!response.ok) {
-      throw new Error("Failed to stop agent")
+    if (updateError) {
+      throw updateError
     }
 
     return NextResponse.json({ success: true, message: "Agent stopped successfully" })

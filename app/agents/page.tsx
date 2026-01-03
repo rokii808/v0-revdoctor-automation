@@ -6,7 +6,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import { Bot, Play, Square, Activity, Clock, CheckCircle, AlertCircle, Settings, BarChart3, Zap, ArrowLeft } from 'lucide-react'
+import {
+  Bot,
+  Play,
+  Square,
+  Activity,
+  Clock,
+  CheckCircle,
+  AlertCircle,
+  Settings,
+  BarChart3,
+  Zap,
+  ArrowLeft,
+} from "lucide-react"
 import Link from "next/link"
 
 interface AgentStatus {
@@ -34,28 +46,32 @@ export default function AgentsPage() {
   const [isStarting, setIsStarting] = useState(false)
   const [isStopping, setIsStopping] = useState(false)
 
-  // Mock user ID - in real app, get from auth context
-  const userId = "placeholder-user-id"
-
   useEffect(() => {
     loadAgentStatus()
   }, [])
 
   const loadAgentStatus = async () => {
     setIsLoading(true)
-    // Mock data - in real app, fetch from API
-    setTimeout(() => {
-      setAgentStatus({
-        isActive: true,
-        lastRun: "2024-01-15T07:00:00Z",
-        totalRuns: 23,
-        carsFound: 156,
-        healthyCars: 47,
-        plan: "pro",
-        subscriptionStatus: "active",
-      })
+    try {
+      const response = await fetch("/api/agent/status")
+      const data = await response.json()
+
+      if (response.ok) {
+        setAgentStatus({
+          isActive: data.isActive,
+          lastRun: data.lastRun,
+          totalRuns: data.totalRuns,
+          carsFound: data.carsFound,
+          healthyCars: data.healthyCars,
+          plan: data.plan || "trial",
+          subscriptionStatus: data.hasActiveSubscription ? "active" : "inactive",
+        })
+      }
+    } catch (error) {
+      console.error("Failed to load agent status:", error)
+    } finally {
       setIsLoading(false)
-    }, 1000)
+    }
   }
 
   const startAgent = async () => {
@@ -64,7 +80,6 @@ export default function AgentsPage() {
       const response = await fetch("/api/agent/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
       })
 
       const result = await response.json()
@@ -89,7 +104,6 @@ export default function AgentsPage() {
       const response = await fetch("/api/agent/stop", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
       })
 
       const result = await response.json()
@@ -132,7 +146,7 @@ export default function AgentsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -144,7 +158,7 @@ export default function AgentsPage() {
             </Button>
             <Link
               href="/dashboard"
-              className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+              className="text-2xl font-bold bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent"
             >
               Revvdoctor
             </Link>
@@ -165,8 +179,8 @@ export default function AgentsPage() {
           {/* Page Header */}
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                <Bot className="w-5 h-5 text-blue-600" />
+              <div className="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center shadow-md">
+                <Bot className="w-6 h-6 text-orange-600" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-slate-900">AI Agent Control</h1>
@@ -182,7 +196,7 @@ export default function AgentsPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="flex items-center gap-2">
-                      <Activity className="w-5 h-5 text-blue-600" />
+                      <Activity className="w-5 h-5 text-orange-600" />
                       Agent Status
                     </CardTitle>
                     <CardDescription>Your Revvdoctor AI agent is currently scanning auction sites</CardDescription>
@@ -206,8 +220,8 @@ export default function AgentsPage() {
                 {/* Agent Toggle */}
                 <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <Zap className="w-4 h-4 text-blue-600" />
+                    <div className="w-10 h-10 bg-orange-50 rounded-full flex items-center justify-center">
+                      <Zap className="w-5 h-5 text-orange-600" />
                     </div>
                     <div>
                       <Label htmlFor="agent-toggle" className="text-base font-medium">
@@ -221,6 +235,7 @@ export default function AgentsPage() {
                     checked={agentStatus.isActive}
                     onCheckedChange={(checked) => (checked ? startAgent() : stopAgent())}
                     disabled={isStarting || isStopping}
+                    className="data-[state=checked]:bg-orange-500"
                   />
                 </div>
 
@@ -229,7 +244,7 @@ export default function AgentsPage() {
                   <Button
                     onClick={startAgent}
                     disabled={agentStatus.isActive || isStarting || agentStatus.subscriptionStatus !== "active"}
-                    className="h-16 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                    className="h-16 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
                   >
                     {isStarting ? (
                       <div className="flex items-center gap-2">
@@ -286,8 +301,8 @@ export default function AgentsPage() {
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <Clock className="w-5 h-5 text-blue-600" />
+                    <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center shadow-sm">
+                      <Clock className="w-6 h-6 text-blue-600" />
                     </div>
                     <div>
                       <p className="text-sm text-slate-600">Last Run</p>
@@ -300,8 +315,8 @@ export default function AgentsPage() {
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                      <BarChart3 className="w-5 h-5 text-green-600" />
+                    <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center shadow-sm">
+                      <BarChart3 className="w-6 h-6 text-green-600" />
                     </div>
                     <div>
                       <p className="text-sm text-slate-600">Total Runs</p>
@@ -314,8 +329,8 @@ export default function AgentsPage() {
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                      <Activity className="w-5 h-5 text-purple-600" />
+                    <div className="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center shadow-sm">
+                      <Activity className="w-6 h-6 text-purple-600" />
                     </div>
                     <div>
                       <p className="text-sm text-slate-600">Cars Found</p>
@@ -328,8 +343,8 @@ export default function AgentsPage() {
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-                      <CheckCircle className="w-5 h-5 text-emerald-600" />
+                    <div className="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center shadow-sm">
+                      <CheckCircle className="w-6 h-6 text-emerald-600" />
                     </div>
                     <div>
                       <p className="text-sm text-slate-600">Healthy Cars</p>
@@ -344,7 +359,7 @@ export default function AgentsPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Settings className="w-5 h-5 text-blue-600" />
+                  <Settings className="w-5 h-5 text-orange-600" />
                   Agent Configuration
                 </CardTitle>
                 <CardDescription>Current settings for your Revvdoctor AI agent</CardDescription>
@@ -384,8 +399,8 @@ export default function AgentsPage() {
               <CardContent>
                 <div className="grid md:grid-cols-3 gap-6">
                   <div className="text-center">
-                    <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                      <Activity className="w-6 h-6 text-blue-600" />
+                    <div className="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-3 shadow-md">
+                      <Activity className="w-7 h-7 text-blue-600" />
                     </div>
                     <h4 className="font-semibold text-slate-900 mb-2">1. Daily Scan</h4>
                     <p className="text-sm text-slate-600">
@@ -393,8 +408,8 @@ export default function AgentsPage() {
                     </p>
                   </div>
                   <div className="text-center">
-                    <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                      <Bot className="w-6 h-6 text-green-600" />
+                    <div className="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-3 shadow-md">
+                      <Bot className="w-7 h-7 text-green-600" />
                     </div>
                     <h4 className="font-semibold text-slate-900 mb-2">2. AI Analysis</h4>
                     <p className="text-sm text-slate-600">
@@ -402,8 +417,8 @@ export default function AgentsPage() {
                     </p>
                   </div>
                   <div className="text-center">
-                    <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                      <CheckCircle className="w-6 h-6 text-purple-600" />
+                    <div className="w-14 h-14 bg-purple-50 rounded-full flex items-center justify-center mx-auto mb-3 shadow-md">
+                      <CheckCircle className="w-7 h-7 text-purple-600" />
                     </div>
                     <h4 className="font-semibold text-slate-900 mb-2">3. Email Digest</h4>
                     <p className="text-sm text-slate-600">

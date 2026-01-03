@@ -823,21 +823,21 @@ export default function HomePage() {
       </section>
 
       {/* Interactive Map Preview */}
-      <section className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 bg-gradient-to-br from-white via-slate-50/50 to-white">
+      <section className="py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 bg-gradient-to-br from-white via-slate-50/50 to-white">
         <div className="container mx-auto max-w-7xl">
-          <AnimatedSection className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-200 mb-6">
+          <AnimatedSection className="text-center mb-8 sm:mb-12 md:mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-blue-50 border border-blue-200 mb-4 sm:mb-6">
               <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-              <span className="text-sm font-semibold text-blue-700">INTERACTIVE PREVIEW</span>
+              <span className="text-xs sm:text-sm font-semibold text-blue-700">INTERACTIVE PREVIEW</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-sans font-bold text-slate-900 mb-4 sm:mb-6 leading-tight px-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-sans font-bold text-slate-900 mb-3 sm:mb-4 md:mb-6 leading-tight px-4">
               Live Auction Coverage
               <br />
               <span className="bg-gradient-to-r from-orange-600 to-blue-600 bg-clip-text text-transparent">
                 Across the UK
               </span>
             </h2>
-            <p className="text-base sm:text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed px-4">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed px-4">
               See real vehicles from live auctions, pinned to their locations. Click any vehicle to view full details
               and start your free trial.
             </p>
@@ -847,8 +847,8 @@ export default function HomePage() {
             <InteractiveMapPreview />
           </AnimatedSection>
 
-          <div className="text-center mt-12">
-            <p className="text-sm text-slate-500">
+          <div className="text-center mt-8 sm:mt-12">
+            <p className="text-xs sm:text-sm text-slate-500">
               📍 Covering all major auction houses across England, Scotland, and Wales
             </p>
           </div>
