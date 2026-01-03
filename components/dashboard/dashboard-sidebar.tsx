@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Car, LayoutDashboard, Settings, FileText, Trophy, Bot } from "lucide-react"
+import { Car, LayoutDashboard, Settings, FileText, Trophy, Bot, LogOut } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -17,7 +17,9 @@ import {
 } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { PlanBadge } from "./plan-badge"
+import { createClient } from "@/lib/supabase/client"
 import type { PlanTier } from "@/lib/plans/config"
+import { useRouter } from "next/navigation"
 
 interface DashboardSidebarProps {
   dealer: any
@@ -69,8 +71,15 @@ const navigationGroups = [
 
 export function DashboardSidebar({ dealer, planTier }: DashboardSidebarProps) {
   const pathname = usePathname()
+  const router = useRouter()
   const dealerName = dealer?.dealer_name || dealer?.company_name || "Dealer"
   const initials = dealerName.substring(0, 2).toUpperCase()
+
+  const handleSignOut = async () => {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.push("/auth/login")
+  }
 
   return (
     <Sidebar collapsible="icon" variant="sidebar">
@@ -116,7 +125,7 @@ export function DashboardSidebar({ dealer, planTier }: DashboardSidebarProps) {
         ))}
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border p-4">
+      <SidebarFooter className="border-t border-sidebar-border p-4 space-y-3">
         <div className="flex items-center gap-3 group-data-[collapsible=icon]:justify-center">
           <Avatar className="w-9 h-9 bg-gradient-to-br from-orange-400 to-orange-600">
             <AvatarFallback className="bg-transparent text-white font-semibold">{initials}</AvatarFallback>
@@ -126,6 +135,16 @@ export function DashboardSidebar({ dealer, planTier }: DashboardSidebarProps) {
             <PlanBadge tier={planTier} size="sm" showIcon={false} />
           </div>
         </div>
+
+        <button
+          onClick={handleSignOut}
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-red-600 hover:bg-red-50 transition-colors group-data-[collapsible=icon]:justify-center"
+        >
+          <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center shadow-sm">
+            <LogOut className="w-4 h-4 text-red-600" />
+          </div>
+          <span className="group-data-[collapsible=icon]:hidden font-medium">Log Out</span>
+        </button>
       </SidebarFooter>
     </Sidebar>
   )
