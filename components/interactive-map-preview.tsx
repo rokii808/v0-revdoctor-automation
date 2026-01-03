@@ -69,7 +69,7 @@ export function InteractiveMapPreview() {
   }, [])
 
   return (
-    <div className="relative w-full h-[350px] sm:h-[450px] md:h-[550px] lg:h-[600px] bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden border border-sm:border-2 border-slate-200 shadow-lg sm:shadow-2xl">
+    <div className="relative w-full h-[350px] sm:h-[450px] md:h-[550px] lg:h-[600px] bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden border border-slate-200 shadow-lg sm:shadow-2xl">
       {/* Grid Pattern Overlay */}
       <div
         className="absolute inset-0 opacity-30"
@@ -83,9 +83,9 @@ export function InteractiveMapPreview() {
       ></div>
 
       {/* Map Content */}
-      <div className="absolute inset-0 p-4 sm:p-6 md:p-8">
+      <div className="absolute inset-0 p-4 sm:p-6 md:p-8 flex flex-col">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3 flex-shrink-0">
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
               <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
@@ -102,7 +102,7 @@ export function InteractiveMapPreview() {
         </div>
 
         {/* Simplified UK Map with Pins */}
-        <div className="relative w-full flex-1 bg-white/60 backdrop-blur-sm rounded-lg sm:rounded-2xl border border-slate-200 shadow-inner overflow-hidden">
+        <div className="relative w-full flex-1 min-h-0 bg-white/60 backdrop-blur-sm rounded-lg sm:rounded-2xl border border-slate-200 shadow-inner overflow-hidden">
           {/* UK Outline (simplified SVG) */}
           <svg
             viewBox="0 0 100 100"
@@ -167,7 +167,7 @@ export function InteractiveMapPreview() {
 
               {/* Price Tag - Shows on Hover */}
               {hoveredVehicle === vehicle.id && (
-                <div className="hidden sm:block absolute top-16 sm:top-20 left-1/2 transform -translate-x-1/2 bg-white px-3 py-2 sm:px-4 sm:py-3 rounded-lg sm:rounded-xl shadow-xl sm:shadow-2xl border border-sm:border-2 border-orange-200 whitespace-nowrap animate-fade-in z-50">
+                <div className="hidden sm:block absolute top-16 sm:top-20 left-1/2 transform -translate-x-1/2 bg-white px-3 py-2 sm:px-4 sm:py-3 rounded-lg sm:rounded-xl shadow-xl sm:shadow-2xl border border-orange-200 whitespace-nowrap animate-fade-in z-50">
                   <p className="text-xs sm:text-sm font-bold text-slate-900">
                     {vehicle.make} {vehicle.model}
                   </p>
