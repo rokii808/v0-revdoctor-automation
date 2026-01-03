@@ -867,7 +867,7 @@ export default function HomePage() {
           </p>
 
           <div className="grid md:grid-cols-4 gap-6">
-            <div className="bg-white border-2 border-gray-200 p-10 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <div className="bg-white border border-gray-200 p-10 rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-opacity-80 backdrop-blur-sm">
               <h3 className="text-2xl font-sans font-bold text-gray-900 mb-3">Starter</h3>
               <p className="text-gray-600 mb-6 text-base">Up to 5 cars daily</p>
               <p className="text-5xl font-sans font-bold text-gray-900 mb-2">£97</p>
@@ -892,17 +892,20 @@ export default function HomePage() {
               </ul>
             </div>
 
-            <div className="bg-orange-600 border-4 border-black p-10 rounded-3xl box-3d-hover transition-all duration-300 hover:-translate-y-2 relative">
-              <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-black text-white rounded-full text-sm font-black px-8 py-3 border-2 border-white">
+            <div
+              className="bg-orange-600 border-4 border-orange-700 p-10 rounded-3xl transition-all duration-300 hover:-translate-y-2 relative shadow-lg"
+              style={{ boxShadow: "0 20px 40px rgba(249, 115, 22, 0.3)" }}
+            >
+              <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-black text-white rounded-full text-sm font-black px-8 py-3 border-2 border-white whitespace-nowrap">
                 ★ MOST POPULAR ★
               </div>
-              <h3 className="text-2xl font-black text-white mb-3 mt-2 tracking-wide">Business</h3>
-              <p className="text-white/90 mb-6 text-base font-semibold">Up to 10 cars daily</p>
-              <p className="text-6xl font-black text-white mb-2">£299</p>
-              <p className="text-base text-white/80 mb-8 font-semibold">/month</p>
+              <h3 className="text-2xl font-sans font-bold text-white mb-3 mt-2">Business</h3>
+              <p className="text-white/90 mb-6 text-base">Up to 10 cars daily</p>
+              <p className="text-6xl font-sans font-bold text-white mb-2">£299</p>
+              <p className="text-base text-white/80 mb-8">/month</p>
               <Button
                 size="lg"
-                className="w-full mb-8 bg-black hover:bg-white hover:text-black text-white border-2 border-white rounded-xl text-base py-6 hover:scale-105 transition-all font-black"
+                className="w-full mb-8 bg-black hover:bg-gray-800 text-white border-2 border-white rounded-full text-base py-6 hover:scale-105 transition-all"
                 asChild
               >
                 <a href="/test-email">GET STARTED NOW</a>
@@ -910,20 +913,20 @@ export default function HomePage() {
               <ul className="text-left space-y-4 text-base text-white">
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
-                  <span className="font-semibold">Advanced AI screening</span>
+                  <span>Advanced AI screening</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
-                  <span className="font-semibold">ROI tracking</span>
+                  <span>ROI tracking</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
-                  <span className="font-semibold">Priority support</span>
+                  <span>Priority support</span>
                 </li>
               </ul>
             </div>
 
-            <div className="bg-white border-2 border-gray-200 p-10 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <div className="bg-white border border-gray-200 p-10 rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-opacity-80 backdrop-blur-sm">
               <h3 className="text-2xl font-sans font-bold text-gray-900 mb-3">Pro</h3>
               <p className="text-gray-600 mb-6 text-base">Up to 25 cars daily</p>
               <p className="text-5xl font-sans font-bold text-gray-900 mb-2">£599</p>
@@ -952,7 +955,7 @@ export default function HomePage() {
               </ul>
             </div>
 
-            <div className="bg-white border-2 border-gray-200 p-10 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <div className="bg-white border border-gray-200 p-10 rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-opacity-80 backdrop-blur-sm">
               <h3 className="text-2xl font-sans font-bold text-gray-900 mb-3">Enterprise</h3>
               <p className="text-gray-600 mb-6 text-base">Unlimited cars</p>
               <p className="text-5xl font-sans font-bold text-gray-900 mb-2">Custom</p>
