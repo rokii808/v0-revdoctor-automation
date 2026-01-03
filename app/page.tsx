@@ -136,7 +136,7 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section - Bold & Distinctive */}
-      <section className="relative py-16 sm:py-24 md:py-32 lg:py-40 px-4 sm:px-6 overflow-hidden bg-gradient-to-br from-orange-50 via-white to-black/5">
+      <section className="relative py-16 sm:py-24 md:py-32 lg:py-40 px-4 sm:px-6 overflow-hidden bg-white">
         {/* Bold geometric pattern background - very subtle */}
         <div
           className="absolute inset-0 opacity-[0.01]"
