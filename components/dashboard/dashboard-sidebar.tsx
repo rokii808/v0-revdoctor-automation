@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Car, LayoutDashboard, Settings, Users, Shield, FileText, Trophy } from "lucide-react"
+import { Car, LayoutDashboard, Settings, FileText, Trophy, Bot } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -49,9 +49,9 @@ const navigationGroups = [
         icon: FileText,
       },
       {
-        title: "Agents",
+        title: "AI Agents",
         href: "/agents",
-        icon: Users,
+        icon: Bot,
       },
     ],
   },
@@ -59,14 +59,9 @@ const navigationGroups = [
     label: "Settings",
     items: [
       {
-        title: "Account Settings",
+        title: "Car Preferences",
         href: "/settings",
         icon: Settings,
-      },
-      {
-        title: "Admin Panel",
-        href: "/admin",
-        icon: Shield,
       },
     ],
   },
@@ -81,8 +76,8 @@ export function DashboardSidebar({ dealer, planTier }: DashboardSidebarProps) {
     <Sidebar collapsible="icon" variant="sidebar">
       <SidebarHeader className="border-b border-sidebar-border p-4">
         <Link href="/dashboard" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/30 group-hover:shadow-xl transition-all">
-            <Car className="w-6 h-6 text-white" />
+          <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center shadow-md group-hover:shadow-lg transition-all">
+            <Car className="w-5 h-5 text-white" />
           </div>
           <div className="flex-1 min-w-0 group-data-[collapsible=icon]:hidden">
             <span className="text-lg font-bold text-sidebar-foreground">RevvDoctor</span>
@@ -101,9 +96,14 @@ export function DashboardSidebar({ dealer, planTier }: DashboardSidebarProps) {
                   const isActive = pathname === item.href
                   return (
                     <SidebarMenuItem key={item.href}>
-                      <SidebarMenuButton asChild isActive={isActive} tooltip={item.title}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={isActive}
+                        tooltip={item.title}
+                        className={isActive ? "bg-orange-50 text-orange-600 hover:bg-orange-100" : ""}
+                      >
                         <Link href={item.href}>
-                          <item.icon className="w-5 h-5" />
+                          <item.icon className={`w-5 h-5 ${isActive ? "text-orange-600" : ""}`} />
                           <span>{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
@@ -118,7 +118,7 @@ export function DashboardSidebar({ dealer, planTier }: DashboardSidebarProps) {
 
       <SidebarFooter className="border-t border-sidebar-border p-4">
         <div className="flex items-center gap-3 group-data-[collapsible=icon]:justify-center">
-          <Avatar className="w-9 h-9 bg-gradient-to-br from-orange-500 to-orange-600">
+          <Avatar className="w-9 h-9 bg-gradient-to-br from-orange-400 to-orange-600">
             <AvatarFallback className="bg-transparent text-white font-semibold">{initials}</AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0 group-data-[collapsible=icon]:hidden">

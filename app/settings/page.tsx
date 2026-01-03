@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Slider } from "@/components/ui/slider"
-import { Settings, Car, MapPin, Calendar, Gauge, PoundSterling, X, Plus, Lock, Crown, Zap, Smartphone, ArrowLeft } from 'lucide-react'
+import { Settings, Car, MapPin, Calendar, Gauge, X, Plus, Lock, Crown, Zap, Smartphone, ArrowLeft } from "lucide-react"
 import { savePrefs, getPrefs } from "@/lib/actions"
 import UpgradeNudge from "@/components/ui/upgrade-nudge"
 import Link from "next/link"
@@ -182,7 +182,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-background">
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -193,13 +193,16 @@ export default function SettingsPage() {
             </Button>
             <Link
               href="/dashboard"
-              className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+              className="text-2xl font-bold bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent"
             >
               Revvdoctor
             </Link>
           </div>
           <div className="flex items-center gap-4">
-            <Badge variant="secondary" className="flex items-center gap-1">
+            <Badge
+              variant="secondary"
+              className="flex items-center gap-1 bg-orange-50 text-orange-700 border-orange-200"
+            >
               {currentTier === "basic" && <Zap className="w-3 h-3" />}
               {currentTier === "startup" && <Crown className="w-3 h-3" />}
               {currentTier === "premium" && <Smartphone className="w-3 h-3" />}
@@ -219,8 +222,8 @@ export default function SettingsPage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                <Settings className="w-5 h-5 text-blue-600" />
+              <div className="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center shadow-md">
+                <Settings className="w-6 h-6 text-orange-600" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-slate-900">Car Preferences</h1>
@@ -248,7 +251,7 @@ export default function SettingsPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="flex items-center gap-2">
-                      <Car className="w-5 h-5 text-blue-600" />
+                      <Car className="w-5 h-5 text-orange-600" />
                       Preferred Car Makes
                     </CardTitle>
                     <CardDescription>
@@ -382,7 +385,7 @@ export default function SettingsPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-blue-600" />
+                  <Calendar className="w-5 h-5 text-orange-600" />
                   Year Range
                 </CardTitle>
                 <CardDescription>Set the minimum and maximum year for cars you're interested in.</CardDescription>
@@ -427,13 +430,21 @@ export default function SettingsPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Gauge className="w-5 h-5 text-blue-600" />
-                  Maximum Mileage
-                </CardTitle>
-                <CardDescription>
-                  Set the maximum mileage you're comfortable with: {preferences.maxMileage.toLocaleString()} miles
-                </CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Gauge className="w-5 h-5 text-orange-600" />
+                      Maximum Mileage
+                    </CardTitle>
+                    <CardDescription>
+                      Set the maximum mileage you're comfortable with: {preferences.maxMileage.toLocaleString()} miles
+                    </CardDescription>
+                  </div>
+                  <Badge variant="outline" className="text-xs">
+                    {preferences.locations.length}/
+                    {tierLimits.maxLocations === Number.POSITIVE_INFINITY ? "∞" : tierLimits.maxLocations} locations
+                  </Badge>
+                </div>
               </CardHeader>
               <CardContent>
                 <Slider
@@ -447,7 +458,7 @@ export default function SettingsPage() {
                   max={200000}
                   min={10000}
                   step={5000}
-                  className="w-full"
+                  className="w-full [&_.range-thumb]:bg-orange-500 [&_.range-track-active]:bg-orange-500"
                 />
                 <div className="flex justify-between text-sm text-slate-500 mt-2">
                   <span>10,000 miles</span>
@@ -461,7 +472,7 @@ export default function SettingsPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="flex items-center gap-2">
-                      <MapPin className="w-5 h-5 text-blue-600" />
+                      <MapPin className="w-5 h-5 text-orange-600" />
                       Preferred Locations
                     </CardTitle>
                     <CardDescription>
@@ -538,12 +549,11 @@ export default function SettingsPage() {
               </CardContent>
             </Card>
 
-            <div className="flex justify-end">
-              <Button
-                onClick={handleSave}
-                disabled={isSaving}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-              >
+            <div className="flex justify-end gap-4 mt-8">
+              <Button variant="outline" asChild>
+                <Link href="/dashboard">Cancel</Link>
+              </Button>
+              <Button onClick={handleSave} disabled={isSaving} className="bg-orange-500 hover:bg-orange-600">
                 {isSaving ? (
                   <div className="flex items-center gap-2">
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

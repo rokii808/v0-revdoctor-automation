@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Trophy, TrendingUp, Users, Crown, Star, Target, Zap, Medal, ArrowLeft } from 'lucide-react'
+import { Trophy, TrendingUp, Users, Crown, Star, Target, Zap, Medal, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
 // Mock leaderboard data - would come from database
@@ -104,7 +104,7 @@ export default function LeaderboardPage() {
     : 0
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-background">
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -115,7 +115,7 @@ export default function LeaderboardPage() {
             </Button>
             <Link
               href="/dashboard"
-              className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+              className="text-2xl font-bold bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent"
             >
               Revvdoctor
             </Link>
@@ -138,8 +138,8 @@ export default function LeaderboardPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-amber-400 to-orange-500 rounded-xl flex items-center justify-center">
-                <Trophy className="w-6 h-6 text-white" />
+              <div className="w-14 h-14 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
+                <Trophy className="w-7 h-7 text-white" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-slate-900">Revvdoctor Leaderboard</h1>
@@ -154,18 +154,18 @@ export default function LeaderboardPage() {
 
           {/* Your Performance Summary */}
           {currentUser && (
-            <Card className="mb-8 border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+            <Card className="mb-8 border-2 border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Star className="w-5 h-5 text-blue-600" />
+                  <Star className="w-5 h-5 text-orange-600" />
                   Your Performance
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-4 gap-6">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-blue-600">#{currentUser.rank}</div>
-                    <p className="text-sm text-blue-700">Global Rank</p>
+                    <div className="text-3xl font-bold text-orange-600">#{currentUser.rank}</div>
+                    <p className="text-sm text-orange-700">Global Rank</p>
                     <Badge variant="secondary" className="mt-1 text-xs">
                       Top {userRankPercentile}%
                     </Badge>
@@ -204,7 +204,7 @@ export default function LeaderboardPage() {
                           Dealers in top 3 average {leaderboardData[0].carsPerWeek} cars/week
                         </p>
                       </div>
-                      <Button asChild className="bg-orange-600 hover:bg-orange-700">
+                      <Button asChild className="bg-orange-500 hover:bg-orange-600">
                         <Link href="/pricing">Upgrade Plan</Link>
                       </Button>
                     </div>
@@ -324,8 +324,10 @@ export default function LeaderboardPage() {
                     const Icon = achievement.icon
                     return (
                       <div key={achievement.title} className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${achievement.bgColor}`}>
-                          <Icon className={`w-5 h-5 ${achievement.color}`} />
+                        <div
+                          className={`w-12 h-12 rounded-full flex items-center justify-center shadow-md ${achievement.bgColor}`}
+                        >
+                          <Icon className={`w-6 h-6 ${achievement.color}`} />
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
