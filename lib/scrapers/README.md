@@ -96,7 +96,7 @@ Use hardcoded vehicle data to test the full workflow
 
 Add to `.env.local`:
 
-```bash
+\`\`\`bash
 # RAW2K API
 RAW2K_API_KEY=your-key-here
 RAW2K_API_URL=https://api.raw2k.co.uk/v1
@@ -115,7 +115,7 @@ AUTOROLA_API_URL=https://api.autorola.com/v1
 MANHEIM_API_KEY=your-key-here
 MANHEIM_DEALER_ID=your-dealer-id
 MANHEIM_API_URL=https://api.manheim.com/v1
-```
+\`\`\`
 
 ---
 
@@ -123,12 +123,12 @@ MANHEIM_API_URL=https://api.manheim.com/v1
 
 While waiting for API access, use the mock scraper to test:
 
-```typescript
+\`\`\`typescript
 import { createMockScraper } from './lib/scrapers/mock-scraper'
 
 // Returns realistic test data
 const vehicles = await createMockScraper()
-```
+\`\`\`
 
 This allows you to:
 - ✅ Test AI classification

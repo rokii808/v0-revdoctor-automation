@@ -8,7 +8,7 @@ This guide shows you how to test the complete agent workflow using mock data.
 
 Add to your `.env.local` file:
 
-```bash
+\`\`\`bash
 # Use mock data for testing
 SCRAPER_MODE=mock
 
@@ -20,15 +20,15 @@ AI_MODEL=google/gemini-flash-1.5-8b
 # Your existing Supabase config
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-```
+\`\`\`
 
 ### 2. Restart Your Dev Server
 
-```bash
+\`\`\`bash
 npm run dev
 # or
 pnpm dev
-```
+\`\`\`
 
 ### 3. Test the Full Workflow
 
@@ -39,16 +39,16 @@ pnpm dev
 4. Watch the logs
 
 **Option B: Trigger via API** (Coming soon)
-```bash
+\`\`\`bash
 curl -X POST http://localhost:3000/api/workflow/trigger \
   -H "Content-Type: application/json"
-```
+\`\`\`
 
 ### 4. What You'll See
 
 The workflow will:
 
-```
+\`\`\`
 🚀 Starting daily scraper (mode: mock)...
 
 📋 Step 1: Loading active dealers
@@ -80,7 +80,7 @@ The workflow will:
   → Saved to workflow_stats table
 
 ✅ Complete!
-```
+\`\`\`
 
 ---
 
@@ -120,19 +120,19 @@ The workflow will:
 ### Check Database (Supabase Dashboard)
 
 1. **vehicle_matches table**
-   ```sql
+   \`\`\`sql
    SELECT * FROM vehicle_matches
    ORDER BY created_at DESC
    LIMIT 20;
-   ```
+   \`\`\`
    → Should see matched vehicles with AI classifications
 
 2. **workflow_stats table**
-   ```sql
+   \`\`\`sql
    SELECT * FROM workflow_stats
    ORDER BY run_date DESC
    LIMIT 5;
-   ```
+   \`\`\`
    → Should see workflow statistics
 
 ### Check Logs
@@ -166,7 +166,7 @@ Request:
 
 ### 3. Update Environment Variables
 
-```bash
+\`\`\`bash
 # In .env.local
 SCRAPER_MODE=api  # ← Switch to API mode
 
@@ -174,7 +174,7 @@ SCRAPER_MODE=api  # ← Switch to API mode
 RAW2K_API_KEY=your-actual-key
 BCA_API_KEY=your-actual-key
 # ... etc
-```
+\`\`\`
 
 ### 4. Test Production
 

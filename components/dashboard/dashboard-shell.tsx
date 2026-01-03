@@ -61,7 +61,7 @@ export function DashboardShell({ user, dealer, planTier, usageStats, children }:
 
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="min-h-screen bg-slate-50 flex w-full">
+      <div className="min-h-screen bg-white flex w-full">
         <DashboardSidebar dealer={dealer} planTier={planTier} />
 
         <SidebarInset className="flex flex-col flex-1">

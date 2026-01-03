@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -6,6 +6,7 @@
 
 :root {
   /* Professional car platform color system - clean slate and orange */
+  /* Ensuring background is pure white */
   --background: #ffffff;
   --foreground: #0f172a; /* slate-900 for strong text */
   --card: #ffffff;
@@ -127,7 +128,8 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-sans;
+    /* Ensuring body background is white */
+    @apply bg-white text-foreground font-sans;
   }
 }
 
@@ -136,22 +138,15 @@
   .text-3d-bold {
     -webkit-text-stroke: 0.5px white;
     paint-order: stroke fill;
-    text-shadow:
-      2px 2px 0 rgba(0, 0, 0, 0.1),
-      3px 3px 0 rgba(0, 0, 0, 0.05);
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1), 3px 3px 0 rgba(0, 0, 0, 0.05);
   }
 
   .text-3d-orange {
-    text-shadow:
-      2px 2px 0 #d4875c,
-      3px 3px 0 #c07850,
-      4px 4px 5px rgba(0, 0, 0, 0.3);
+    text-shadow: 2px 2px 0 #d4875c, 3px 3px 0 #c07850, 4px 4px 5px rgba(0, 0, 0, 0.3);
   }
 
   .box-3d {
-    box-shadow:
-      4px 4px 0 #000,
-      5px 5px 0 rgba(0, 0, 0, 0.9);
+    box-shadow: 4px 4px 0 #000, 5px 5px 0 rgba(0, 0, 0, 0.9);
   }
 
   .box-3d-hover {
@@ -159,9 +154,7 @@
   }
 
   .box-3d-hover:hover {
-    box-shadow:
-      6px 6px 0 #000,
-      7px 7px 0 rgba(0, 0, 0, 0.9);
+    box-shadow: 6px 6px 0 #000, 7px 7px 0 rgba(0, 0, 0, 0.9);
     transform: translate(-2px, -2px);
   }
 

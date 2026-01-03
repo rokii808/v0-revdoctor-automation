@@ -10,7 +10,7 @@ This guide shows you how to debug and test sending emails to multiple recipients
 
 Your code **already supports sending to multiple emails**! Here's how:
 
-```typescript
+\`\`\`typescript
 export async function sendDigestBatch(
   recipients: DigestRecipient[]
 ): Promise<SendDigestResult[]> {
@@ -28,7 +28,7 @@ export async function sendDigestBatch(
     await new Promise(resolve => setTimeout(resolve, 1000))
   }
 }
-```
+\`\`\`
 
 **How it works:**
 1. Takes array of dealers (email recipients)
@@ -70,10 +70,10 @@ Resend requires you to verify the domain you're sending from.
 
 **Use Resend's test domain** (immediate, no verification needed):
 
-```bash
+\`\`\`bash
 # In your code
 from: "Revvdoctor <onboarding@resend.dev>"
-```
+\`\`\`
 
 ✅ Works immediately
 ❌ May land in spam
@@ -87,17 +87,17 @@ from: "Revvdoctor <onboarding@resend.dev>"
 2. Click **"Add Domain"**
 3. Enter your domain (e.g., `revvdoctor.com`)
 4. Add the DNS records Resend provides:
-   ```
+   \`\`\`
    TXT record: resend._domainkey → [value from Resend]
    CNAME: em → [value from Resend]
-   ```
+   \`\`\`
 5. Wait 5-15 minutes for DNS propagation
 6. Click **"Verify"** in Resend
 
 Then use:
-```typescript
+\`\`\`typescript
 from: "Revvdoctor <digest@revvdoctor.com>"
-```
+\`\`\`
 
 ---
 
@@ -107,7 +107,7 @@ from: "Revvdoctor <digest@revvdoctor.com>"
 
 Create a simple test file:
 
-```typescript
+\`\`\`typescript
 // test-resend.ts
 import { Resend } from "resend"
 
@@ -141,16 +141,16 @@ async function testMultipleEmails() {
 }
 
 testMultipleEmails()
-```
+\`\`\`
 
 Run it:
-```bash
+\`\`\`bash
 npx tsx test-resend.ts
-```
+\`\`\`
 
 ### Test 2: Use the Real Workflow Function
 
-```typescript
+\`\`\`typescript
 import { sendDigestBatch } from "@/lib/workflow/email-digest"
 import type { DigestRecipient } from "@/lib/workflow/email-digest"
 
@@ -173,7 +173,7 @@ const testRecipients: DigestRecipient[] = [
 
 const results = await sendDigestBatch(testRecipients)
 console.log("Results:", results)
-```
+\`\`\`
 
 ---
 
@@ -182,19 +182,19 @@ console.log("Results:", results)
 ### Issue 1: "Invalid API key"
 
 **Error:**
-```
+\`\`\`
 Error: You must provide an API key
-```
+\`\`\`
 
 **Solution:**
-```bash
+\`\`\`bash
 # Check your .env.local
 echo $RESEND_API_KEY
 
 # Should start with re_
 # If not set, add it:
 RESEND_API_KEY=re_your_key_here
-```
+\`\`\`
 
 Restart your dev server after adding the key.
 
@@ -220,32 +220,32 @@ Restart your dev server after adding the key.
    - Use `onboarding@resend.dev` for testing
 
 4. **Add console logs:**
-   ```typescript
+   \`\`\`typescript
    console.log("[Email] Sending to:", recipient.email)
    console.log("[Email] Result:", data)
    console.log("[Email] Error:", error)
-   ```
+   \`\`\`
 
 ---
 
 ### Issue 3: Rate Limit Exceeded
 
 **Error:**
-```
+\`\`\`
 429: Too Many Requests
-```
+\`\`\`
 
 **Solution:**
 
 Your code already has rate limiting! Adjust batch size:
 
-```typescript
+\`\`\`typescript
 // In lib/workflow/email-digest.ts
 const BATCH_SIZE = 3  // ← Reduce from 5 to 3
 
 // Or increase delay between batches:
 await new Promise(resolve => setTimeout(resolve, 2000)) // 2 seconds
-```
+\`\`\`
 
 **Free tier limits:**
 - 100 emails per day
@@ -259,7 +259,7 @@ await new Promise(resolve => setTimeout(resolve, 2000)) // 2 seconds
 
 **Debug with detailed logging:**
 
-```typescript
+\`\`\`typescript
 const results = await sendDigestBatch(recipients)
 
 // Check each result
@@ -280,7 +280,7 @@ console.log(`
   Skipped: ${stats.skipped}
   Success Rate: ${stats.success_rate}%
 `)
-```
+\`\`\`
 
 ---
 
@@ -305,7 +305,7 @@ Get real-time notifications when emails are delivered:
 3. Select events: `email.sent`, `email.delivered`, `email.bounced`
 
 Create webhook handler:
-```typescript
+\`\`\`typescript
 // app/api/webhooks/resend/route.ts
 export async function POST(request: Request) {
   const event = await request.json()
@@ -320,7 +320,7 @@ export async function POST(request: Request) {
 
   return new Response("OK")
 }
-```
+\`\`\`
 
 ---
 
@@ -328,7 +328,7 @@ export async function POST(request: Request) {
 
 Create `scripts/test-email-workflow.ts`:
 
-```typescript
+\`\`\`typescript
 import { sendDigestBatch, getDigestStats } from "@/lib/workflow/email-digest"
 
 async function testEmailWorkflow() {
@@ -414,12 +414,12 @@ async function testEmailWorkflow() {
 }
 
 testEmailWorkflow()
-```
+\`\`\`
 
 Run it:
-```bash
+\`\`\`bash
 npx tsx scripts/test-email-workflow.ts
-```
+\`\`\`
 
 ---
 

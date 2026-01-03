@@ -35,19 +35,19 @@ Your app now supports **3 email providers** with automatic switching based on vo
 4. Copy the key (starts with `xkeysib-...`)
 
 **Add to `.env.local`:**
-```bash
+\`\`\`bash
 EMAIL_PROVIDER=brevo
 BREVO_API_KEY=xkeysib-your-key-here-1234567890abcdef
-```
+\`\`\`
 
 ---
 
 ### Step 3: Verify Sender Domain (Optional for Testing)
 
 **For testing** - Use Brevo's default domain:
-```typescript
+\`\`\`typescript
 from: "Revvdoctor <no-reply@smtp-relay.brevo.com>"
-```
+\`\`\`
 ✅ Works immediately, no setup needed
 
 **For production** - Add your own domain:
@@ -56,10 +56,10 @@ from: "Revvdoctor <no-reply@smtp-relay.brevo.com>"
 2. Click **"Add a new domain"**
 3. Enter `revvdoctor.com`
 4. Add DNS records (they'll give you exact values):
-   ```
+   \`\`\`
    TXT: brevo-code → [value from Brevo]
    TXT: v=DKIM1; k=rsa; p=... → [value from Brevo]
-   ```
+   \`\`\`
 5. Wait 5-15 minutes for verification
 6. Use: `from: "Revvdoctor <digest@revvdoctor.com>"`
 
@@ -68,17 +68,17 @@ from: "Revvdoctor <no-reply@smtp-relay.brevo.com>"
 ### Step 4: Test It!
 
 Add to `.env.local`:
-```bash
+\`\`\`bash
 EMAIL_PROVIDER=brevo
 BREVO_API_KEY=xkeysib-your-actual-key
 SCRAPER_MODE=mock
-```
+\`\`\`
 
 Run the workflow - emails will be sent via Brevo! Check logs:
-```
+\`\`\`
 [Email] Sending via BREVO to dealer@example.com
 [Email] Successfully sent to dealer@example.com (ID: abc123)
-```
+\`\`\`
 
 ---
 
@@ -137,11 +137,11 @@ Run the workflow - emails will be sent via Brevo! Check logs:
 3. Choose **"Domain"**
 4. Enter `revvdoctor.com`
 5. Add DNS records to your domain:
-   ```
+   \`\`\`
    TXT: _amazonses → [verification code]
    CNAME: [random]._domainkey → [value from AWS]
    MX: (optional for bounce handling)
-   ```
+   \`\`\`
 6. Wait for verification (5-15 minutes)
 
 ---
@@ -159,7 +159,7 @@ Run the workflow - emails will be sent via Brevo! Check logs:
    - Secret Access Key
 
 **Custom policy (more secure):**
-```json
+\`\`\`json
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -173,14 +173,14 @@ Run the workflow - emails will be sent via Brevo! Check logs:
     }
   ]
 }
-```
+\`\`\`
 
 ---
 
 ### Step 5: Configure Environment Variables
 
 Add to `.env.local`:
-```bash
+\`\`\`bash
 # Switch to SES
 EMAIL_PROVIDER=ses
 
@@ -191,17 +191,17 @@ AWS_REGION=us-east-1
 
 # Your verified sender
 # from: "Revvdoctor <digest@revvdoctor.com>"
-```
+\`\`\`
 
 ---
 
 ### Step 6: Test SES
 
 Run your workflow - check logs:
-```
+\`\`\`
 [Email] Sending via SES to dealer@example.com
 [Email] Successfully sent to dealer@example.com (ID: 0123456789...)
-```
+\`\`\`
 
 Monitor in **SES Console** → **Email sending** → **Sending statistics**
 
@@ -211,14 +211,14 @@ Monitor in **SES Console** → **Email sending** → **Sending statistics**
 
 You can implement auto-switching based on daily volume:
 
-```typescript
+\`\`\`typescript
 // lib/email/auto-switch.ts
 export async function getOptimalProvider(dailyCount: number) {
   if (dailyCount <= 300) return "brevo"  // Free tier
   if (dailyCount <= 1000) return "ses"   // Cost-effective
   return "ses" // Scale infinitely
 }
-```
+\`\`\`
 
 Update `.env.local` dynamically or use a database setting.
 
@@ -243,7 +243,7 @@ Update `.env.local` dynamically or use a database setting.
 
 Create a test script:
 
-```typescript
+\`\`\`typescript
 // scripts/test-email-providers.ts
 import { sendEmail } from "@/lib/email/providers"
 
@@ -266,12 +266,12 @@ async function testProvider(provider: "brevo" | "ses" | "resend") {
 await testProvider("brevo")
 await testProvider("ses")
 await testProvider("resend")
-```
+\`\`\`
 
 Run:
-```bash
+\`\`\`bash
 npx tsx scripts/test-email-providers.ts
-```
+\`\`\`
 
 ---
 
@@ -280,12 +280,12 @@ npx tsx scripts/test-email-providers.ts
 ### Check Current Provider
 
 Add this to your workflow:
-```typescript
+\`\`\`typescript
 import { getProviderInfo } from "@/lib/email/providers"
 
 console.log("Email provider:", getProviderInfo())
 // Output: { current: "brevo", name: "Brevo", free: "300 emails/day" }
-```
+\`\`\`
 
 ### Brevo Dashboard
 
@@ -347,13 +347,13 @@ See:
 - ✅ Professional sender reputation
 
 **Switch by changing one environment variable:**
-```bash
+\`\`\`bash
 # Development/Testing
 EMAIL_PROVIDER=brevo
 
 # Production at scale
 EMAIL_PROVIDER=ses
-```
+\`\`\`
 
 No code changes needed! 🎉
 
