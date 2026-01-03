@@ -172,12 +172,10 @@ export default function HomePage() {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-black text-black mb-6 sm:mb-8 md:mb-10 leading-[1.15] tracking-tight text-3d-bold">
-              AUTOMATE
-              <br />
-              CAR SOURCING.
+              Automate your car sourcing.
               <br />
               <span className="text-orange-600 text-3d-orange">
-                WIN FASTER.
+                Close deals faster.
               </span>
             </h1>
           </motion.div>
@@ -188,7 +186,7 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           >
-            RevvDoctor scans hundreds of auctions and delivers pre-qualified, investment-ready vehicles straight to your inbox.
+            RevvDoctor scans hundreds of auctions and sends pre-qualified, investment-ready vehicles directly to your inbox.
           </motion.p>
 
           <motion.div
@@ -214,7 +212,7 @@ export default function HomePage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            <p className="text-sm sm:text-base md:text-lg text-slate-500 font-bold tracking-wide">★ TRUSTED BY 100+ UK DEALERSHIPS ★</p>
+            <p className="text-sm sm:text-base md:text-lg text-slate-500 font-bold tracking-wide">Trusted by 100+ dealerships across the UK</p>
           </motion.div>
         </div>
       </section>
