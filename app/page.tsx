@@ -163,7 +163,7 @@ export default function HomePage() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-3 w-3 sm:h-4 sm:w-4 bg-orange-600"></span>
             </span>
-            <span className="text-xs sm:text-sm md:text-base font-bold text-slate-700 tracking-wide">SCANNING LIVE AUCTIONS 24/7</span>
+            <span className="text-xs sm:text-sm md:text-base font-sans font-bold text-slate-700 tracking-wide">Scanning live auctions</span>
           </div>
 
           <motion.div
@@ -171,17 +171,17 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-black text-black mb-6 sm:mb-8 md:mb-10 leading-[1.15] tracking-tight text-3d-bold">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-sans font-black text-black mb-6 sm:mb-8 md:mb-10 leading-[1.15] tracking-tight">
               Automate your car sourcing.
               <br />
-              <span className="text-orange-600 text-3d-orange">
+              <span className="text-orange-600">
                 Close deals faster.
               </span>
             </h1>
           </motion.div>
 
           <motion.p
-            className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-slate-600 mb-10 sm:mb-12 md:mb-16 max-w-4xl mx-auto leading-relaxed font-semibold px-4"
+            className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-sans text-slate-600 mb-10 sm:mb-12 md:mb-16 max-w-4xl mx-auto leading-relaxed font-semibold px-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
@@ -197,11 +197,11 @@ export default function HomePage() {
           >
             <Button
               size="lg"
-              className="bg-orange-600 hover:bg-orange-700 text-white text-base sm:text-lg md:text-xl lg:text-2xl px-6 sm:px-10 md:px-14 lg:px-16 py-4 sm:py-6 md:py-8 lg:py-10 rounded-2xl border-2 sm:border-3 md:border-4 border-slate-700 box-3d-hover font-black tracking-wide group shadow-xl"
+              className="bg-orange-600 hover:bg-orange-700 text-white text-base sm:text-lg md:text-xl lg:text-2xl font-sans px-6 sm:px-10 md:px-14 lg:px-16 py-4 sm:py-6 md:py-8 lg:py-10 rounded-full font-semibold group shadow-xl"
               asChild
             >
               <a href="/test-email">
-                SEE IT IN ACTION <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 ml-2 sm:ml-3 md:ml-4 group-hover:translate-x-2 transition-transform" />
+                See It In Action <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 ml-2 sm:ml-3 md:ml-4 group-hover:translate-x-2 transition-transform" />
               </a>
             </Button>
           </motion.div>
@@ -212,7 +212,7 @@ export default function HomePage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            <p className="text-sm sm:text-base md:text-lg text-slate-500 font-bold tracking-wide">Trusted by 100+ dealerships across the UK</p>
+            <p className="text-sm sm:text-base md:text-lg font-sans text-slate-500 font-medium tracking-wide">Trusted by 100+ dealerships across the UK</p>
           </motion.div>
         </div>
       </section>
