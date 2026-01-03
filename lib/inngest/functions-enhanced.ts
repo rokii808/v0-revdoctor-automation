@@ -1,14 +1,35 @@
 import { inngest } from "./client"
 import { createClient } from "@supabase/supabase-js"
+// HTML Scrapers (legacy - use only if no API access)
 import { scrapeRAW2K } from "../scrapers/raw2k"
 import { scrapeBCA } from "../scrapers/bca"
 import { scrapeAutorola } from "../scrapers/autorola"
 import { scrapeManheim } from "../scrapers/manheim"
+// Mock Scrapers (for testing)
+import {
+  scrapeRAW2KMock,
+  scrapeBCAMock,
+  scrapeAutorolaMock,
+  scrapeManheimMock,
+} from "../scrapers/mock-scraper"
+// API Scrapers (production - use when you have API keys)
+import {
+  scrapeRAW2KAPI,
+  scrapeBCAAPI,
+  scrapeAutorolaAPI,
+  scrapeManheimAPI,
+} from "../scrapers/api-scraper"
 import { classifyVehiclesWithAI } from "../analysis/ai-classifier"
 import { matchVehiclesToDealers, getMatchStats, type VehicleMatch } from "../workflow/preference-matcher"
 import { sendDigestBatch, getDigestStats } from "../workflow/email-digest"
 import type { VehicleListing } from "../scrapers/index"
 import type { DigestRecipient } from "../workflow/email-digest"
+
+// SCRAPER MODE: "mock" | "api" | "html"
+// - "mock" = Use test data (recommended for initial testing)
+// - "api" = Use auction site APIs (production, requires API keys)
+// - "html" = Web scraping (fallback, less reliable)
+const SCRAPER_MODE = (process.env.SCRAPER_MODE || "mock") as "mock" | "api" | "html"
 
 // Initialize Supabase client with service role key for background jobs
 // Use placeholders for build time, will fail at runtime if actually used without the keys
@@ -98,14 +119,28 @@ export const dailyScraperJobEnhanced = inngest.createFunction(
 
     // STEP 2: Scrape all auction sites in parallel
     const scrapedVehicles = await step.run("scrape-all-sites", async () => {
-      console.log("🕷️  [Step 2] Scraping all auction sites in parallel...")
+      console.log(`🕷️  [Step 2] Scraping all auction sites in parallel (mode: ${SCRAPER_MODE})...`)
 
-      const scrapeResults = await Promise.allSettled([
-        scrapeRAW2K(),
-        scrapeBCA(),
-        scrapeAutorola(),
-        scrapeManheim(),
-      ])
+      // Select scraper functions based on mode
+      let scrapers: Array<() => Promise<VehicleListing[]>>
+
+      switch (SCRAPER_MODE) {
+        case "api":
+          console.log("  Using API scrapers (production mode)")
+          scrapers = [scrapeRAW2KAPI, scrapeBCAAPI, scrapeAutorolaAPI, scrapeManheimAPI]
+          break
+        case "html":
+          console.log("  Using HTML scrapers (fallback mode)")
+          scrapers = [scrapeRAW2K, scrapeBCA, scrapeAutorola, scrapeManheim]
+          break
+        case "mock":
+        default:
+          console.log("  Using MOCK scrapers (testing mode)")
+          scrapers = [scrapeRAW2KMock, scrapeBCAMock, scrapeAutorolaMock, scrapeManheimMock]
+          break
+      }
+
+      const scrapeResults = await Promise.allSettled(scrapers.map(fn => fn()))
 
       const allVehicles: VehicleListing[] = []
       const siteStats: Record<string, number> = {}
