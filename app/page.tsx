@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Car,
@@ -15,6 +16,8 @@ import {
   Mail,
   Filter,
   BarChart3,
+  Menu,
+  X,
 } from "lucide-react"
 import { AnimatedSection } from "@/components/animated-section"
 import { AnimatedCounter } from "@/components/animated-counter"
@@ -23,8 +26,10 @@ import { InteractiveMapPreview } from "@/components/interactive-map-preview"
 import { motion } from "framer-motion"
 
 export default function HomePage() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white overflow-x-hidden">
       <header className="border-b border-gray-100 bg-white/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-6 py-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -49,11 +54,11 @@ export default function HomePage() {
             </a>
           </nav>
 
-          <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-2 sm:gap-4">
             <Button
               variant="ghost"
               size="lg"
-              className="text-gray-700 hover:text-gray-900 font-medium"
+              className="text-gray-700 hover:text-gray-900 font-medium text-sm sm:text-base px-3 sm:px-4 py-2 min-h-[44px]"
               asChild
             >
               <a href="/auth/login">Login</a>
@@ -61,17 +66,77 @@ export default function HomePage() {
 
             <Button
               size="lg"
-              className="cta-enterprise bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg shadow-orange-500/25 text-base rounded-full font-semibold px-8 py-4"
+              className="cta-enterprise bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg shadow-orange-500/25 text-sm sm:text-base rounded-full font-semibold px-4 sm:px-6 md:px-8 py-3 sm:py-4 min-h-[44px]"
               asChild
             >
               <a href="/auth/signup">Start Free Trial</a>
             </Button>
           </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 text-gray-700 hover:text-gray-900 min-h-[44px] min-w-[44px] flex items-center justify-center"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden border-t border-gray-100 bg-white"
+          >
+            <div className="container mx-auto px-6 py-6 space-y-4">
+              <a
+                href="#how-it-works"
+                className="block text-gray-700 hover:text-gray-900 font-medium text-base py-3 min-h-[44px]"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                How it works
+              </a>
+              <a
+                href="#pricing"
+                className="block text-gray-700 hover:text-gray-900 font-medium text-base py-3 min-h-[44px]"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Pricing
+              </a>
+              <a
+                href="/about"
+                className="block text-gray-700 hover:text-gray-900 font-medium text-base py-3 min-h-[44px]"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                About Us
+              </a>
+              <div className="pt-4 space-y-3 border-t border-gray-100">
+                <Button
+                  variant="ghost"
+                  size="lg"
+                  className="w-full text-gray-700 hover:text-gray-900 font-medium text-base min-h-[44px]"
+                  asChild
+                >
+                  <a href="/auth/login">Login</a>
+                </Button>
+                <Button
+                  size="lg"
+                  className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg shadow-orange-500/25 text-base rounded-full font-semibold min-h-[44px]"
+                  asChild
+                >
+                  <a href="/auth/signup">Start Free Trial</a>
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        )}
       </header>
 
       {/* Hero Section - Bold & Distinctive */}
-      <section className="relative py-40 px-6 overflow-hidden bg-gradient-to-br from-orange-50 via-white to-black/5">
+      <section className="relative py-16 sm:py-24 md:py-32 lg:py-40 px-4 sm:px-6 overflow-hidden bg-gradient-to-br from-orange-50 via-white to-black/5">
         {/* Bold geometric pattern background - very subtle */}
         <div
           className="absolute inset-0 opacity-[0.01]"
@@ -85,20 +150,20 @@ export default function HomePage() {
         ></div>
 
         {/* Animated orange orbs - more dramatic */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-orange-500/20 to-orange-600/10 rounded-full blur-3xl animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-orange-400/15 to-black/5 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
+        <div className="absolute top-0 right-0 w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] bg-gradient-to-br from-orange-500/20 to-orange-600/10 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute bottom-0 left-0 w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] md:w-[450px] md:h-[450px] lg:w-[500px] lg:h-[500px] bg-gradient-to-tr from-orange-400/15 to-black/5 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
 
         {/* Sharp accent shapes */}
-        <div className="absolute top-20 left-20 w-32 h-32 bg-orange-500/5 rotate-45"></div>
-        <div className="absolute bottom-40 right-32 w-24 h-24 bg-black/5 rotate-12"></div>
+        <div className="absolute top-20 left-20 w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 bg-orange-500/5 rotate-45"></div>
+        <div className="absolute bottom-40 right-32 w-12 h-12 sm:w-16 sm:h-16 md:w-24 md:h-24 bg-black/5 rotate-12"></div>
 
         <div className="container mx-auto text-center max-w-6xl relative z-10">
-          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white border-2 border-slate-700 box-3d mb-12 animate-fade-in">
-            <span className="relative flex h-4 w-4">
+          <div className="inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-white border-2 border-slate-700 box-3d mb-8 sm:mb-10 md:mb-12 animate-fade-in">
+            <span className="relative flex h-3 w-3 sm:h-4 sm:w-4">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-4 w-4 bg-orange-600"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 sm:h-4 sm:w-4 bg-orange-600"></span>
             </span>
-            <span className="text-base font-bold text-slate-700 tracking-wide">SCANNING LIVE AUCTIONS 24/7</span>
+            <span className="text-xs sm:text-sm md:text-base font-bold text-slate-700 tracking-wide">SCANNING LIVE AUCTIONS 24/7</span>
           </div>
 
           <motion.div
@@ -106,24 +171,22 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h1 className="text-7xl md:text-9xl font-black text-slate-700 mb-10 leading-[1.15] tracking-tight text-3d-bold">
-              AUTOMATE
-              <br />
-              CAR SOURCING.
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-black text-black mb-6 sm:mb-8 md:mb-10 leading-[1.15] tracking-tight text-3d-bold">
+              Automate your car sourcing.
               <br />
               <span className="text-orange-600 text-3d-orange">
-                WIN FASTER.
+                Close deals faster.
               </span>
             </h1>
           </motion.div>
 
           <motion.p
-            className="text-2xl md:text-3xl text-slate-600 mb-16 max-w-4xl mx-auto leading-relaxed font-semibold"
+            className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-slate-600 mb-10 sm:mb-12 md:mb-16 max-w-4xl mx-auto leading-relaxed font-semibold px-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           >
-            RevvDoctor scans hundreds of auctions and delivers pre-qualified, investment-ready vehicles straight to your inbox.
+            RevvDoctor scans hundreds of auctions and sends pre-qualified, investment-ready vehicles directly to your inbox.
           </motion.p>
 
           <motion.div
@@ -134,29 +197,29 @@ export default function HomePage() {
           >
             <Button
               size="lg"
-              className="bg-orange-600 hover:bg-orange-700 text-white text-2xl px-16 py-10 rounded-2xl border-4 border-slate-700 box-3d-hover font-black tracking-wide group shadow-xl"
+              className="bg-orange-600 hover:bg-orange-700 text-white text-base sm:text-lg md:text-xl lg:text-2xl px-6 sm:px-10 md:px-14 lg:px-16 py-4 sm:py-6 md:py-8 lg:py-10 rounded-2xl border-2 sm:border-3 md:border-4 border-slate-700 box-3d-hover font-black tracking-wide group shadow-xl"
               asChild
             >
               <a href="/test-email">
-                SEE IT IN ACTION <ArrowRight className="w-8 h-8 ml-4 group-hover:translate-x-2 transition-transform" />
+                SEE IT IN ACTION <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 ml-2 sm:ml-3 md:ml-4 group-hover:translate-x-2 transition-transform" />
               </a>
             </Button>
           </motion.div>
 
           <motion.div
-            className="text-center"
+            className="text-center px-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            <p className="text-lg text-slate-500 font-bold tracking-wide">★ TRUSTED BY 100+ UK DEALERSHIPS ★</p>
+            <p className="text-sm sm:text-base md:text-lg text-slate-500 font-bold tracking-wide">Trusted by 100+ dealerships across the UK</p>
           </motion.div>
         </div>
       </section>
 
       {/* Live Metrics Dashboard Preview */}
       <motion.section
-        className="py-24 px-6 bg-white text-slate-900 relative overflow-hidden -mt-20 pt-32 rounded-t-[3rem] shadow-2xl"
+        className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 bg-white text-slate-900 relative overflow-hidden -mt-12 sm:-mt-16 md:-mt-20 pt-20 sm:pt-28 md:pt-32 rounded-t-[2rem] sm:rounded-t-[2.5rem] md:rounded-t-[3rem] shadow-2xl"
         initial={{ opacity: 0, y: 60 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
@@ -177,12 +240,12 @@ export default function HomePage() {
               <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
               <span className="text-sm font-black text-white tracking-wider">LIVE DATA</span>
             </div>
-            <h2 className="text-6xl md:text-8xl font-black text-slate-700 mb-8 leading-tight tracking-tighter">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-8xl font-black text-slate-700 mb-6 sm:mb-8 leading-tight tracking-tighter">
               SEE RESULTS IN
               <br />
               <span className="text-orange-600">REAL-TIME</span>
             </h2>
-            <p className="text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-semibold">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-semibold px-4">
               Watch as our AI scans hundreds of auctions and delivers qualified vehicles — updated every minute.
             </p>
           </motion.div>
@@ -199,7 +262,7 @@ export default function HomePage() {
       </motion.section>
 
       {/* Problems Section with 3-Column Layout */}
-      <section className="py-28 px-6 bg-white">
+      <section className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 bg-white">
         <div className="container mx-auto max-w-6xl">
           <motion.div
             className="text-center mb-20"
@@ -208,12 +271,12 @@ export default function HomePage() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true, margin: "-100px" }}
           >
-            <h2 className="text-5xl md:text-7xl font-sans font-bold text-slate-900 mb-6 leading-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-sans font-bold text-slate-900 mb-4 sm:mb-6 leading-tight px-4">
               Car sourcing shouldn't
               <br />
               take hours.
             </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed px-4">
               Dealers waste time filtering auction sites, chasing leads and analyzing cars that don&#39;t meet their
               criteria. RevvDoctor removes that manual work so you can focus on deals that actually convert.
             </p>
@@ -321,14 +384,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-28 px-6 bg-gradient-to-b from-white to-gray-50" id="how-it-works">
+      <section className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 bg-gradient-to-b from-white to-gray-50" id="how-it-works">
         <div className="container mx-auto text-center max-w-5xl">
-          <h2 className="text-5xl md:text-7xl font-serif font-bold text-gray-900 mb-6 leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold text-gray-900 mb-4 sm:mb-6 leading-tight px-4">
             Start sourcing in minutes,
             <br />
             not weeks.
           </h2>
-          <p className="text-xl text-gray-600 mb-20 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-12 sm:mb-16 md:mb-20 max-w-2xl mx-auto leading-relaxed px-4">
             Get your AI powered screening up and running in just four simple steps.
           </p>
 
@@ -376,15 +439,15 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-28 px-6 bg-white">
+      <section className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 bg-white">
         <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl md:text-7xl font-serif font-bold text-gray-900 mb-6 leading-tight">
+          <div className="text-center mb-12 sm:mb-14 md:mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold text-gray-900 mb-4 sm:mb-6 leading-tight px-4">
               Here's exactly what
               <br />
               you'll receive.
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
               Twice a day, RevvDoctor emails you a curated list of cars that meet your requirements verified and ready
               for bidding.
             </p>
@@ -469,7 +532,7 @@ export default function HomePage() {
 
               <Button
                 size="lg"
-                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white text-lg px-10 py-7 rounded-full shadow-xl shadow-orange-500/30 hover:scale-105 transition-all font-semibold"
+                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white text-base sm:text-lg px-6 sm:px-8 md:px-10 py-4 sm:py-5 md:py-7 rounded-full shadow-xl shadow-orange-500/30 hover:scale-105 transition-all font-semibold min-h-[44px]"
                 asChild
               >
                 <a href="/test-email">Get My First Sample Email</a>
@@ -479,18 +542,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-28 px-6 bg-gradient-to-br from-orange-50 via-white to-black/5 relative overflow-hidden">
+      <section className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 bg-gradient-to-br from-orange-50 via-white to-black/5 relative overflow-hidden">
         {/* Geometric accent shapes */}
         <div className="absolute top-10 right-10 w-40 h-40 bg-orange-500/10 rotate-12"></div>
         <div className="absolute bottom-20 left-20 w-32 h-32 bg-black/5 -rotate-12"></div>
 
         <div className="container mx-auto max-w-6xl relative z-10">
-          <h2 className="text-6xl md:text-8xl font-black text-slate-700 mb-8 leading-tight tracking-tighter text-center">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-8xl font-black text-slate-700 mb-6 sm:mb-8 leading-tight tracking-tighter text-center px-4">
             EVERYTHING YOU
             <br />
             NEED TO <span className="text-orange-600">WIN.</span>
           </h2>
-          <p className="text-2xl text-slate-600 mb-20 max-w-3xl mx-auto leading-relaxed font-semibold text-center">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-600 mb-12 sm:mb-16 md:mb-20 max-w-3xl mx-auto leading-relaxed font-semibold text-center px-4">
             Built for dealers who want to save time and increase margins.
           </p>
 
@@ -576,10 +639,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-28 px-6 bg-white">
+      <section className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 bg-white">
         <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-7xl font-serif font-bold text-gray-900 mb-6 leading-tight">
+          <div className="text-center mb-12 sm:mb-16 md:mb-20">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold text-gray-900 mb-4 sm:mb-6 leading-tight px-4">
               Trusted by dealerships
               <br />
               across the UK.
@@ -662,14 +725,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-28 px-6 bg-white">
+      <section className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 bg-white">
         <div className="container mx-auto max-w-6xl">
-          <h2 className="text-6xl md:text-8xl font-black text-slate-700 text-center mb-8 leading-tight tracking-tighter">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-8xl font-black text-slate-700 text-center mb-6 sm:mb-8 leading-tight tracking-tighter px-4">
             BUILT FOR EVERY
             <br />
             <span className="text-orange-600">DEALERSHIP.</span>
           </h2>
-          <p className="text-2xl text-slate-600 mb-20 max-w-3xl mx-auto leading-relaxed font-semibold text-center">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-600 mb-12 sm:mb-16 md:mb-20 max-w-3xl mx-auto leading-relaxed font-semibold text-center px-4">
             Save time and increase margins — no matter your size.
           </p>
 
@@ -750,21 +813,21 @@ export default function HomePage() {
       </section>
 
       {/* Interactive Map Preview */}
-      <section className="py-28 px-6 bg-gradient-to-br from-white via-slate-50/50 to-white">
+      <section className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 bg-gradient-to-br from-white via-slate-50/50 to-white">
         <div className="container mx-auto max-w-7xl">
           <AnimatedSection className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-200 mb-6">
               <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
               <span className="text-sm font-semibold text-blue-700">INTERACTIVE PREVIEW</span>
             </div>
-            <h2 className="text-5xl md:text-7xl font-sans font-bold text-slate-900 mb-6 leading-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-sans font-bold text-slate-900 mb-4 sm:mb-6 leading-tight px-4">
               Live Auction Coverage
               <br />
               <span className="bg-gradient-to-r from-orange-600 to-blue-600 bg-clip-text text-transparent">
                 Across the UK
               </span>
             </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed px-4">
               See real vehicles from live auctions, pinned to their locations. Click any vehicle to view full details
               and start your free trial.
             </p>
@@ -782,14 +845,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-28 px-6 bg-white" id="pricing">
+      <section className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 bg-white" id="pricing">
         <div className="container mx-auto text-center max-w-6xl">
-          <h2 className="text-5xl md:text-7xl font-serif font-bold text-gray-900 mb-6 leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold text-gray-900 mb-4 sm:mb-6 leading-tight px-4">
             Simple pricing.
             <br />
             Maximum value.
           </h2>
-          <p className="text-xl text-gray-600 mb-20 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-12 sm:mb-16 md:mb-20 max-w-2xl mx-auto leading-relaxed px-4">
             Choose the plan that fits your dealership. Cancel anytime, no questions asked.
           </p>
 
@@ -913,12 +976,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-28 px-6 bg-gradient-to-br from-orange-50 via-white to-black/5">
+      <section className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 bg-gradient-to-br from-orange-50 via-white to-black/5">
         <div className="container mx-auto text-center max-w-4xl">
-          <h2 className="text-6xl md:text-8xl font-black text-slate-700 text-center mb-8 leading-tight tracking-tighter">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-8xl font-black text-slate-700 text-center mb-6 sm:mb-8 leading-tight tracking-tighter px-4">
             GOT <span className="text-orange-600">QUESTIONS?</span>
           </h2>
-          <p className="text-2xl text-slate-600 text-center mb-20 leading-relaxed font-semibold">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-600 text-center mb-12 sm:mb-16 md:mb-20 leading-relaxed font-semibold px-4">
             Everything you need to know before getting started.
           </p>
 
@@ -952,23 +1015,23 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-28 px-6 bg-white">
+      <section className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 bg-white">
         <div className="container mx-auto text-center max-w-4xl">
-          <h2 className="text-5xl md:text-7xl font-serif font-bold text-gray-900 mb-8 leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold text-gray-900 mb-6 sm:mb-8 leading-tight px-4">
             Start sourcing healthy
             <br />
             cars today.
           </h2>
-          <p className="text-xl text-gray-600 mb-14 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-10 sm:mb-12 md:mb-14 max-w-2xl mx-auto leading-relaxed px-4">
             Join dealerships already saving time and increasing margins with RevvDoctor.
           </p>
           <Button
             size="lg"
-            className="cta-enterprise bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white text-xl px-14 py-8 rounded-full shadow-xl shadow-orange-500/30 font-semibold group"
+            className="cta-enterprise bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white text-base sm:text-lg md:text-xl px-8 sm:px-10 md:px-14 py-4 sm:py-6 md:py-8 rounded-full shadow-xl shadow-orange-500/30 font-semibold group min-h-[44px]"
             asChild
           >
             <a href="/test-email">
-              See It In Action <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-1 transition-transform" />
+              See It In Action <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 ml-2 sm:ml-3 group-hover:translate-x-1 transition-transform" />
             </a>
           </Button>
         </div>
