@@ -191,7 +191,7 @@ export default function AgentsPage() {
 
           <div className="grid gap-8">
             {/* Agent Status Card */}
-            <Card className="border-2">
+            <Card className="border-2 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.16)] transition-shadow duration-300">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
@@ -218,9 +218,9 @@ export default function AgentsPage() {
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Agent Toggle */}
-                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border-2 border-slate-200 shadow-md">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-orange-50 rounded-full flex items-center justify-center">
+                    <div className="w-10 h-10 bg-gradient-to-br from-orange-100 to-orange-50 rounded-full flex items-center justify-center shadow-md">
                       <Zap className="w-5 h-5 text-orange-600" />
                     </div>
                     <div>
@@ -298,10 +298,10 @@ export default function AgentsPage() {
 
             {/* Agent Statistics */}
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Card>
+              <Card className="shadow-[0_6px_20px_rgb(0,0,0,0.1)] border-2 border-slate-200 hover:shadow-[0_8px_25px_rgb(0,0,0,0.14)] hover:-translate-y-1 transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center shadow-sm">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-50 rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(59,130,246,0.2)]">
                       <Clock className="w-6 h-6 text-blue-600" />
                     </div>
                     <div>
@@ -312,10 +312,10 @@ export default function AgentsPage() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="shadow-[0_6px_20px_rgb(0,0,0,0.1)] border-2 border-slate-200 hover:shadow-[0_8px_25px_rgb(0,0,0,0.14)] hover:-translate-y-1 transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center shadow-sm">
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-50 rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(34,197,94,0.2)]">
                       <BarChart3 className="w-6 h-6 text-green-600" />
                     </div>
                     <div>
@@ -326,10 +326,10 @@ export default function AgentsPage() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="shadow-[0_6px_20px_rgb(0,0,0,0.1)] border-2 border-slate-200 hover:shadow-[0_8px_25px_rgb(0,0,0,0.14)] hover:-translate-y-1 transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center shadow-sm">
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-purple-50 rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(168,85,247,0.2)]">
                       <Activity className="w-6 h-6 text-purple-600" />
                     </div>
                     <div>
@@ -340,10 +340,10 @@ export default function AgentsPage() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="shadow-[0_6px_20px_rgb(0,0,0,0.1)] border-2 border-slate-200 hover:shadow-[0_8px_25px_rgb(0,0,0,0.14)] hover:-translate-y-1 transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center shadow-sm">
+                    <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-emerald-50 rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(16,185,129,0.2)]">
                       <CheckCircle className="w-6 h-6 text-emerald-600" />
                     </div>
                     <div>
@@ -356,7 +356,7 @@ export default function AgentsPage() {
             </div>
 
             {/* Agent Configuration */}
-            <Card>
+            <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-2 border-slate-200">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Settings className="w-5 h-5 text-orange-600" />
@@ -391,7 +391,7 @@ export default function AgentsPage() {
             </Card>
 
             {/* How It Works */}
-            <Card>
+            <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-2 border-slate-200">
               <CardHeader>
                 <CardTitle>How Your AI Agent Works</CardTitle>
                 <CardDescription>Understanding the Revvdoctor automation process</CardDescription>
@@ -399,7 +399,7 @@ export default function AgentsPage() {
               <CardContent>
                 <div className="grid md:grid-cols-3 gap-6">
                   <div className="text-center">
-                    <div className="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-3 shadow-md">
+                    <div className="w-14 h-14 bg-gradient-to-br from-blue-100 to-blue-50 rounded-full flex items-center justify-center mx-auto mb-3 shadow-[0_6px_20px_rgba(59,130,246,0.25)]">
                       <Activity className="w-7 h-7 text-blue-600" />
                     </div>
                     <h4 className="font-semibold text-slate-900 mb-2">1. Daily Scan</h4>
@@ -408,7 +408,7 @@ export default function AgentsPage() {
                     </p>
                   </div>
                   <div className="text-center">
-                    <div className="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-3 shadow-md">
+                    <div className="w-14 h-14 bg-gradient-to-br from-green-100 to-green-50 rounded-full flex items-center justify-center mx-auto mb-3 shadow-[0_6px_20px_rgba(34,197,94,0.25)]">
                       <Bot className="w-7 h-7 text-green-600" />
                     </div>
                     <h4 className="font-semibold text-slate-900 mb-2">2. AI Analysis</h4>
@@ -417,7 +417,7 @@ export default function AgentsPage() {
                     </p>
                   </div>
                   <div className="text-center">
-                    <div className="w-14 h-14 bg-purple-50 rounded-full flex items-center justify-center mx-auto mb-3 shadow-md">
+                    <div className="w-14 h-14 bg-gradient-to-br from-purple-100 to-purple-50 rounded-full flex items-center justify-center mx-auto mb-3 shadow-[0_6px_20px_rgba(168,85,247,0.25)]">
                       <CheckCircle className="w-7 h-7 text-purple-600" />
                     </div>
                     <h4 className="font-semibold text-slate-900 mb-2">3. Email Digest</h4>

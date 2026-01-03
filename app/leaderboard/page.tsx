@@ -154,7 +154,7 @@ export default function LeaderboardPage() {
 
           {/* Your Performance Summary */}
           {currentUser && (
-            <Card className="mb-8 border-2 border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50">
+            <Card className="mb-8 border-2 border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50 shadow-[0_8px_30px_rgba(249,115,22,0.15)] hover:shadow-[0_12px_40px_rgba(249,115,22,0.2)] transition-shadow duration-300">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Star className="w-5 h-5 text-orange-600" />
@@ -196,7 +196,7 @@ export default function LeaderboardPage() {
                 </div>
 
                 {currentUser.rank > 3 && (
-                  <div className="mt-6 bg-orange-50 border border-orange-200 rounded-lg p-4">
+                  <div className="mt-6 bg-orange-50 border-2 border-orange-200 rounded-lg p-4 shadow-md">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-medium text-orange-900">Want to climb higher?</p>
@@ -217,7 +217,7 @@ export default function LeaderboardPage() {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Top Performers */}
             <div className="lg:col-span-2">
-              <Card>
+              <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-2 border-slate-200">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Trophy className="w-5 h-5 text-amber-500" />
@@ -229,11 +229,11 @@ export default function LeaderboardPage() {
                   {leaderboardData.map((dealer, index) => (
                     <div
                       key={dealer.rank}
-                      className={`flex items-center justify-between p-4 rounded-lg border transition-all ${
+                      className={`flex items-center justify-between p-4 rounded-lg border-2 transition-all shadow-md hover:shadow-lg hover:-translate-y-1 duration-300 ${
                         dealer.isCurrentUser
-                          ? "border-blue-200 bg-blue-50"
+                          ? "border-blue-200 bg-blue-50 shadow-[0_4px_20px_rgba(59,130,246,0.15)]"
                           : index < 3
-                            ? "border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50"
+                            ? "border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50 shadow-[0_4px_20px_rgba(251,191,36,0.15)]"
                             : "border-slate-200 bg-white hover:bg-slate-50"
                       }`}
                     >
@@ -311,7 +311,7 @@ export default function LeaderboardPage() {
 
             {/* Achievements & Stats */}
             <div className="space-y-6">
-              <Card>
+              <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-2 border-slate-200">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Target className="w-5 h-5 text-purple-500" />
@@ -325,7 +325,7 @@ export default function LeaderboardPage() {
                     return (
                       <div key={achievement.title} className="flex items-center gap-3">
                         <div
-                          className={`w-12 h-12 rounded-full flex items-center justify-center shadow-md ${achievement.bgColor}`}
+                          className={`w-12 h-12 rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(0,0,0,0.15)] ${achievement.bgColor}`}
                         >
                           <Icon className={`w-6 h-6 ${achievement.color}`} />
                         </div>
@@ -344,7 +344,7 @@ export default function LeaderboardPage() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-2 border-slate-200">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-green-500" />
@@ -373,7 +373,7 @@ export default function LeaderboardPage() {
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4 mt-4">
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg p-4 mt-4 shadow-md">
                     <p className="text-sm font-medium text-green-900 mb-1">Elite Club</p>
                     <p className="text-xs text-green-700">
                       Top {benchmarkStats.topPerformers} dealers (10%) average £

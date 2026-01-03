@@ -246,7 +246,7 @@ export default function SettingsPage() {
                 />
               )}
 
-            <Card>
+            <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-2 border-slate-200">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
@@ -312,7 +312,7 @@ export default function SettingsPage() {
                 </div>
 
                 {preferences.makes.length >= tierLimits.maxMakes && getNextTier() && (
-                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 flex items-center justify-between">
+                  <div className="bg-orange-50 border-2 border-orange-200 rounded-lg p-4 flex items-center justify-between shadow-md">
                     <div className="flex items-center gap-3">
                       <Lock className="w-5 h-5 text-orange-600" />
                       <div>
@@ -382,7 +382,7 @@ export default function SettingsPage() {
               </Card>
             )}
 
-            <Card>
+            <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-2 border-slate-200">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
@@ -436,7 +436,7 @@ export default function SettingsPage() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-2 border-slate-200">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
@@ -475,7 +475,7 @@ export default function SettingsPage() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-2 border-slate-200">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
@@ -541,7 +541,7 @@ export default function SettingsPage() {
                 </div>
 
                 {preferences.locations.length >= tierLimits.maxLocations && getNextTier() && (
-                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 flex items-center justify-between">
+                  <div className="bg-orange-50 border-2 border-orange-200 rounded-lg p-4 flex items-center justify-between shadow-md">
                     <div className="flex items-center gap-3">
                       <Lock className="w-5 h-5 text-orange-600" />
                       <div>

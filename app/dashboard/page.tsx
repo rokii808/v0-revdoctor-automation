@@ -12,7 +12,7 @@ import { getPlanConfig, type PlanTier } from "@/lib/plans/config"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Settings, Car, Eye, TrendingUp } from "lucide-react"
+import { Car, Eye, TrendingUp } from "lucide-react"
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -141,7 +141,9 @@ export default function DashboardPage() {
       <div className="space-y-6">
         {/* Welcome Section */}
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Welcome back, {dealer?.dealer_name?.split(" ")[0] || "Dealer"}! 👋</h1>
+          <h1 className="text-3xl font-bold text-slate-900">
+            Welcome back, {dealer?.dealer_name?.split(" ")[0] || "Dealer"}! 👋
+          </h1>
           <p className="text-slate-600 mt-1">Here's what your AI scout found today</p>
         </div>
 
@@ -152,10 +154,10 @@ export default function DashboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200 hover:shadow-xl transition-all"
+            className="bg-white rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-200 hover:shadow-[0_12px_40px_rgb(0,0,0,0.16)] hover:-translate-y-1 transition-all duration-300"
           >
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-100 to-orange-50 flex items-center justify-center shadow-md">
                 <Car className="w-6 h-6 text-orange-600" />
               </div>
               <span className="text-2xl">🚗</span>
@@ -169,10 +171,10 @@ export default function DashboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200 hover:shadow-xl transition-all"
+            className="bg-white rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-200 hover:shadow-[0_12px_40px_rgb(0,0,0,0.16)] hover:-translate-y-1 transition-all duration-300"
           >
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center shadow-md">
                 <Eye className="w-6 h-6 text-blue-600" />
               </div>
               <span className="text-2xl">📊</span>
@@ -186,10 +188,10 @@ export default function DashboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200 hover:shadow-xl transition-all"
+            className="bg-white rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-200 hover:shadow-[0_12px_40px_rgb(0,0,0,0.16)] hover:-translate-y-1 transition-all duration-300"
           >
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-100 to-green-50 flex items-center justify-center shadow-md">
                 <TrendingUp className="w-6 h-6 text-green-600" />
               </div>
               <span className="text-2xl">✅</span>
@@ -203,7 +205,7 @@ export default function DashboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-6 shadow-lg text-white"
+            className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-6 shadow-[0_8px_30px_rgba(249,115,22,0.3)] text-white hover:shadow-[0_12px_40px_rgba(249,115,22,0.4)] hover:-translate-y-1 transition-all duration-300"
           >
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
@@ -220,9 +222,8 @@ export default function DashboardPage() {
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Left Column - Vehicles (2/3 width) */}
           <div className="lg:col-span-2 space-y-6">
-
             {/* Vehicles Section */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200">
+            <div className="bg-white rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-200">
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h2 className="text-xl font-bold text-slate-900">Today's Best Picks</h2>
@@ -249,7 +250,7 @@ export default function DashboardPage() {
             <QuickActions />
 
             {/* Activity Feed */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200">
+            <div className="bg-white rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-200">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-slate-900">Recent Activity</h3>
               </div>
