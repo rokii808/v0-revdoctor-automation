@@ -165,18 +165,34 @@ export function InteractiveMapPreview() {
                 <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-6 sm:w-8 h-2 sm:h-3 bg-slate-900/20 blur-md rounded-full"></div>
               </div>
 
-              {/* Price Tag - Shows on Hover */}
+              {/* Price Tag - Shows on Hover/Click */}
               {hoveredVehicle === vehicle.id && (
-                <div className="hidden sm:block absolute top-16 sm:top-20 left-1/2 transform -translate-x-1/2 bg-white px-3 py-2 sm:px-4 sm:py-3 rounded-lg sm:rounded-xl shadow-xl sm:shadow-2xl border border-orange-200 whitespace-nowrap animate-fade-in z-50">
-                  <p className="text-xs sm:text-sm font-bold text-slate-900">
-                    {vehicle.make} {vehicle.model}
-                  </p>
-                  <p className="text-sm sm:text-lg font-bold text-orange-600">£{vehicle.price.toLocaleString()}</p>
-                  <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5 sm:mt-1">
-                    <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                    {vehicle.location}
-                  </p>
-                </div>
+                <>
+                  {/* Desktop Tooltip */}
+                  <div className="hidden sm:block absolute top-16 sm:top-20 left-1/2 transform -translate-x-1/2 bg-white px-3 py-2 sm:px-4 sm:py-3 rounded-lg sm:rounded-xl shadow-xl sm:shadow-2xl border border-orange-200 whitespace-nowrap animate-fade-in z-50">
+                    <p className="text-xs sm:text-sm font-bold text-slate-900">
+                      {vehicle.make} {vehicle.model}
+                    </p>
+                    <p className="text-sm sm:text-lg font-bold text-orange-600">£{vehicle.price.toLocaleString()}</p>
+                    <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5 sm:mt-1">
+                      <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                      {vehicle.location}
+                    </p>
+                  </div>
+
+                  <div className="sm:hidden absolute top-full mt-3 left-1/2 transform -translate-x-1/2 bg-white px-3 py-2 rounded-lg shadow-lg border border-orange-200 z-50 min-w-max">
+                    <p className="text-xs font-bold text-slate-900 whitespace-nowrap">
+                      {vehicle.make} {vehicle.model}
+                    </p>
+                    <p className="text-sm font-bold text-orange-600 whitespace-nowrap">
+                      £{vehicle.price.toLocaleString()}
+                    </p>
+                    <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5 whitespace-nowrap">
+                      <MapPin className="w-2.5 h-2.5 flex-shrink-0" />
+                      {vehicle.location}
+                    </p>
+                  </div>
+                </>
               )}
             </button>
           ))}
