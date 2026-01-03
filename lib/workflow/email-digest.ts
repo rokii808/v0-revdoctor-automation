@@ -185,13 +185,13 @@ function buildDigestHTML(recipient: DigestRecipient): string {
     }
     .header {
       text-align: center;
-      border-bottom: 3px solid #ec4899;
+      border-bottom: 3px solid #f97316;
       padding-bottom: 20px;
       margin-bottom: 30px;
     }
     .header h1 {
       margin: 0;
-      color: #ec4899;
+      color: #f97316;
       font-size: 28px;
     }
     .header p {
@@ -200,8 +200,8 @@ function buildDigestHTML(recipient: DigestRecipient): string {
       font-size: 16px;
     }
     .summary {
-      background-color: #fdf2f8;
-      border-left: 4px solid #ec4899;
+      background-color: #fff7ed;
+      border-left: 4px solid #f97316;
       padding: 15px;
       margin-bottom: 30px;
       border-radius: 4px;
@@ -209,7 +209,7 @@ function buildDigestHTML(recipient: DigestRecipient): string {
     .summary h2 {
       margin: 0 0 10px 0;
       font-size: 18px;
-      color: #ec4899;
+      color: #f97316;
     }
     .vehicle-card {
       border: 1px solid #e5e7eb;
@@ -319,7 +319,7 @@ function buildDigestHTML(recipient: DigestRecipient): string {
     }
     .view-button {
       display: inline-block;
-      background-color: #ec4899;
+      background-color: #f97316;
       color: white;
       padding: 10px 20px;
       text-decoration: none;
@@ -329,7 +329,7 @@ function buildDigestHTML(recipient: DigestRecipient): string {
       text-align: center;
     }
     .view-button:hover {
-      background-color: #db2777;
+      background-color: #ea580c;
     }
     .footer {
       text-align: center;
@@ -340,7 +340,7 @@ function buildDigestHTML(recipient: DigestRecipient): string {
       font-size: 13px;
     }
     .footer a {
-      color: #ec4899;
+      color: #f97316;
       text-decoration: none;
     }
   </style>

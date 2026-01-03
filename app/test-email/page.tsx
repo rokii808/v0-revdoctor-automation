@@ -148,7 +148,7 @@ export default function TestEmailPage() {
       <div className="container mx-auto px-4 py-16 max-w-6xl">
         <div className="text-center mb-16">
           <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-14 h-14 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center shadow-xl">
+            <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-xl">
               <Sparkles className="w-7 h-7 text-white" />
             </div>
             <h1 className="text-5xl font-serif font-bold text-foreground">Revvdoctor</h1>
@@ -159,7 +159,7 @@ export default function TestEmailPage() {
             inbox
           </p>
           <div className="flex items-center justify-center gap-6 flex-wrap">
-            <Badge className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-5 py-2.5 text-sm">
+            <Badge className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-2.5 text-sm">
               Free Trial - Preview 2 Cars
             </Badge>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -172,14 +172,14 @@ export default function TestEmailPage() {
         <Card className="mb-16 border-2 shadow-lg">
           <CardHeader className="text-center pb-6">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <Mail className="w-6 h-6 text-pink-600" />
+              <Mail className="w-6 h-6 text-orange-600" />
               <CardTitle className="font-serif text-3xl">Get Your Sample Digest</CardTitle>
             </div>
             <CardDescription className="text-lg">
               Enter your email address to receive a sample digest with 2 healthy car listings
               <br />
               <span className="inline-flex items-center gap-1.5 mt-3 text-sm">
-                <Badge variant="secondary" className="bg-purple-100 text-purple-700 border-purple-200">
+                <Badge variant="secondary" className="bg-orange-100 text-orange-700 border-orange-200">
                   <Sparkles className="w-3 h-3 mr-1" />
                   Powered by n8n
                 </Badge>
@@ -205,7 +205,7 @@ export default function TestEmailPage() {
                 onClick={handleSendTestEmail}
                 disabled={isSending || !email || !!emailError}
                 size="lg"
-                className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white shadow-lg px-10 h-14 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg px-10 h-14 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSending ? (
                   <>
@@ -260,12 +260,12 @@ export default function TestEmailPage() {
           </div>
 
           {isRefreshing && (
-            <Card className="mb-8 bg-gradient-to-br from-pink-50 to-purple-50 border-pink-200 shadow-md">
+            <Card className="mb-8 bg-gradient-to-br from-orange-50 to-orange-50 border-orange-200 shadow-md">
               <CardContent className="pt-8 pb-8">
                 <div className="text-center">
-                  <div className="w-12 h-12 border-4 border-pink-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                  <p className="text-pink-700 font-semibold text-xl mb-2">Scanning RAW2K Auctions...</p>
-                  <p className="text-sm text-pink-600">AI is analyzing condition reports in real-time</p>
+                  <div className="w-12 h-12 border-4 border-orange-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                  <p className="text-orange-700 font-semibold text-xl mb-2">Scanning RAW2K Auctions...</p>
+                  <p className="text-sm text-orange-600">AI is analyzing condition reports in real-time</p>
                 </div>
               </CardContent>
             </Card>
@@ -316,11 +316,11 @@ export default function TestEmailPage() {
                     </div>
                   </div>
 
-                  <div className="mb-6 p-5 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg border border-purple-100">
+                  <div className="mb-6 p-5 bg-gradient-to-br from-orange-50 to-orange-50 rounded-lg border border-orange-100">
                     <div className="flex items-center gap-2 mb-3">
-                      <Sparkles className="w-4 h-4 text-purple-600" />
-                      <span className="text-sm font-semibold text-purple-900">AI Analysis</span>
-                      <Badge variant="secondary" className="text-xs bg-purple-100 text-purple-700">
+                      <Sparkles className="w-4 h-4 text-orange-600" />
+                      <span className="text-sm font-semibold text-orange-900">AI Analysis</span>
+                      <Badge variant="secondary" className="text-xs bg-orange-100 text-orange-700">
                         Why this car?
                       </Badge>
                     </div>
@@ -328,7 +328,7 @@ export default function TestEmailPage() {
                   </div>
 
                   <div className="flex gap-3">
-                    <Button variant="default" size="lg" asChild className="shadow-md bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700">
+                    <Button variant="default" size="lg" asChild className="shadow-md bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700">
                       <a href={car.url} target="_blank" rel="noopener noreferrer">
                         View Live Listing →
                       </a>
@@ -344,7 +344,7 @@ export default function TestEmailPage() {
             ))}
           </div>
 
-          <Card className="mt-10 border-2 border-pink-200 bg-white shadow-md">
+          <Card className="mt-10 border-2 border-orange-200 bg-white shadow-md">
             <CardContent className="pt-6 pb-6 text-center">
               <p className="text-lg text-muted-foreground mb-4">
                 <strong className="text-foreground">Want cars like these in your inbox?</strong> Enter your email above to get started.
@@ -365,7 +365,7 @@ export default function TestEmailPage() {
         <Card className="border-2 shadow-sm bg-white">
           <CardHeader className="text-center pb-4">
             <div className="flex items-center justify-center gap-2 mb-3">
-              <Car className="w-5 h-5 text-pink-600" />
+              <Car className="w-5 h-5 text-orange-600" />
               <CardTitle className="font-serif text-2xl">How Revvdoctor Works for Dealerships</CardTitle>
             </div>
             <CardDescription className="text-base">
@@ -375,7 +375,7 @@ export default function TestEmailPage() {
           <CardContent className="pt-8 pb-8">
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                   <span className="font-bold text-2xl">1</span>
                 </div>
                 <h4 className="font-semibold text-lg mb-3">AI Screens Cars</h4>
@@ -384,7 +384,7 @@ export default function TestEmailPage() {
                 </p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                   <span className="font-bold text-2xl">2</span>
                 </div>
                 <h4 className="font-semibold text-lg mb-3">Smart Filtering</h4>
@@ -393,7 +393,7 @@ export default function TestEmailPage() {
                 </p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                   <span className="font-bold text-2xl">3</span>
                 </div>
                 <h4 className="font-semibold text-lg mb-3">Daily Digest</h4>
