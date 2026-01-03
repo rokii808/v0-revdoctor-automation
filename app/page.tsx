@@ -151,7 +151,10 @@ export default function HomePage() {
 
         {/* Animated orange orbs - more dramatic */}
         <div className="absolute top-0 right-0 w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] bg-gradient-to-br from-orange-500/20 to-orange-600/10 rounded-full blur-3xl animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] md:w-[450px] md:h-[450px] lg:w-[500px] lg:h-[500px] bg-gradient-to-tr from-orange-400/15 to-black/5 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
+        <div
+          className="absolute bottom-0 left-0 w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] md:w-[450px] md:h-[450px] lg:w-[500px] lg:h-[500px] bg-gradient-to-tr from-orange-400/15 to-black/5 rounded-full blur-3xl animate-pulse-slow"
+          style={{ animationDelay: "2s" }}
+        ></div>
 
         {/* Sharp accent shapes */}
         <div className="absolute top-20 left-20 w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 bg-orange-500/5 rotate-45"></div>
@@ -163,7 +166,9 @@ export default function HomePage() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-3 w-3 sm:h-4 sm:w-4 bg-orange-600"></span>
             </span>
-            <span className="text-xs sm:text-sm md:text-base font-sans font-bold text-slate-700 tracking-wide">Scanning live auctions</span>
+            <span className="text-xs sm:text-sm md:text-base font-sans font-bold text-slate-700 tracking-wide">
+              Scanning live auctions
+            </span>
           </div>
 
           <motion.div
@@ -174,9 +179,7 @@ export default function HomePage() {
             <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-sans font-black text-black mb-6 sm:mb-8 md:mb-10 leading-[1.15] tracking-tight">
               Automate your car sourcing.
               <br />
-              <span className="text-orange-600">
-                Close deals faster.
-              </span>
+              <span className="text-orange-600">Close deals faster.</span>
             </h1>
           </motion.div>
 
@@ -186,7 +189,8 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           >
-            RevvDoctor scans hundreds of auctions and sends pre-qualified, investment-ready vehicles directly to your inbox.
+            RevvDoctor scans hundreds of auctions and sends pre-qualified, investment-ready vehicles directly to your
+            inbox.
           </motion.p>
 
           <motion.div
@@ -201,7 +205,8 @@ export default function HomePage() {
               asChild
             >
               <a href="/test-email">
-                See It In Action <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 ml-2 sm:ml-3 md:ml-4 group-hover:translate-x-2 transition-transform" />
+                See It In Action{" "}
+                <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 ml-2 sm:ml-3 md:ml-4 group-hover:translate-x-2 transition-transform" />
               </a>
             </Button>
           </motion.div>
@@ -212,7 +217,9 @@ export default function HomePage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            <p className="text-sm sm:text-base md:text-lg font-sans text-slate-500 font-medium tracking-wide">Trusted by 100+ dealerships across the UK</p>
+            <p className="text-sm sm:text-base md:text-lg font-sans text-slate-500 font-medium tracking-wide">
+              Trusted by 100+ dealerships across the UK
+            </p>
           </motion.div>
         </div>
       </section>
@@ -384,7 +391,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 bg-gradient-to-b from-white to-gray-50" id="how-it-works">
+      <section
+        className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 bg-gradient-to-b from-white to-gray-50"
+        id="how-it-works"
+      >
         <div className="container mx-auto text-center max-w-5xl">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-sans font-bold text-gray-900 mb-4 sm:mb-6 leading-tight px-4">
             Start sourcing in minutes,
@@ -886,7 +896,7 @@ export default function HomePage() {
               <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-black text-white rounded-full text-sm font-black px-8 py-3 border-2 border-white">
                 ★ MOST POPULAR ★
               </div>
-              <h3 className="text-2xl font-black text-white mb-3 mt-2 tracking-wide">PREMIUM</h3>
+              <h3 className="text-2xl font-black text-white mb-3 mt-2 tracking-wide">Business</h3>
               <p className="text-white/90 mb-6 text-base font-semibold">Up to 10 cars daily</p>
               <p className="text-6xl font-black text-white mb-2">£299</p>
               <p className="text-base text-white/80 mb-8 font-semibold">/month</p>
@@ -1031,7 +1041,8 @@ export default function HomePage() {
             asChild
           >
             <a href="/test-email">
-              See It In Action <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 ml-2 sm:ml-3 group-hover:translate-x-1 transition-transform" />
+              See It In Action{" "}
+              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 ml-2 sm:ml-3 group-hover:translate-x-1 transition-transform" />
             </a>
           </Button>
         </div>
