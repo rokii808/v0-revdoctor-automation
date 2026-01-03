@@ -737,7 +737,7 @@ export default function HomePage() {
 
       <section className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 bg-white">
         <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-8xl font-black text-slate-700 text-center mb-6 sm:mb-8 leading-tight tracking-tighter px-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-sans font-bold text-slate-700 text-center mb-6 sm:mb-8 leading-tight tracking-tighter px-4">
             BUILT FOR EVERY
             <br />
             <span className="text-orange-600">DEALERSHIP.</span>
@@ -892,39 +892,41 @@ export default function HomePage() {
               </ul>
             </div>
 
+            {/* START OF UPDATED CODE */}
             <div
-              className="bg-orange-600 border-4 border-orange-700 p-10 rounded-3xl transition-all duration-300 hover:-translate-y-2 relative shadow-lg"
-              style={{ boxShadow: "0 20px 40px rgba(249, 115, 22, 0.3)" }}
+              className="bg-white border border-gray-200 p-10 rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-opacity-80 backdrop-blur-sm relative"
+              style={{ boxShadow: "0 20px 40px rgba(229, 153, 104, 0.15)" }}
             >
               <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-black text-white rounded-full text-sm font-black px-8 py-3 border-2 border-white whitespace-nowrap">
                 ★ MOST POPULAR ★
               </div>
-              <h3 className="text-2xl font-sans font-bold text-white mb-3 mt-2">Business</h3>
-              <p className="text-white/90 mb-6 text-base">Up to 10 cars daily</p>
-              <p className="text-6xl font-sans font-bold text-white mb-2">£299</p>
-              <p className="text-base text-white/80 mb-8">/month</p>
+              <h3 className="text-2xl font-sans font-bold text-gray-900 mb-3 mt-2">Premium</h3>
+              <p className="text-gray-600 mb-6 text-base">Up to 10 cars daily</p>
+              <p className="text-6xl font-sans font-bold text-gray-900 mb-2">£299</p>
+              <p className="text-base text-gray-500 mb-8">/month</p>
               <Button
                 size="lg"
-                className="w-full mb-8 bg-black hover:bg-gray-800 text-white border-2 border-white rounded-full text-base py-6 hover:scale-105 transition-all"
+                className="w-full mb-8 bg-orange-600 hover:bg-orange-700 text-white border-2 border-orange-600 rounded-full text-base py-6 hover:scale-105 transition-all"
                 asChild
               >
                 <a href="/test-email">GET STARTED NOW</a>
               </Button>
-              <ul className="text-left space-y-4 text-base text-white">
+              <ul className="text-left space-y-4 text-base text-gray-600">
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>Advanced AI screening</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>ROI tracking</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                   <span>Priority support</span>
                 </li>
               </ul>
             </div>
+            {/* END OF UPDATED CODE */}
 
             <div className="bg-white border border-gray-200 p-10 rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-opacity-80 backdrop-blur-sm">
               <h3 className="text-2xl font-sans font-bold text-gray-900 mb-3">Pro</h3>
