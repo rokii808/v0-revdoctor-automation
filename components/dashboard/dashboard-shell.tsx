@@ -1,27 +1,18 @@
 "use client"
 
+import type React from "react"
+
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import {
-  Car,
-  LayoutDashboard,
-  Settings,
-  Bell,
-  Search,
-  Menu,
-  X,
-  LogOut,
-  TrendingUp,
-  MessageCircle,
-} from "lucide-react"
+import { Car, LayoutDashboard, Settings, Bell, Search, Menu, X, LogOut, MessageCircle } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { PlanBadge } from "./plan-badge"
-import { type PlanTier } from "@/lib/plans/config"
-import { type UsageStats } from "@/lib/plans/usage-tracker"
+import type { PlanTier } from "@/lib/plans/config"
+import type { UsageStats } from "@/lib/plans/usage-tracker"
 import { AgentChat, AgentButton } from "./agent-chat"
 
 interface DashboardShellProps {
@@ -32,13 +23,7 @@ interface DashboardShellProps {
   children: React.ReactNode
 }
 
-export function DashboardShell({
-  user,
-  dealer,
-  planTier,
-  usageStats,
-  children,
-}: DashboardShellProps) {
+export function DashboardShell({ user, dealer, planTier, usageStats, children }: DashboardShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [agentChatOpen, setAgentChatOpen] = useState(false)
   const router = useRouter()
@@ -55,7 +40,7 @@ export function DashboardShell({
     console.log("Message sent to agent:", message)
   }
 
-  const dealerName = dealer?.dealer_name || dealer?.company_name || user?.email?.split('@')[0] || 'Dealer'
+  const dealerName = dealer?.dealer_name || dealer?.company_name || user?.email?.split("@")[0] || "Dealer"
   const initials = dealerName.substring(0, 2).toUpperCase()
 
   return (
@@ -66,12 +51,7 @@ export function DashboardShell({
           <div className="flex items-center justify-between h-16">
             {/* Logo & Mobile Menu */}
             <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="lg:hidden"
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-              >
+              <Button variant="ghost" size="sm" className="lg:hidden" onClick={() => setSidebarOpen(!sidebarOpen)}>
                 {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </Button>
 
@@ -79,9 +59,7 @@ export function DashboardShell({
                 <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/30">
                   <Car className="w-6 h-6 text-white" />
                 </div>
-                <span className="text-xl font-bold text-slate-900 hidden sm:block">
-                  RevvDoctor
-                </span>
+                <span className="text-xl font-bold text-slate-900 hidden sm:block">RevvDoctor</span>
               </Link>
             </div>
 
@@ -129,9 +107,7 @@ export function DashboardShell({
                   <PlanBadge tier={planTier} size="sm" showIcon={false} />
                 </div>
                 <Avatar className="w-9 h-9 bg-gradient-to-br from-orange-500 to-orange-600">
-                  <AvatarFallback className="bg-transparent text-white font-semibold">
-                    {initials}
-                  </AvatarFallback>
+                  <AvatarFallback className="bg-transparent text-white font-semibold">{initials}</AvatarFallback>
                 </Avatar>
               </div>
             </div>
@@ -164,52 +140,12 @@ export function DashboardShell({
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
-                Hello {dealerName} 👋
-              </h1>
-              <p className="text-slate-600 mt-1">
-                Here's your dashboard overview for today
-              </p>
-            </div>
-
-            <div className="hidden md:flex gap-3">
-              <Link href="/settings">
-                <Button variant="outline" size="sm">
-                  <Settings className="w-4 h-4 mr-2" />
-                  Settings
-                </Button>
-              </Link>
-              <Link href="/pricing">
-                <Button
-                  size="sm"
-                  className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700"
-                >
-                  <TrendingUp className="w-4 h-4 mr-2" />
-                  Upgrade
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </motion.div>
-
         {/* Dashboard Content */}
         {children}
       </main>
 
       {/* Agent Chat Interface */}
-      <AgentChat
-        isOpen={agentChatOpen}
-        onClose={() => setAgentChatOpen(false)}
-        onSendMessage={handleSendMessage}
-      />
+      <AgentChat isOpen={agentChatOpen} onClose={() => setAgentChatOpen(false)} onSendMessage={handleSendMessage} />
 
       {/* Floating Agent Button */}
       <AgentButton onClick={() => setAgentChatOpen(true)} />
