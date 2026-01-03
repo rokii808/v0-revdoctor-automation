@@ -1,26 +1,5 @@
-import { Resend } from "resend"
 import type { VehicleMatch } from "./preference-matcher"
-
-// Singleton pattern: Cache Resend client instance using closure
-// This prevents creating a new instance on every call while avoiding
-// module-level initialization errors when RESEND_API_KEY is missing
-let resendClient: Resend | null = null
-
-function getResendClient(): Resend {
-  // Return cached instance if it exists
-  if (resendClient) {
-    return resendClient
-  }
-
-  // Validate API key exists
-  if (!process.env.RESEND_API_KEY) {
-    throw new Error("RESEND_API_KEY environment variable is required")
-  }
-
-  // Create and cache new instance (closure captures this variable)
-  resendClient = new Resend(process.env.RESEND_API_KEY || "re_placeholder_for_build")
-  return resendClient
-}
+import { sendEmail, getProviderInfo } from "../email/providers"
 
 export interface DigestRecipient {
   dealer_id: string
@@ -62,9 +41,9 @@ export async function sendDailyDigest(
 
     const html = buildDigestHTML(recipient)
     const subject = buildSubjectLine(recipient)
-    const resend = getResendClient()
 
-    const { data, error } = await resend.emails.send({
+    // Send via configured email provider (Brevo, SES, or Resend)
+    const result = await sendEmail({
       from: "Revvdoctor <digest@revvdoctor.com>",
       to: recipient.email,
       subject,
@@ -76,22 +55,22 @@ export async function sendDailyDigest(
       ],
     })
 
-    if (error) {
-      console.error(`[Email] Failed to send to ${recipient.email}:`, error)
+    if (!result.success) {
+      console.error(`[Email] Failed to send to ${recipient.email}:`, result.error)
       return {
         success: false,
         dealer_id: recipient.dealer_id,
         email: recipient.email,
-        error: error.message,
+        error: result.error,
       }
     }
 
-    console.log(`[Email] Successfully sent to ${recipient.email} (ID: ${data?.id})`)
+    console.log(`[Email] Successfully sent to ${recipient.email} (ID: ${result.messageId})`)
     return {
       success: true,
       dealer_id: recipient.dealer_id,
       email: recipient.email,
-      message_id: data?.id,
+      message_id: result.messageId,
     }
   } catch (err) {
     console.error(`[Email] Unexpected error sending to ${recipient.email}:`, err)
