@@ -106,7 +106,7 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h1 className="text-7xl md:text-9xl font-black text-slate-700 mb-10 leading-[1.15] tracking-tight text-3d-bold">
+            <h1 className="text-7xl md:text-9xl font-black text-black mb-10 leading-[1.15] tracking-tight text-3d-bold">
               AUTOMATE
               <br />
               CAR SOURCING.
