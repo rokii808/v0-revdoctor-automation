@@ -2,8 +2,25 @@ import { createClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
 import OpenAI from "openai"
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+// Support multiple AI providers via OpenRouter or direct OpenAI
+const AI_PROVIDER = process.env.AI_PROVIDER || "openrouter" // "openrouter" or "openai"
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY
+
+// Default to free models on OpenRouter
+const AI_MODEL = process.env.AI_MODEL || "google/gemini-flash-1.5-8b" // Free model
+
+const client = new OpenAI({
+  apiKey: AI_PROVIDER === "openrouter" ? OPENROUTER_API_KEY : OPENAI_API_KEY,
+  baseURL: AI_PROVIDER === "openrouter"
+    ? "https://openrouter.ai/api/v1"
+    : "https://api.openai.com/v1",
+  defaultHeaders: AI_PROVIDER === "openrouter"
+    ? {
+        "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "https://revvdoctor.com",
+        "X-Title": "RevvDoctor AI Agent",
+      }
+    : {},
 })
 
 // POST /api/agent/chat - Chat with AI agent about vehicles and deals
@@ -57,9 +74,9 @@ export async function POST(request: Request) {
       ? `User preferences: Max budget £${dealer.prefs.maxBid || "N/A"}, Min year: ${dealer.prefs.minYear || "N/A"}, Preferred makes: ${dealer.prefs.makes?.join(", ") || "Any"}, Max mileage: ${dealer.prefs.maxMileage || "N/A"}`
       : ""
 
-    // Call OpenAI
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+    // Call AI provider (OpenRouter or OpenAI)
+    const completion = await client.chat.completions.create({
+      model: AI_MODEL,
       messages: [
         {
           role: "system",
@@ -103,12 +120,13 @@ When answering:
   } catch (error: any) {
     console.error("Agent chat error:", error)
 
-    // If OpenAI API key is missing, return helpful error
-    if (error?.message?.includes("API key")) {
+    // If API key is missing, return helpful error
+    if (error?.message?.includes("API key") || error?.status === 401) {
+      const provider = AI_PROVIDER === "openrouter" ? "OpenRouter" : "OpenAI"
       return NextResponse.json(
         {
           response:
-            "Chat is currently unavailable. The OpenAI API key needs to be configured. Please contact support.",
+            `Chat is currently unavailable. ${provider} API key needs to be configured. Please contact support.`,
           suggestions: ["Check agent status", "View dashboard", "See recent matches"],
         },
         { status: 200 }
