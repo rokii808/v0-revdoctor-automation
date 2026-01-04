@@ -21,8 +21,11 @@ export async function sendDemoEmail(data: DemoEmailData): Promise<{
     const html = buildDemoEmailHTML(data)
 
     // Send via configured email provider (Brevo, SES, or Resend)
+    // Use environment variable for from address to ensure it's verified
+    const fromAddress = process.env.EMAIL_FROM_ADDRESS || "Revvdoctor <noreply@revvdoctor.com>"
+
     const result = await sendEmail({
-      from: "Revvdoctor <digest@revvdoctor.com>",
+      from: fromAddress,
       to: data.email,
       subject: "🚗 See Revvdoctor in Action - AI-Powered Vehicle Analysis",
       html,
