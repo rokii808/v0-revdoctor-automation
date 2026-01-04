@@ -873,7 +873,7 @@ export default function HomePage() {
             <div className="bg-white border border-gray-200 p-10 rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-opacity-80 backdrop-blur-sm">
               <h3 className="text-2xl font-sans font-bold text-gray-900 mb-3">Starter</h3>
               <p className="text-gray-600 mb-6 text-base">Up to 5 cars daily</p>
-              <p className="text-5xl font-sans font-bold text-gray-900 mb-2">£97</p>
+              <p className="text-5xl font-sans font-bold text-gray-900 mb-2">£39.99</p>
               <p className="text-base text-gray-500 mb-8">/month</p>
               <Button
                 size="lg"
@@ -904,7 +904,7 @@ export default function HomePage() {
               </div>
               <h3 className="text-2xl font-sans font-bold text-gray-900 mb-3 mt-4">Premium</h3>
               <p className="text-gray-600 mb-6 text-base">Up to 10 cars daily</p>
-              <p className="text-5xl font-sans font-bold text-gray-900 mb-2">£299</p>
+              <p className="text-5xl font-sans font-bold text-gray-900 mb-2">£99</p>
               <p className="text-base text-gray-500 mb-8">/month</p>
               <Button
                 size="lg"
@@ -932,7 +932,7 @@ export default function HomePage() {
             <div className="bg-white border border-gray-200 p-10 rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-opacity-80 backdrop-blur-sm">
               <h3 className="text-2xl font-sans font-bold text-gray-900 mb-3">Pro</h3>
               <p className="text-gray-600 mb-6 text-base">Up to 25 cars daily</p>
-              <p className="text-5xl font-sans font-bold text-gray-900 mb-2">£599</p>
+              <p className="text-5xl font-sans font-bold text-gray-900 mb-2">£199</p>
               <p className="text-base text-gray-500 mb-8">/month</p>
               <Button
                 size="lg"
