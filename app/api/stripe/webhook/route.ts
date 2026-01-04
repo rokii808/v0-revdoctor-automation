@@ -58,23 +58,13 @@ export async function POST(req: NextRequest) {
         })
 
         // Update dealer status
-        await supabase.from("dealers").update({
-          subscription_status: "active",
-          subscription_expires_at: new Date((subscription as any).current_period_end * 1000).toISOString(),
-        }).eq("user_id", userId)
-
-        // Call n8n webhook to start agent (if N8N_WEBHOOK_URL is configured)
-        if (process.env.N8N_WEBHOOK_URL) {
-          try {
-            await fetch(`${process.env.N8N_WEBHOOK_URL}/webhook/startAgent`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ user_id: userId, plan }),
-            })
-          } catch (error) {
-            console.error("Failed to notify n8n:", error)
-          }
-        }
+        await supabase
+          .from("dealers")
+          .update({
+            subscription_status: "active",
+            subscription_expires_at: new Date((subscription as any).current_period_end * 1000).toISOString(),
+          })
+          .eq("user_id", userId)
 
         break
       }
@@ -103,23 +93,13 @@ export async function POST(req: NextRequest) {
 
           // Update dealer status
           const dealerStatus = subscription.status === "active" ? "active" : "cancelled"
-          await supabase.from("dealers").update({
-            subscription_status: dealerStatus,
-            subscription_expires_at: new Date((subscription as any).current_period_end * 1000).toISOString(),
-          }).eq("user_id", existingSubscription.user_id)
-
-          // Stop agent if subscription cancelled
-          if (subscription.status === "canceled" && process.env.N8N_WEBHOOK_URL) {
-            try {
-              await fetch(`${process.env.N8N_WEBHOOK_URL}/webhook/stopAgent`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ user_id: existingSubscription.user_id }),
-              })
-            } catch (error) {
-              console.error("Failed to notify n8n about cancellation:", error)
-            }
-          }
+          await supabase
+            .from("dealers")
+            .update({
+              subscription_status: dealerStatus,
+              subscription_expires_at: new Date((subscription as any).current_period_end * 1000).toISOString(),
+            })
+            .eq("user_id", existingSubscription.user_id)
         }
         break
       }

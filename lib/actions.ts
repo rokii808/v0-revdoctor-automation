@@ -34,19 +34,6 @@ export async function savePrefs(
       throw error
     }
 
-    // Optional: Call n8n webhook to reload agent cache
-    if (process.env.N8N_WEBHOOK_URL) {
-      try {
-        await fetch(`${process.env.N8N_WEBHOOK_URL}/webhook/updatePrefs`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_id: userId, prefs }),
-        })
-      } catch (error) {
-        console.error("Failed to notify n8n about preference update:", error)
-      }
-    }
-
     revalidatePath("/settings")
     return { success: true }
   } catch (error) {
