@@ -4,8 +4,9 @@ import { Inngest } from "inngest"
 export const inngest = new Inngest({
   id: "revvdoctor",
   name: "RevvDoctor Background Jobs",
-  // Event key is required for sending events
-  // In development, Inngest Dev Server runs without auth
-  // In production, set INNGEST_EVENT_KEY environment variable
-  eventKey: process.env.INNGEST_EVENT_KEY || "local-dev-key",
+  // Only set eventKey in production
+  // In development, omit eventKey to use local Inngest Dev Server
+  ...(process.env.INNGEST_EVENT_KEY && {
+    eventKey: process.env.INNGEST_EVENT_KEY
+  }),
 })
