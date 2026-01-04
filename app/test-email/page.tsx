@@ -110,34 +110,33 @@ export default function TestEmailPage() {
 
     setIsSending(true)
     try {
-      console.log("[v0] Sending preview request via n8n...")
+      console.log("[Demo] Sending demo email request...")
 
-      const response = await fetch("/api/preview", {
+      const response = await fetch("/api/demo/see-action", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: email,
-          count: 2,
+          email: email.toLowerCase().trim(),
         }),
       })
 
       const result = await response.json()
 
-      if (response.ok) {
-        console.log("[v0] Preview email sent successfully via n8n")
+      if (response.ok && result.success) {
+        console.log("[Demo] Demo workflow triggered successfully")
         alert(
-          `✅ Success! Check your inbox at ${email}\n\nYour sample digest with 2 healthy car listings is on its way.\n\nCheck your spam folder if you don't see it within 2 minutes.`,
+          `✅ Success! Check your inbox at ${email}\n\nYour AI-analyzed sample digest with 2 healthy cars will arrive in 2-3 minutes.\n\nCheck your spam folder if you don't see it.`,
         )
       } else {
-        console.error("[v0] Preview send failed:", result)
-        const errorMessage = result.details || result.error || "Unknown error occurred"
-        alert(`❌ Failed to send preview email:\n\n${errorMessage}`)
+        console.error("[Demo] Demo send failed:", result)
+        const errorMessage = result.message || result.error || "Unknown error occurred"
+        alert(`❌ Failed to send demo email:\n\n${errorMessage}`)
       }
     } catch (error) {
-      console.error("[v0] Preview send error:", error)
-      alert("❌ Error sending preview email. Check console for details.")
+      console.error("[Demo] Demo send error:", error)
+      alert("❌ Error sending demo email. Check console for details.")
     } finally {
       setIsSending(false)
     }
@@ -176,14 +175,14 @@ export default function TestEmailPage() {
               <CardTitle className="font-serif text-3xl">Get Your Sample Digest</CardTitle>
             </div>
             <CardDescription className="text-lg">
-              Enter your email address to receive a sample digest with 2 healthy car listings
+              Enter your email address to receive a sample digest with 2 AI-analyzed healthy car listings
               <br />
               <span className="inline-flex items-center gap-1.5 mt-3 text-sm">
                 <Badge variant="secondary" className="bg-orange-100 text-orange-700 border-orange-200">
                   <Sparkles className="w-3 h-3 mr-1" />
-                  Powered by n8n
+                  Real AI Analysis
                 </Badge>
-                <span className="text-muted-foreground">Same template used for production digests</span>
+                <span className="text-muted-foreground">Live demo using actual Revvdoctor workflow</span>
               </span>
             </CardDescription>
           </CardHeader>
