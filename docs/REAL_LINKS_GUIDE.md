@@ -24,18 +24,18 @@ When a visitor submits their email on `/test-email`, they receive:
 ✅ **Live proof** that the system works
 
 Example URLs shown:
-```
+\`\`\`
 https://www.raw2k.co.uk/vehicles/BMW-3-Series-2019-12345
 https://www.bca.co.uk/vehicle/Mercedes-C-Class-2020-67890
-```
+\`\`\`
 
 ### Verification
 
 Check Inngest Dev Server logs to see:
-```
+\`\`\`
 ✅ [Demo] Got 5 REAL vehicles from RAW2K with live links!
 🔗 [Demo] Sample URL: https://www.raw2k.co.uk/vehicles/...
-```
+\`\`\`
 
 ## Real Agent Workflow (For Subscribed Users)
 
@@ -45,9 +45,9 @@ The agent supports 3 scraper modes set via `SCRAPER_MODE` environment variable:
 
 #### 1. Mock Mode (Default - Testing)
 
-```bash
+\`\`\`bash
 SCRAPER_MODE=mock
-```
+\`\`\`
 
 **Uses:** Test data with placeholder URLs
 **Purpose:** Testing without hitting real auction sites
@@ -55,9 +55,9 @@ SCRAPER_MODE=mock
 
 #### 2. HTML Mode (Web Scraping)
 
-```bash
+\`\`\`bash
 SCRAPER_MODE=html
-```
+\`\`\`
 
 **Uses:** Web scraping with Cheerio
 **Purpose:** Real data when no API access
@@ -66,9 +66,9 @@ SCRAPER_MODE=html
 
 #### 3. API Mode (Production - Recommended)
 
-```bash
+\`\`\`bash
 SCRAPER_MODE=api
-```
+\`\`\`
 
 **Uses:** Official auction site APIs
 **Purpose:** Most reliable, production-ready
@@ -81,9 +81,9 @@ SCRAPER_MODE=api
 
 Set in `.env.local`:
 
-```bash
+\`\`\`bash
 SCRAPER_MODE=html
-```
+\`\`\`
 
 **Pros:**
 - ✅ No API keys needed
@@ -107,7 +107,7 @@ SCRAPER_MODE=html
 
 2. **Set Environment Variables:**
 
-```bash
+\`\`\`bash
 SCRAPER_MODE=api
 
 # RAW2K
@@ -119,7 +119,7 @@ BCA_API_KEY=your_bca_key_here
 BCA_API_URL=https://api.bca.co.uk/v1
 
 # Add others as you get access
-```
+\`\`\`
 
 3. **Update API Scraper:**
 
@@ -140,24 +140,24 @@ Edit `lib/scrapers/api-scraper.ts` with actual API endpoints.
 ## URL Format by Auction Site
 
 ### RAW2K
-```
+\`\`\`
 https://www.raw2k.co.uk/vehicles/{listing-id}
-```
+\`\`\`
 
 ### BCA (British Car Auctions)
-```
+\`\`\`
 https://www.bca.co.uk/vehicle/{vehicle-id}
-```
+\`\`\`
 
 ### Autorola
-```
+\`\`\`
 https://www.autorola.co.uk/vehicle/{lot-number}
-```
+\`\`\`
 
 ### Manheim
-```
+\`\`\`
 https://www.manheim.co.uk/lot/{auction-id}/{lot-id}
-```
+\`\`\`
 
 ## Implementation Details
 
@@ -165,7 +165,7 @@ https://www.manheim.co.uk/lot/{auction-id}/{lot-id}
 
 **File:** `lib/inngest/functions-demo.ts`
 
-```typescript
+\`\`\`typescript
 // Tries real scraping first
 const { scrapeRAW2K } = await import("../scrapers/raw2k")
 const realVehicles = await scrapeRAW2K()
@@ -174,13 +174,13 @@ if (realVehicles && realVehicles.length > 0) {
   // Use real vehicles with live links!
   console.log(`🔗 Sample URL: ${realVehicles[0].url}`)
 }
-```
+\`\`\`
 
 ### Real Agent Workflow
 
 **File:** `lib/inngest/functions-enhanced.ts`
 
-```typescript
+\`\`\`typescript
 // Choose scraper based on SCRAPER_MODE
 const SCRAPER_MODE = process.env.SCRAPER_MODE || "mock"
 
@@ -196,13 +196,13 @@ switch (SCRAPER_MODE) {
   default:
     scrapers = [scrapeRAW2KMock, scrapeBCAMock, ...]
 }
-```
+\`\`\`
 
 ### HTML Scraper (RAW2K Example)
 
 **File:** `lib/scrapers/raw2k.ts`
 
-```typescript
+\`\`\`typescript
 // Extracts URL from HTML
 const relativeUrl = el.attr("href") || el.find("a").attr("href") || ""
 const url = relativeUrl.startsWith("http")
@@ -214,25 +214,25 @@ return {
   // ... other fields
   url, // ✅ Real, clickable link
 }
-```
+\`\`\`
 
 ## Testing Real Links
 
 ### Test Demo Workflow
 
 1. **Run Demo:**
-```bash
+\`\`\`bash
 npm run dev
 # Visit http://localhost:3000/test-email
 # Submit email
-```
+\`\`\`
 
 2. **Check Inngest Logs:**
-```bash
+\`\`\`bash
 # Terminal where Inngest Dev Server is running
 ✅ [Demo] Got 5 REAL vehicles from RAW2K with live links!
 🔗 [Demo] Sample URL: https://www.raw2k.co.uk/vehicles/...
-```
+\`\`\`
 
 3. **Check Email:**
 - Open received email
@@ -242,29 +242,29 @@ npm run dev
 ### Test Real Agent Workflow
 
 1. **Enable HTML Scraping:**
-```bash
+\`\`\`bash
 # .env.local
 SCRAPER_MODE=html
-```
+\`\`\`
 
 2. **Trigger Agent:**
-```bash
+\`\`\`bash
 # Via Inngest dashboard
 http://localhost:8288
 
 # Or trigger manually via API
 curl -X POST http://localhost:3000/api/agent/start
-```
+\`\`\`
 
 3. **Check Database:**
-```sql
+\`\`\`sql
 SELECT
   make,
   model,
   url
 FROM vehicle_matches
 LIMIT 5;
-```
+\`\`\`
 
 URLs should be real: `https://www.raw2k.co.uk/vehicles/...`
 
@@ -275,7 +275,7 @@ URLs should be real: `https://www.raw2k.co.uk/vehicles/...`
 **Problem:** Demo is using mock data instead of real scraping
 
 **Check:**
-```bash
+\`\`\`bash
 # Inngest logs should show:
 ⚠️  [Demo] Real scraping failed, falling back to mock data
 
@@ -283,7 +283,7 @@ URLs should be real: `https://www.raw2k.co.uk/vehicles/...`
 - RAW2K website is down
 - HTML structure changed
 - Network timeout
-```
+\`\`\`
 
 **Solution:**
 - Wait for site to come back up
@@ -300,46 +300,46 @@ URLs should be real: `https://www.raw2k.co.uk/vehicles/...`
 3. Actual auction site availability
 
 **Fix:**
-```typescript
+\`\`\`typescript
 // Ensure URL is absolute, not relative
 const url = relativeUrl.startsWith("http")
   ? relativeUrl
   : `https://www.raw2k.co.uk${relativeUrl}`
-```
+\`\`\`
 
 ### Agent Using Mock Instead of Real
 
 **Problem:** Agent shows mock data even with `SCRAPER_MODE=html`
 
 **Check:**
-```bash
+\`\`\`bash
 # Environment variable loaded?
 echo $SCRAPER_MODE
 
 # Restart dev server after changing .env.local
 npm run dev
-```
+\`\`\`
 
 **Verify:**
-```typescript
+\`\`\`typescript
 // Check logs
 console.log(`[Workflow] Using scraper mode: ${SCRAPER_MODE}`)
-```
+\`\`\`
 
 ## Recommendation
 
 ### For Development & Testing
-```bash
+\`\`\`bash
 SCRAPER_MODE=html
-```
+\`\`\`
 - Shows real links
 - No API costs
 - Good for testing
 
 ### For Production
-```bash
+\`\`\`bash
 SCRAPER_MODE=api
-```
+\`\`\`
 - Most reliable
 - Best data quality
 - Worth the cost at scale
@@ -363,18 +363,18 @@ The demo email template (`lib/workflow/email-digest-demo.ts`) includes:
 
 ### View Listing Button
 
-```html
+\`\`\`html
 <a href="${vehicle.url}" target="_blank">
   View Live Listing →
 </a>
-```
+\`\`\`
 
 ### URL Display
 
 Shows actual auction site URL in email:
-```
+\`\`\`
 🔗 https://www.raw2k.co.uk/vehicles/BMW-3-Series-2019-12345
-```
+\`\`\`
 
 ## Summary
 

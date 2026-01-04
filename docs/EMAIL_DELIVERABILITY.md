@@ -28,10 +28,10 @@
 
 Add to your `.env.local`:
 
-```bash
+\`\`\`bash
 # Use your verified domain email
 EMAIL_FROM_ADDRESS="Revvdoctor <noreply@revvdoctor.com>"
-```
+\`\`\`
 
 ### 2. Configure SPF, DKIM, and DMARC Records
 
@@ -41,11 +41,11 @@ These DNS records tell email providers your emails are legitimate.
 
 Add this TXT record to your domain DNS:
 
-```
+\`\`\`
 Type: TXT
 Name: @
 Value: v=spf1 include:_spf.resend.com ~all
-```
+\`\`\`
 
 For other providers:
 - **Brevo**: `v=spf1 include:spf.sendinblue.com ~all`
@@ -55,26 +55,26 @@ For other providers:
 
 Resend automatically provides this when you verify your domain. Look for records like:
 
-```
+\`\`\`
 Type: TXT
 Name: resend._domainkey
 Value: (provided by Resend)
-```
+\`\`\`
 
 #### DMARC (Domain-based Message Authentication)
 
 Add this TXT record:
 
-```
+\`\`\`
 Type: TXT
 Name: _dmarc
 Value: v=DMARC1; p=none; rua=mailto:dmarc@revvdoctor.com
-```
+\`\`\`
 
 For stricter policy (after testing):
-```
+\`\`\`
 Value: v=DMARC1; p=quarantine; rua=mailto:dmarc@revvdoctor.com; pct=100
-```
+\`\`\`
 
 ### 3. Improve Email Content
 
@@ -97,9 +97,9 @@ Value: v=DMARC1; p=quarantine; rua=mailto:dmarc@revvdoctor.com; pct=100
 
 #### Our Current Subject:
 
-```
+\`\`\`
 🚗 See Revvdoctor in Action - AI-Powered Vehicle Analysis
-```
+\`\`\`
 
 This is good! Clear, professional, and relevant.
 
@@ -166,7 +166,7 @@ Check your domain/IP reputation:
 
 After adding your domain in Resend, you'll get records like:
 
-```
+\`\`\`
 # Domain Verification
 Type: TXT
 Name: @
@@ -181,7 +181,7 @@ Value: p=MIGfMA0GCSqGSIb3DQEBA...
 Type: CNAME
 Name: resend
 Value: feedback.resend.com
-```
+\`\`\`
 
 ## Current Demo Email Configuration
 
@@ -210,7 +210,7 @@ Value: feedback.resend.com
 
 After fixing DNS and environment variables:
 
-```bash
+\`\`\`bash
 # 1. Update .env.local with verified email address
 EMAIL_FROM_ADDRESS="Revvdoctor <noreply@revvdoctor.com>"
 
@@ -227,19 +227,19 @@ npm run dev
 
 # 5. Test with your own email
 # Gmail, Outlook, etc.
-```
+\`\`\`
 
 ## Production Deployment
 
 When deploying to Vercel/production:
 
 1. **Set environment variable:**
-   ```
+   \`\`\`
    EMAIL_FROM_ADDRESS="Revvdoctor <noreply@revvdoctor.com>"
-   ```
+   \`\`\`
 
 2. **Verify DNS records are live:**
-   ```bash
+   \`\`\`bash
    # Check SPF
    dig TXT revvdoctor.com
 
@@ -248,7 +248,7 @@ When deploying to Vercel/production:
 
    # Check DMARC
    dig TXT _dmarc.revvdoctor.com
-   ```
+   \`\`\`
 
 3. **Test in production:**
    - Send to mail-tester.com from production

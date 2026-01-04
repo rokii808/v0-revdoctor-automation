@@ -231,4 +231,3 @@ function generateDemoMatchReasons(vehicle: any): string[] {
 
   return reasons
 }
-

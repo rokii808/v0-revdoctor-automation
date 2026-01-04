@@ -253,7 +253,8 @@ export default function HomePage() {
               <span className="text-orange-600">REAL-TIME</span>
             </h2>
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-semibold px-4">
-              Watch as our AI scans hundreds of auctions and delivers qualified vehicles — updated every minute.
+              Watch as our intelligent system scans hundreds of auctions and delivers qualified vehicles — updated every
+              minute.
             </p>
           </motion.div>
 
@@ -402,7 +403,7 @@ export default function HomePage() {
             not weeks.
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-12 sm:mb-16 md:mb-20 max-w-2xl mx-auto leading-relaxed px-4">
-            Get your AI powered screening up and running in just four simple steps.
+            Get your automated intelligent screening up and running in just four simple steps.
           </p>
 
           <div className="grid md:grid-cols-4 gap-6">
@@ -524,7 +525,9 @@ export default function HomePage() {
                 </div>
                 <div>
                   <h4 className="text-xl font-bold text-gray-900 mb-2">Condition validation</h4>
-                  <p className="text-gray-600 leading-relaxed">AI verified condition ratings to minimize risk</p>
+                  <p className="text-gray-600 leading-relaxed">
+                    Algorithmically verified condition ratings to minimize risk
+                  </p>
                 </div>
               </div>
 
@@ -574,7 +577,7 @@ export default function HomePage() {
                 <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/25">
                   <Filter className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-3xl font-sans font-bold text-gray-900 mb-4">AI powered filtering</h3>
+                <h3 className="text-3xl font-sans font-bold text-gray-900 mb-4">Smart filtering</h3>
                 <p className="text-gray-600 leading-relaxed text-lg">
                   Only see cars that match your exact criteria. No more wasting time on unsuitable vehicles.
                 </p>
@@ -687,7 +690,7 @@ export default function HomePage() {
                 </div>
               </div>
               <p className="text-gray-700 leading-relaxed italic">
-                "The AI screening is incredibly accurate. We've reduced bad purchases by 85% since switching to
+                "The intelligent screening is incredibly accurate. We've reduced bad purchases by 85% since switching to
                 RevDoctor."
               </p>
             </div>
@@ -892,7 +895,6 @@ export default function HomePage() {
               </ul>
             </div>
 
-            {/* START OF UPDATED CODE */}
             <div
               className="bg-orange-50 border-2 border-orange-600 p-10 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 relative"
               style={{ boxShadow: "0 20px 40px rgba(229, 153, 104, 0.15)" }}
@@ -926,7 +928,6 @@ export default function HomePage() {
                 </li>
               </ul>
             </div>
-            {/* END OF UPDATED CODE */}
 
             <div className="bg-white border border-gray-200 p-10 rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-opacity-80 backdrop-blur-sm">
               <h3 className="text-2xl font-sans font-bold text-gray-900 mb-3">Pro</h3>
@@ -1003,8 +1004,8 @@ export default function HomePage() {
           <div className="space-y-6">
             {[
               {
-                q: "How accurate is the AI screening?",
-                a: "Our AI achieves 95%+ accuracy by analyzing condition reports, images, and historical data patterns.",
+                q: "How accurate is the automated screening?",
+                a: "Our advanced algorithms achieve 95%+ accuracy by analyzing condition reports, images, and historical data patterns.",
               },
               {
                 q: "Can I customize my preferences?",

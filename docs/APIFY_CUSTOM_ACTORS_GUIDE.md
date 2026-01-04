@@ -12,26 +12,26 @@ Complete guide to creating custom Apify actors for RAW2K, BCA, Autorola, and Man
 
 ### Step 1: Install Apify CLI & Login
 
-```bash
+\`\`\`bash
 # Install CLI globally
 npm install -g apify-cli
 
 # Login with your API key
 apify login
-```
+\`\`\`
 
 Enter your API key when prompted (from https://console.apify.com/account/integrations).
 
 ### Step 2: Create RAW2K Actor
 
-```bash
+\`\`\`bash
 # Create actor directory
 mkdir -p apify-actors/raw2k-scraper
 cd apify-actors/raw2k-scraper
 
 # Initialize actor
 apify init
-```
+\`\`\`
 
 Choose: **"Puppeteer & Playwright Crawler"**
 
@@ -41,16 +41,16 @@ Replace `.actor/input_schema.json` with `/apify-actors/raw2k-input-schema.json`.
 
 ### Step 3: Test Locally
 
-```bash
+\`\`\`bash
 # Run locally
 apify run
 
 # Check results
 cat storage/datasets/default/*.json
-```
+\`\`\`
 
 You should see JSON output with vehicle data:
-```json
+\`\`\`json
 {
   "id": "RAW2K-1234567890",
   "make": "BMW",
@@ -60,37 +60,37 @@ You should see JSON output with vehicle data:
   "mileage": "42000",
   "url": "https://www.raw2k.co.uk/vehicles/..."
 }
-```
+\`\`\`
 
 ### Step 4: Deploy to Apify
 
-```bash
+\`\`\`bash
 # Deploy to Apify cloud
 apify push
 
 # Copy the actor ID shown (e.g., your-username/raw2k-scraper)
-```
+\`\`\`
 
 ### Step 5: Update Integration Code
 
 Update `lib/scrapers/apify-scraper.ts`:
 
-```typescript
+\`\`\`typescript
 // Replace 'your-actor-name/raw2k-scraper' with your actual actor ID
 const run = await client.actor('YOUR-USERNAME/raw2k-scraper').call({
   startUrls: ['https://www.raw2k.co.uk/vehicles'],
   maxPages: 10,
 })
-```
+\`\`\`
 
 ## Creating Actors for Other Sites
 
 ### BCA (British Car Auctions)
 
-```bash
+\`\`\`bash
 cd apify-actors
 apify create bca-scraper
-```
+\`\`\`
 
 **Modify `src/main.js`:**
 
@@ -101,7 +101,7 @@ Key differences from RAW2K:
 
 **BCA-specific selectors** (inspect BCA website to find actual selectors):
 
-```javascript
+\`\`\`javascript
 // In requestHandler, update selectors:
 await page.waitForSelector('.search-result, .vehicle-item');
 
@@ -112,29 +112,29 @@ const vehicles = await page.$$eval('.search-result, .vehicle-item', (cards) => {
     // ... rest of extraction logic
   });
 });
-```
+\`\`\`
 
 ### Autorola
 
-```bash
+\`\`\`bash
 cd apify-actors
 apify create autorola-scraper
-```
+\`\`\`
 
 Start URL: `https://www.autorola.co.uk/vehicles`
 
 ### Manheim
 
-```bash
+\`\`\`bash
 cd apify-actors
 apify create manheim-scraper
-```
+\`\`\`
 
 Start URL: `https://www.manheim.co.uk/search`
 
 **Note:** Manheim may require login. For authenticated scraping:
 
-```javascript
+\`\`\`javascript
 // In requestHandler, before scraping:
 if (request.userData.label === 'LOGIN') {
   await page.type('#username', process.env.MANHEIM_USERNAME);
@@ -142,13 +142,13 @@ if (request.userData.label === 'LOGIN') {
   await page.click('button[type="submit"]');
   await page.waitForNavigation();
 }
-```
+\`\`\`
 
 ## Actor Code Structure
 
 ### Main Components
 
-```javascript
+\`\`\`javascript
 // 1. Initialize Actor
 await Actor.init();
 
@@ -177,43 +177,43 @@ await crawler.run();
 
 // 6. Exit
 await Actor.exit();
-```
+\`\`\`
 
 ### Key Functions
 
 **Extract text safely:**
-```javascript
+\`\`\`javascript
 const getText = (selector) => {
   const el = card.querySelector(selector);
   return el ? el.textContent.trim() : '';
 };
-```
+\`\`\`
 
 **Parse price:**
-```javascript
+\`\`\`javascript
 const priceText = getText('.price');
 const price = priceText.replace(/[^0-9.]/g, ''); // Remove £, commas
-```
+\`\`\`
 
 **Parse mileage:**
-```javascript
+\`\`\`javascript
 const mileageText = getText('.mileage');
 const mileage = mileageText.replace(/[^0-9]/g, ''); // Just numbers
-```
+\`\`\`
 
 **Handle relative URLs:**
-```javascript
+\`\`\`javascript
 const relativeUrl = getAttr('a', 'href');
 const url = relativeUrl.startsWith('http')
   ? relativeUrl
   : `https://www.raw2k.co.uk${relativeUrl}`;
-```
+\`\`\`
 
 ## Testing Your Actors
 
 ### Local Testing
 
-```bash
+\`\`\`bash
 # Run with default input
 apify run
 
@@ -222,7 +222,7 @@ echo '{"maxPages": 5}' | apify run --input -
 
 # Check output
 cat storage/datasets/default/*.json | jq
-```
+\`\`\`
 
 ### Test in Apify Console
 
@@ -236,13 +236,13 @@ cat storage/datasets/default/*.json | jq
 ### Debugging
 
 **View logs:**
-```bash
+\`\`\`bash
 # Local
 apify run --verbose
 
 # In console
 # Go to actor run → Logs tab
-```
+\`\`\`
 
 **Common issues:**
 
@@ -264,7 +264,7 @@ apify run --verbose
 
 ### Development Workflow
 
-```bash
+\`\`\`bash
 # 1. Make changes
 nano src/main.js
 
@@ -276,32 +276,32 @@ apify push
 
 # 4. Test in cloud
 # Visit console.apify.com and run actor
-```
+\`\`\`
 
 ### Version Control
 
-```bash
+\`\`\`bash
 # Add to git
 git add apify-actors/
 git commit -m "Add Apify actors for auction scraping"
 git push
-```
+\`\`\`
 
 ## Integration with Revvdoctor
 
 ### Update Environment Variables
 
-```bash
+\`\`\`bash
 # .env.local
 SCRAPER_MODE=apify
 APIFY_API_KEY=apify_api_xxxxxxxxxx
-```
+\`\`\`
 
 ### Update Actor IDs in Code
 
 **Edit `lib/scrapers/apify-scraper.ts`:**
 
-```typescript
+\`\`\`typescript
 export async function scrapeRAW2KApify(): Promise<VehicleListing[]> {
   const run = await client.actor('YOUR-USERNAME/raw2k-scraper').call({
     startUrls: ['https://www.raw2k.co.uk/vehicles'],
@@ -319,13 +319,13 @@ export async function scrapeBCAApify(): Promise<VehicleListing[]> {
 }
 
 // Repeat for Autorola and Manheim
-```
+\`\`\`
 
 ### Enable Apify Mode in Workflow
 
 **Edit `lib/inngest/functions-enhanced.ts`:**
 
-```typescript
+\`\`\`typescript
 // Add import
 import {
   scrapeRAW2KApify,
@@ -349,7 +349,7 @@ switch (SCRAPER_MODE) {
     break
   // ... other cases
 }
-```
+\`\`\`
 
 ## Scheduling & Automation
 
@@ -364,46 +364,46 @@ In Apify Console:
 
 Your Revvdoctor workflow can then fetch the latest dataset:
 
-```typescript
+\`\`\`typescript
 // Get dataset from last run
 const actor = await client.actor(actorId).get();
 const lastRunId = actor.lastRunId;
 const { items } = await client.run(lastRunId).dataset().listItems();
-```
+\`\`\`
 
 ### Webhooks
 
 Get notified when scraping completes:
 
-```typescript
+\`\`\`typescript
 const run = await client.actor(actorId).call(input, {
   webhooks: [{
     eventTypes: ['ACTOR.RUN.SUCCEEDED'],
     requestUrl: 'https://revvdoctor.com/api/webhooks/apify',
   }],
 });
-```
+\`\`\`
 
 ## Cost Optimization
 
 ### Reduce Costs
 
 **1. Limit page count:**
-```json
+\`\`\`json
 {
   "maxPages": 50  // Don't scrape entire site
 }
-```
+\`\`\`
 
 **2. Use datacenter proxies:**
-```json
+\`\`\`json
 {
   "proxyConfiguration": {
     "useApifyProxy": true,
     "apifyProxyGroups": ["SHADER"]  // Cheaper than RESIDENTIAL
   }
 }
-```
+\`\`\`
 
 **3. Schedule wisely:**
 - Run once daily, not hourly
@@ -495,14 +495,14 @@ Sites change their HTML structure. When scraper breaks:
 **Error:** `403 Forbidden` or `CAPTCHA detected`
 
 **Fix:** Switch to residential proxies:
-```json
+\`\`\`json
 {
   "proxyConfiguration": {
     "useApifyProxy": true,
     "apifyProxyGroups": ["RESIDENTIAL"]
   }
 }
-```
+\`\`\`
 
 ## Support Resources
 
