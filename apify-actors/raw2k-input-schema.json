@@ -1,0 +1,36 @@
+{
+    "title": "RAW2K Vehicle Scraper Input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "startUrls": {
+            "title": "Start URLs",
+            "type": "array",
+            "description": "URLs to start scraping from",
+            "default": [
+                {
+                    "url": "https://www.raw2k.co.uk/vehicles"
+                }
+            ],
+            "editor": "requestListSources"
+        },
+        "maxPages": {
+            "title": "Maximum pages to scrape",
+            "type": "integer",
+            "description": "Maximum number of pages to scrape",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 1000
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Proxy settings for scraping",
+            "default": {
+                "useApifyProxy": true
+            },
+            "editor": "proxy"
+        }
+    },
+    "required": ["startUrls"]
+}
