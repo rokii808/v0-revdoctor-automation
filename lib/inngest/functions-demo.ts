@@ -33,19 +33,35 @@ export const sendDemoAction = inngest.createFunction(
 
     console.log(`🎬 [Demo] Starting "See It in Action" for ${email}`)
 
-    // STEP 1: Get sample vehicles using mock scraper
+    // STEP 1: Get sample vehicles - try REAL scraping first for authentic demo with live links
     const scrapedVehicles = await step.run("scrape-sample-vehicles", async () => {
-      console.log("🕷️  [Demo] Getting sample vehicles...")
+      console.log("🕷️  [Demo] Attempting to scrape REAL vehicles from RAW2K...")
 
-      // Use mock scraper for reliable demo experience
+      // Try to scrape real vehicles first - this gives authentic demo with clickable links
+      try {
+        const { scrapeRAW2K } = await import("../scrapers/raw2k")
+        const realVehicles = await scrapeRAW2K()
+
+        if (realVehicles && realVehicles.length > 0) {
+          // Successfully scraped real vehicles with live auction links!
+          const shuffled = realVehicles.sort(() => Math.random() - 0.5)
+          const sampleVehicles = shuffled.slice(0, 5)
+
+          console.log(`✅ [Demo] Got ${sampleVehicles.length} REAL vehicles from RAW2K with live links!`)
+          console.log(`🔗 [Demo] Sample URL: ${sampleVehicles[0]?.url}`)
+          return sampleVehicles
+        }
+      } catch (err) {
+        console.warn("⚠️  [Demo] Real scraping failed, falling back to mock data:", err)
+      }
+
+      // Fallback: Use mock scraper if real scraping fails
+      console.log("🔄 [Demo] Using mock vehicles as fallback...")
       const mockVehicles = await createMockScraper("DEMO")
-
-      // Randomly select 5 vehicles for variety
       const shuffled = mockVehicles.sort(() => Math.random() - 0.5)
       const sampleVehicles = shuffled.slice(0, 5)
 
-      console.log(`✅ [Demo] Got ${sampleVehicles.length} sample vehicles`)
-
+      console.log(`✅ [Demo] Got ${sampleVehicles.length} mock vehicles`)
       return sampleVehicles
     })
 
