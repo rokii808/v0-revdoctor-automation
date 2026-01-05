@@ -8,11 +8,13 @@ import { VehicleGrid } from "@/components/dashboard/vehicle-grid"
 import { ActivityFeed, generateMockActivities } from "@/components/dashboard/activity-feed"
 import { QuickActions } from "@/components/dashboard/quick-actions"
 import { UsageOverview } from "@/components/dashboard/usage-overview"
+import { PersonalizedMatches } from "@/components/dashboard/personalized-matches"
+import { TransparentMetrics } from "@/components/dashboard/transparent-metrics"
 import { getPlanConfig, type PlanTier } from "@/lib/plans/config"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Car, Eye, TrendingUp } from "lucide-react"
+import { Car, Eye, TrendingUp, Star, BarChart3 } from "lucide-react"
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -239,6 +241,9 @@ export default function DashboardPage() {
               {/* Vehicle Grid */}
               <VehicleGrid vehicles={transformedVehicles} planTier={plan} canViewMore={usageStats.canView} />
             </div>
+
+            {/* Personalized Matches Section */}
+            <PersonalizedMatches dealerId={dealer?.id} />
           </div>
 
           {/* Right Column - Sidebar Widgets (1/3 width) */}
@@ -257,6 +262,17 @@ export default function DashboardPage() {
               <ActivityFeed activities={mockActivities} compact={true} />
             </div>
           </div>
+        </div>
+
+        {/* Transparent Metrics Section - Full Width */}
+        <div className="mt-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <TransparentMetrics />
+          </motion.div>
         </div>
       </div>
     </DashboardShell>
