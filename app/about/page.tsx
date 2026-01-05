@@ -162,22 +162,26 @@ export default function AboutPage() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">How We Started</h2>
-            <p className="text-xl text-gray-600 text-balance">Born from real-world experience in automotive retail</p>
+            <p className="text-xl text-gray-600 text-balance">Born from research into automotive value optimization</p>
           </div>
           <div className="prose prose-lg max-w-none">
             <p className="text-gray-600 leading-relaxed mb-6">
-              Revvdoctor was founded by a team with deep roots in the automotive industry. We watched dealers spend
-              countless hours manually searching through auction listings, often missing great deals simply because they
-              couldn't check every platform fast enough.
+              Revvdoctor began with extensive research into how automotive dealers could improve their value when
+              purchasing from suppliers. Our team analyzed thousands of auction transactions, identifying patterns in
+              pricing, vehicle condition, and market timing that separated profitable purchases from missed
+              opportunities.
             </p>
             <p className="text-gray-600 leading-relaxed mb-6">
-              We knew there had to be a better way. By combining industry expertise with modern technology, we created a
-              platform that does the heavy lifting—monitoring, analyzing, and filtering—so dealers can focus on what
-              they do best: closing deals.
+              Through our research, we discovered that dealers were leaving significant value on the table—not due to
+              lack of expertise, but simply because manually tracking every auction platform, comparing prices, and
+              evaluating vehicle conditions in real-time was humanly impossible. The opportunity cost of missed deals
+              far exceeded the time spent searching.
             </p>
             <p className="text-gray-600 leading-relaxed">
-              Today, Revvdoctor helps dealers across the UK discover opportunities they would have otherwise missed,
-              turning what was once a time-consuming manual process into an automated competitive advantage.
+              This research led us to develop an intelligent system that continuously monitors supplier inventories,
+              analyzes market data, and identifies the highest-value purchasing opportunities. Today, Revvdoctor helps
+              dealers across the UK maximize their return on every vehicle purchase by ensuring they never miss a
+              high-value opportunity from their suppliers.
             </p>
           </div>
         </div>
