@@ -22,6 +22,8 @@ import {
 import { classifyVehiclesWithAI } from "../analysis/ai-classifier"
 import { matchVehiclesToDealers, getMatchStats, type VehicleMatch } from "../workflow/preference-matcher"
 import { sendDigestBatch, getDigestStats } from "../workflow/email-digest"
+import { findHotDeals, getDealerHotDealPreferences } from "../notifications/hot-deal-detector"
+import { sendHotDealAlert } from "../notifications/send-hot-deal-alert"
 import type { VehicleListing } from "../scrapers/index"
 import type { DigestRecipient } from "../workflow/email-digest"
 
@@ -341,9 +343,87 @@ export const dailyScraperJobEnhanced = inngest.createFunction(
       return matchesToSave.length
     })
 
-    // STEP 7: Send email digests
+    // STEP 7: Detect and send hot deal alerts
+    const hotDealAlerts = await step.run("send-hot-deal-alerts", async () => {
+      console.log("🔥 [Step 7] Detecting hot deals and sending instant alerts...")
+
+      let totalHotDeals = 0
+      let alertsSent = 0
+      let alertsFailed = 0
+
+      for (const [dealerId, matches] of (dealerMatches as Map<string, VehicleMatch[]>).entries()) {
+        const dealer = dealers.find(d => d.id === dealerId)
+        if (!dealer) continue
+
+        // Check dealer's instant alert preference
+        const prefs = dealer.prefs || {}
+        const instantAlertsEnabled = prefs.instant_alerts !== false // Default to true
+
+        if (!instantAlertsEnabled) {
+          console.log(`  ⏭️  Skipping ${dealer.email} - instant alerts disabled`)
+          continue
+        }
+
+        // Get dealer's hot deal criteria
+        const criteria = await getDealerHotDealPreferences(dealerId, supabase)
+
+        // Find hot deals for this dealer
+        const hotDeals = findHotDeals(matches as any[], criteria)
+
+        if (hotDeals.length > 0) {
+          console.log(`  🔥 Found ${hotDeals.length} hot deals for ${dealer.email}`)
+          totalHotDeals += hotDeals.length
+
+          // Send instant alert for top hot deal only (avoid spam)
+          const topDeal = hotDeals[0]
+
+          try {
+            const result = await sendHotDealAlert({
+              dealerEmail: dealer.email,
+              dealerName: dealer.dealer_name || dealer.email.split("@")[0],
+              vehicle: {
+                year: topDeal.match.year,
+                make: topDeal.match.make,
+                model: topDeal.match.model,
+                price: topDeal.match.price,
+                mileage: topDeal.match.mileage,
+                url: topDeal.match.url,
+                imageUrl: topDeal.match.images?.[0],
+                risk: topDeal.match.ai_classification?.risk_score || 50,
+                profit: topDeal.match.ai_classification?.profit_potential || 0,
+              },
+              hotDeal: topDeal.hotDeal,
+            })
+
+            if (result.success) {
+              alertsSent++
+              console.log(`  ✅ Sent hot deal alert to ${dealer.email}`)
+            } else {
+              alertsFailed++
+              console.error(`  ❌ Failed to send alert to ${dealer.email}:`, result.error)
+            }
+          } catch (err) {
+            alertsFailed++
+            console.error(`  ❌ Error sending alert to ${dealer.email}:`, err)
+          }
+        }
+      }
+
+      console.log(`✅ [Step 7] Hot deal alerts complete:`)
+      console.log(`  Total hot deals found: ${totalHotDeals}`)
+      console.log(`  Alerts sent: ${alertsSent}`)
+      console.log(`  Alerts failed: ${alertsFailed}`)
+
+      return {
+        totalHotDeals,
+        alertsSent,
+        alertsFailed,
+      }
+    })
+
+    // STEP 8: Send email digests
     const emailResults = await step.run("send-email-digests", async () => {
-      console.log("📧 [Step 7] Sending email digests to dealers...")
+      console.log("📧 [Step 8] Sending email digests to dealers...")
 
       // Build digest recipients
       const recipients: DigestRecipient[] = []
@@ -370,7 +450,7 @@ export const dailyScraperJobEnhanced = inngest.createFunction(
         const results = await sendDigestBatch(recipients)
         const stats = getDigestStats(results)
 
-        console.log(`✅ [Step 7] Email digests sent:`)
+        console.log(`✅ [Step 8] Email digests sent:`)
         console.log(`  Sent: ${stats.sent}`)
         console.log(`  Failed: ${stats.failed}`)
         console.log(`  Skipped (no matches): ${stats.skipped}`)
@@ -378,14 +458,14 @@ export const dailyScraperJobEnhanced = inngest.createFunction(
 
         return results
       } catch (err) {
-        console.error("❌ [Step 7] Email sending failed:", err)
+        console.error("❌ [Step 8] Email sending failed:", err)
         throw new Error(`Email sending failed: ${err instanceof Error ? err.message : "Unknown error"}`)
       }
     })
 
-    // STEP 8: Log final statistics
+    // STEP 9: Log final statistics
     await step.run("log-statistics", async () => {
-      console.log("📊 [Step 8] Logging workflow statistics...")
+      console.log("📊 [Step 9] Logging workflow statistics...")
 
       const endTime = Date.now()
       const duration = ((endTime - startTime) / 1000 / 60).toFixed(2) // minutes
@@ -402,6 +482,8 @@ export const dailyScraperJobEnhanced = inngest.createFunction(
         ).length,
         total_matches: getMatchStats(dealerMatches as Map<string, VehicleMatch[]>).totalMatches,
         dealers_with_matches: getMatchStats(dealerMatches as Map<string, VehicleMatch[]>).totalDealersWithMatches,
+        hot_deals_found: hotDealAlerts.totalHotDeals,
+        hot_deal_alerts_sent: hotDealAlerts.alertsSent,
         emails_sent: getDigestStats(emailResults).sent,
         emails_failed: getDigestStats(emailResults).failed,
       }
@@ -413,7 +495,7 @@ export const dailyScraperJobEnhanced = inngest.createFunction(
         console.warn("⚠️  Failed to save workflow stats:", error.message)
       }
 
-      console.log(`✅ [Step 7] Workflow completed in ${duration} minutes`)
+      console.log(`✅ [Step 9] Workflow completed in ${duration} minutes`)
       console.log(`📊 Final stats:`, stats)
 
       return stats
@@ -427,6 +509,8 @@ export const dailyScraperJobEnhanced = inngest.createFunction(
       vehicles: scrapedVehicles.length,
       classified: classifiedVehicles.length,
       matches: getMatchStats(dealerMatches as Map<string, VehicleMatch[]>).totalMatches,
+      hot_deals: hotDealAlerts.totalHotDeals,
+      hot_deal_alerts_sent: hotDealAlerts.alertsSent,
       emails_sent: getDigestStats(emailResults).sent,
       duration_minutes: ((Date.now() - startTime) / 1000 / 60).toFixed(2),
     }
