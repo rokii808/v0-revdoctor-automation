@@ -74,7 +74,56 @@ export async function POST(request: Request) {
       ? `User preferences: Max budget £${dealer.prefs.maxBid || "N/A"}, Min year: ${dealer.prefs.minYear || "N/A"}, Preferred makes: ${dealer.prefs.makes?.join(", ") || "Any"}, Max mileage: ${dealer.prefs.maxMileage || "N/A"}`
       : ""
 
-    // Call AI provider (OpenRouter or OpenAI)
+    // Define available functions the AI can call
+    const tools = [
+      {
+        type: "function" as const,
+        function: {
+          name: "filter_vehicles",
+          description: "Filter vehicles by criteria like make, price range, or risk score",
+          parameters: {
+            type: "object",
+            properties: {
+              make: { type: "string", description: "Filter by vehicle make (e.g., BMW, Audi)" },
+              maxPrice: { type: "number", description: "Maximum price in GBP" },
+              minPrice: { type: "number", description: "Minimum price in GBP" },
+              maxRisk: { type: "number", description: "Maximum risk score (0-100)" },
+              minProfit: { type: "number", description: "Minimum profit potential in GBP" },
+            },
+          },
+        },
+      },
+      {
+        type: "function" as const,
+        function: {
+          name: "get_vehicle_details",
+          description: "Get detailed information about a specific vehicle by ID or index",
+          parameters: {
+            type: "object",
+            properties: {
+              vehicleIndex: { type: "number", description: "Index of the vehicle from the list (1-based)" },
+            },
+            required: ["vehicleIndex"],
+          },
+        },
+      },
+      {
+        type: "function" as const,
+        function: {
+          name: "save_favorite",
+          description: "Save a vehicle to favorites for later review",
+          parameters: {
+            type: "object",
+            properties: {
+              vehicleIndex: { type: "number", description: "Index of the vehicle to save (1-based)" },
+            },
+            required: ["vehicleIndex"],
+          },
+        },
+      },
+    ]
+
+    // Call AI provider with function calling support (OpenRouter or OpenAI)
     const completion = await client.chat.completions.create({
       model: AI_MODEL,
       messages: [
@@ -97,18 +146,73 @@ When answering:
 - Suggest actionable next steps
 - Highlight profit potential
 - Warn about high-risk vehicles
-- Keep responses concise and scannable`,
+- Keep responses concise and scannable
+- Use available functions to help users filter, analyze, and save vehicles
+- When showing vehicles, reference them by their number (1, 2, 3, etc.)`,
         },
         {
           role: "user",
           content: message,
         },
       ],
+      tools: tools,
+      tool_choice: "auto",
       temperature: 0.7,
       max_tokens: 300,
     })
 
-    const responseContent = completion.choices[0]?.message?.content || "Sorry, I couldn't process that request."
+    const responseMessage = completion.choices[0]?.message
+
+    // Check if AI wants to call a function
+    if (responseMessage?.tool_calls && responseMessage.tool_calls.length > 0) {
+      const toolCall = responseMessage.tool_calls[0]
+      const functionName = toolCall.function.name
+      const functionArgs = JSON.parse(toolCall.function.arguments)
+
+      // Execute the function
+      const functionResult = await executeFunctionCall(
+        functionName,
+        functionArgs,
+        dealer?.id,
+        recentMatches || [],
+        supabase
+      )
+
+      // Get AI's final response incorporating the function result
+      const followUpCompletion = await client.chat.completions.create({
+        model: AI_MODEL,
+        messages: [
+          {
+            role: "system",
+            content: `You are RevvDoctor AI. Present the results in a clear, concise way.`,
+          },
+          {
+            role: "user",
+            content: message,
+          },
+          responseMessage,
+          {
+            role: "tool",
+            tool_call_id: toolCall.id,
+            content: JSON.stringify(functionResult),
+          },
+        ],
+        temperature: 0.7,
+        max_tokens: 300,
+      })
+
+      const finalResponse = followUpCompletion.choices[0]?.message?.content || "Done!"
+      const suggestions = generateSuggestions(message, recentMatches || [])
+
+      return NextResponse.json({
+        response: finalResponse,
+        suggestions,
+        action: functionName,
+        actionResult: functionResult,
+      })
+    }
+
+    const responseContent = responseMessage?.content || "Sorry, I couldn't process that request."
 
     // Generate contextual suggestions based on the conversation
     const suggestions = generateSuggestions(message, recentMatches || [])
@@ -134,6 +238,100 @@ When answering:
     }
 
     return NextResponse.json({ error: "Failed to process chat message" }, { status: 500 })
+  }
+}
+
+async function executeFunctionCall(
+  functionName: string,
+  args: any,
+  dealerId: string,
+  recentMatches: any[],
+  supabase: any
+): Promise<any> {
+  switch (functionName) {
+    case "filter_vehicles":
+      let filtered = [...recentMatches]
+
+      if (args.make) {
+        filtered = filtered.filter((v) => v.make?.toLowerCase() === args.make.toLowerCase())
+      }
+      if (args.maxPrice) {
+        filtered = filtered.filter((v) => v.price <= args.maxPrice)
+      }
+      if (args.minPrice) {
+        filtered = filtered.filter((v) => v.price >= args.minPrice)
+      }
+      if (args.maxRisk) {
+        filtered = filtered.filter((v) => v.risk_score <= args.maxRisk)
+      }
+      if (args.minProfit) {
+        filtered = filtered.filter((v) => (v.profit_potential || 0) >= args.minProfit)
+      }
+
+      return {
+        success: true,
+        count: filtered.length,
+        vehicles: filtered.slice(0, 5).map((v, i) => ({
+          index: i + 1,
+          make: v.make,
+          model: v.model,
+          year: v.year,
+          price: v.price,
+          risk: v.risk_score,
+          profit: v.profit_potential,
+        })),
+      }
+
+    case "get_vehicle_details":
+      const index = args.vehicleIndex - 1
+      if (index < 0 || index >= recentMatches.length) {
+        return { success: false, error: "Vehicle not found" }
+      }
+
+      const vehicle = recentMatches[index]
+      return {
+        success: true,
+        vehicle: {
+          make: vehicle.make,
+          model: vehicle.model,
+          year: vehicle.year,
+          price: vehicle.price,
+          mileage: vehicle.mileage,
+          risk: vehicle.risk_score,
+          verdict: vehicle.verdict,
+          profit: vehicle.profit_potential,
+          url: vehicle.listing_url,
+        },
+      }
+
+    case "save_favorite":
+      const saveIndex = args.vehicleIndex - 1
+      if (saveIndex < 0 || saveIndex >= recentMatches.length) {
+        return { success: false, error: "Vehicle not found" }
+      }
+
+      const vehicleToSave = recentMatches[saveIndex]
+
+      // Record SAVE interaction
+      await supabase.from("dealer_interactions").insert({
+        dealer_id: dealerId,
+        vehicle_match_id: vehicleToSave.id,
+        interaction_type: "SAVE",
+      })
+
+      // Update vehicle_matches table
+      await supabase
+        .from("vehicle_matches")
+        .update({ saved: true, updated_at: new Date().toISOString() })
+        .eq("id", vehicleToSave.id)
+
+      return {
+        success: true,
+        message: `Saved ${vehicleToSave.year} ${vehicleToSave.make} ${vehicleToSave.model} to favorites`,
+      }
+
+    default:
+      return { success: false, error: "Unknown function" }
   }
 }
 

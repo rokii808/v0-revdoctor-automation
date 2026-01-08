@@ -10,6 +10,7 @@ import { QuickActions } from "@/components/dashboard/quick-actions"
 import { UsageOverview } from "@/components/dashboard/usage-overview"
 import { PersonalizedMatches } from "@/components/dashboard/personalized-matches"
 import { TransparentMetrics } from "@/components/dashboard/transparent-metrics"
+import { AgentControlPanel } from "@/components/dashboard/agent-control-panel"
 import { getPlanConfig, type PlanTier } from "@/lib/plans/config"
 import { motion } from "framer-motion"
 import Link from "next/link"
@@ -248,6 +249,9 @@ export default function DashboardPage() {
 
           {/* Right Column - Sidebar Widgets (1/3 width) */}
           <div className="space-y-6">
+            {/* Agent Control Panel */}
+            <AgentControlPanel compact={true} />
+
             {/* Usage Overview */}
             <UsageOverview planTier={plan} stats={usageStats} compact={true} />
 

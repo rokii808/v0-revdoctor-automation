@@ -227,29 +227,94 @@ export const dailyScraperJobEnhanced = inngest.createFunction(
       }
     })
 
-    // STEP 5: Save matches to database
-    await step.run("save-matches-to-db", async () => {
-      console.log("💾 [Step 5] Saving matches to database...")
+    // STEP 5: Calculate personalization boosts
+    const personalizedMatches = await step.run("calculate-personalization", async () => {
+      console.log("✨ [Step 5] Calculating personalization boosts...")
 
-      const matchesToSave: any[] = []
+      const enhanced: any[] = []
+      let boostCount = 0
+      let totalBoost = 0
 
       for (const [dealerId, matches] of (dealerMatches as Map<string, VehicleMatch[]>).entries()) {
         for (const match of matches) {
-          matchesToSave.push({
-            dealer_id: dealerId,
-            make: match.make,
-            model: match.model,
-            year: match.year,
-            price: match.price,
-            mileage: match.mileage,
-            auction_site: match.auction_site,
-            url: match.url,
-            match_score: match.match_score,
-            match_reasons: match.match_reasons,
-            ai_classification: match.ai_classification,
-            created_at: new Date().toISOString(),
+          // Calculate personalization boost using database function
+          const { data: boostResult } = await supabase
+            .rpc("calculate_personalization_boost", {
+              p_dealer_id: dealerId,
+              p_make: match.make,
+              p_model: match.model,
+              p_price: match.price || 0,
+              p_year: match.year || 0,
+              p_mileage: match.mileage || 0,
+            })
+
+          const personalizationBoost = boostResult || 0
+          const baseScore = match.match_score
+          const finalScore = baseScore + personalizationBoost
+
+          if (personalizationBoost !== 0) {
+            boostCount++
+            totalBoost += personalizationBoost
+          }
+
+          enhanced.push({
+            dealerId,
+            match,
+            baseScore,
+            personalizationBoost,
+            finalScore,
           })
         }
+      }
+
+      const avgBoost = boostCount > 0 ? (totalBoost / boostCount).toFixed(1) : 0
+      console.log(`✅ [Step 5] Personalization complete:`)
+      console.log(`  ${boostCount} matches received boost (avg: ${avgBoost} points)`)
+
+      return enhanced
+    })
+
+    // STEP 6: Save matches to database
+    await step.run("save-matches-to-db", async () => {
+      console.log("💾 [Step 6] Saving matches to database...")
+
+      const matchesToSave: any[] = []
+
+      for (const item of personalizedMatches) {
+        const { dealerId, match, baseScore, personalizationBoost, finalScore } = item
+
+        matchesToSave.push({
+          dealer_id: dealerId,
+          make: match.make,
+          model: match.model,
+          year: match.year,
+          price: match.price,
+          mileage: match.mileage,
+          auction_site: match.auction_site,
+          listing_url: match.url,
+          url: match.url,
+          image_url: match.images?.[0] || null,
+          verdict: match.ai_classification.verdict,
+          risk: match.ai_classification.risk_score,
+          reason: match.ai_classification.reason,
+
+          // Personalized scoring
+          base_score: baseScore,
+          personalization_boost: personalizationBoost,
+          final_score: finalScore,
+          score_breakdown: {
+            ai_risk: match.ai_classification.risk_score <= 30 ? 15 : (match.ai_classification.risk_score <= 50 ? 8 : 0),
+            profit_potential: match.ai_classification.profit_potential > 2000 ? 15 : (match.ai_classification.profit_potential > 1000 ? 8 : 0),
+            preference_match: baseScore - 70,
+            personalization: personalizationBoost,
+          },
+
+          // Keep legacy fields for backward compatibility
+          match_score: finalScore,
+          match_reasons: match.match_reasons,
+
+          created_at: new Date().toISOString(),
+        })
       }
 
       if (matchesToSave.length > 0) {
@@ -268,17 +333,17 @@ export const dailyScraperJobEnhanced = inngest.createFunction(
           }
         }
 
-        console.log(`✅ [Step 5] Saved ${savedCount}/${matchesToSave.length} matches to database`)
+        console.log(`✅ [Step 6] Saved ${savedCount}/${matchesToSave.length} matches to database`)
       } else {
-        console.log("⚠️  [Step 5] No matches to save")
+        console.log("⚠️  [Step 6] No matches to save")
       }
 
       return matchesToSave.length
     })
 
-    // STEP 6: Send email digests
+    // STEP 7: Send email digests
     const emailResults = await step.run("send-email-digests", async () => {
-      console.log("📧 [Step 6] Sending email digests to dealers...")
+      console.log("📧 [Step 7] Sending email digests to dealers...")
 
       // Build digest recipients
       const recipients: DigestRecipient[] = []
@@ -305,7 +370,7 @@ export const dailyScraperJobEnhanced = inngest.createFunction(
         const results = await sendDigestBatch(recipients)
         const stats = getDigestStats(results)
 
-        console.log(`✅ [Step 6] Email digests sent:`)
+        console.log(`✅ [Step 7] Email digests sent:`)
         console.log(`  Sent: ${stats.sent}`)
         console.log(`  Failed: ${stats.failed}`)
         console.log(`  Skipped (no matches): ${stats.skipped}`)
@@ -313,14 +378,14 @@ export const dailyScraperJobEnhanced = inngest.createFunction(
 
         return results
       } catch (err) {
-        console.error("❌ [Step 6] Email sending failed:", err)
+        console.error("❌ [Step 7] Email sending failed:", err)
         throw new Error(`Email sending failed: ${err instanceof Error ? err.message : "Unknown error"}`)
       }
     })
 
-    // STEP 7: Log final statistics
+    // STEP 8: Log final statistics
     await step.run("log-statistics", async () => {
-      console.log("📊 [Step 7] Logging workflow statistics...")
+      console.log("📊 [Step 8] Logging workflow statistics...")
 
       const endTime = Date.now()
       const duration = ((endTime - startTime) / 1000 / 60).toFixed(2) // minutes
