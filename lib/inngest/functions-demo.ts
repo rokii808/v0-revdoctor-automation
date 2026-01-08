@@ -2,6 +2,7 @@ import { inngest } from "./client"
 import { createMockScraper } from "../scrapers/mock-scraper"
 import { classifyVehiclesWithAI } from "../analysis/ai-classifier"
 import { sendDemoEmail } from "../workflow/email-digest-demo"
+import { createAdminClient } from "../supabase/admin"
 import type { VehicleListing } from "../scrapers/index"
 import type { VehicleMatch } from "../workflow/preference-matcher"
 
@@ -148,6 +149,31 @@ export const sendDemoAction = inngest.createFunction(
           success: false,
           error: err instanceof Error ? err.message : "Unknown error",
         }
+      }
+    })
+
+    // STEP 5: Update tracking database
+    await step.run("update-tracking", async () => {
+      console.log(`💾 [Demo] Updating tracking database for ${email}...`)
+
+      const supabase = createAdminClient()
+      const normalizedEmail = email.toLowerCase().trim()
+
+      try {
+        await supabase
+          .from("see_it_in_action_submissions")
+          .update({
+            last_email_status: emailResult.success ? "sent" : "failed",
+            last_email_sent_at: new Date().toISOString(),
+            last_email_error: emailResult.error || null,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("email", normalizedEmail)
+
+        console.log(`✅ [Demo] Tracking updated: ${emailResult.success ? "sent" : "failed"}`)
+      } catch (err) {
+        console.error("⚠️ [Demo] Failed to update tracking:", err)
+        // Non-critical error - don't fail the workflow
       }
     })
 

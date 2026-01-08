@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Loader2, Mail, CheckCircle2, AlertCircle } from "lucide-react"
 
 export function SeeItInActionForm() {
@@ -8,6 +8,22 @@ export function SeeItInActionForm() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState("")
+  const [submissionCount, setSubmissionCount] = useState(0)
+  const [remainingSubmissions, setRemainingSubmissions] = useState(2)
+  const [refreshCountdown, setRefreshCountdown] = useState(0)
+
+  // Countdown timer for page refresh after success
+  useEffect(() => {
+    if (success && refreshCountdown > 0) {
+      const timer = setTimeout(() => {
+        setRefreshCountdown(refreshCountdown - 1)
+      }, 1000)
+      return () => clearTimeout(timer)
+    } else if (success && refreshCountdown === 0) {
+      // Refresh the page after countdown
+      window.location.reload()
+    }
+  }, [success, refreshCountdown])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -36,8 +52,18 @@ export function SeeItInActionForm() {
       if (response.ok && data.success) {
         setSuccess(true)
         setEmail("")
+        setSubmissionCount(data.submission_count || 1)
+        setRemainingSubmissions(data.remaining_submissions || 0)
+
+        // Start 5-second countdown for page refresh
+        setRefreshCountdown(5)
       } else {
-        setError(data.error || "Failed to send demo. Please try again.")
+        // Handle rate limit error specially
+        if (response.status === 429) {
+          setError(data.message || "You've already received the demo 2 times. Please sign up for full access!")
+        } else {
+          setError(data.message || data.error || "Failed to send demo. Please try again.")
+        }
       }
     } catch (err) {
       setError("Something went wrong. Please try again.")
@@ -54,13 +80,26 @@ export function SeeItInActionForm() {
         <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="flex items-start gap-3">
             <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-            <div>
+            <div className="flex-1">
               <h4 className="font-semibold text-green-900 mb-1">
                 Demo Email Sent! 🎉
+                {submissionCount === 1 && remainingSubmissions === 1 && (
+                  <span className="text-sm font-normal text-green-700 ml-2">(1 more demo available)</span>
+                )}
               </h4>
-              <p className="text-sm text-green-700">
+              <p className="text-sm text-green-700 mb-2">
                 Check your inbox in <strong>2-3 minutes</strong> to see 2 AI-analyzed vehicles with detailed insights.
               </p>
+              {refreshCountdown > 0 && (
+                <p className="text-xs text-green-600 font-medium">
+                  Page will refresh in {refreshCountdown} second{refreshCountdown !== 1 ? 's' : ''}...
+                </p>
+              )}
+              {remainingSubmissions === 0 && (
+                <p className="text-xs text-orange-600 font-medium mt-2">
+                  ⚠️ You've used both demo submissions. <a href="/auth/signup" className="underline">Sign up</a> for unlimited access!
+                </p>
+              )}
             </div>
           </div>
         </div>
