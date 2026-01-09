@@ -96,17 +96,34 @@ export async function POST(req: NextRequest) {
 
     console.log(`[API] Triggering demo for ${normalizedEmail} (submission #${existingSubmission ? existingSubmission.submission_count + 1 : 1})`)
 
-    // Trigger Inngest workflow
-    await inngest.send({
-      name: "demo/see-action",
-      data: {
-        email: normalizedEmail,
-        triggered_at: new Date().toISOString(),
-        submission_number: existingSubmission ? existingSubmission.submission_count + 1 : 1,
-      },
-    })
+    // Check if Inngest is configured (has event key)
+    const hasInngestKey = !!process.env.INNGEST_EVENT_KEY
 
-    console.log(`[API] Demo workflow triggered successfully for ${normalizedEmail}`)
+    if (hasInngestKey) {
+      // Production: Use Inngest workflow (async)
+      await inngest.send({
+        name: "demo/see-action",
+        data: {
+          email: normalizedEmail,
+          triggered_at: new Date().toISOString(),
+          submission_number: existingSubmission ? existingSubmission.submission_count + 1 : 1,
+        },
+      })
+      console.log(`[API] Demo workflow triggered via Inngest for ${normalizedEmail}`)
+    } else {
+      // Development/Preview: Send email directly (fallback)
+      console.log(`[API] Inngest not configured - sending demo email directly for ${normalizedEmail}`)
+
+      // Import and run demo logic directly
+      const { sendDemoEmailDirect } = await import("@/lib/workflow/demo-direct")
+
+      // Run in background (don't wait for completion)
+      sendDemoEmailDirect(normalizedEmail, supabase).catch((err) => {
+        console.error(`[API] Direct demo email failed for ${normalizedEmail}:`, err)
+      })
+
+      console.log(`[API] Direct demo email initiated for ${normalizedEmail}`)
+    }
 
     const submissionCount = existingSubmission ? existingSubmission.submission_count + 1 : 1
     const remainingSubmissions = MAX_SUBMISSIONS_PER_EMAIL - submissionCount
