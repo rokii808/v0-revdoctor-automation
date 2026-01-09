@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server"
 import { inngest } from "@/lib/inngest/client"
 import { createAdminClient } from "@/lib/supabase/admin"
 
+// Force dynamic rendering and server-side execution
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
+
 const MAX_SUBMISSIONS_PER_EMAIL = 2
 
 /**
