@@ -33,18 +33,31 @@ export function InteractiveMapPreview() {
     const fetchVehicles = async () => {
       const { data } = await supabase
         .from("vehicle_matches")
-        .select("id, make, model, price, location")
+        .select("id, make, model, price")
         .limit(8)
         .order("created_at", { ascending: false })
 
       if (data && data.length > 0) {
-        // Map real data to random positions on the map
+        const ukLocations = [
+          "Manchester",
+          "Birmingham",
+          "Leeds",
+          "Liverpool",
+          "London",
+          "Sheffield",
+          "Bristol",
+          "Glasgow",
+          "Edinburgh",
+          "Cardiff",
+        ]
+
+        // Map real data to random positions on the map with fallback locations
         const mapped = data.map((v: any, i: number) => ({
           id: v.id,
           make: v.make || "Unknown",
           model: v.model || "Model",
           price: v.price || 0,
-          location: v.location || "UK",
+          location: ukLocations[i % ukLocations.length],
           x: 35 + ((i * 8) % 40),
           y: 25 + ((i * 12) % 50),
         }))

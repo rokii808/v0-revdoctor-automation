@@ -25,7 +25,7 @@ This adapts the consumer vehicle recommendation architecture for **dealer dashbo
 
 ## Architecture
 
-```
+\`\`\`
 ┌─────────────────────────────────────────────────────────────┐
 │                    DEALER DASHBOARD (React)                  │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
@@ -55,7 +55,7 @@ This adapts the consumer vehicle recommendation architecture for **dealer dashbo
                     │   SUPABASE DB   │
                     │   + Redis Cache │
                     └─────────────────┘
-```
+\`\`\`
 
 ---
 
@@ -63,7 +63,7 @@ This adapts the consumer vehicle recommendation architecture for **dealer dashbo
 
 Add interaction tracking and learned preferences to existing schema:
 
-```sql
+\`\`\`sql
 -- supabase/migrations/20260104_add_dealer_learning.sql
 
 -- Track dealer interactions with matched vehicles
@@ -168,13 +168,13 @@ CREATE TRIGGER trigger_update_learned_preferences
 AFTER INSERT ON dealer_interactions
 FOR EACH ROW
 EXECUTE FUNCTION update_dealer_learned_preferences();
-```
+\`\`\`
 
 ---
 
 ## 2. API Routes for Dealer Dashboard
 
-```typescript
+\`\`\`typescript
 // app/api/dealers/matches/route.ts
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -286,9 +286,9 @@ export async function GET(request: NextRequest) {
     } : null,
   })
 }
-```
+\`\`\`
 
-```typescript
+\`\`\`typescript
 // app/api/dealers/interact/route.ts
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -419,9 +419,9 @@ async function updateLearnedPreferences(
       onConflict: 'dealer_id',
     })
 }
-```
+\`\`\`
 
-```typescript
+\`\`\`typescript
 // app/api/dealers/metrics/route.ts
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -567,13 +567,13 @@ function calculateDailyBreakdown(matches: any[]) {
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([date, count]) => ({ date, count }))
 }
-```
+\`\`\`
 
 ---
 
 ## 3. Frontend Dashboard Components
 
-```typescript
+\`\`\`typescript
 // app/dashboard/components/PersonalizedMatches.tsx
 
 'use client'
@@ -747,9 +747,9 @@ export function PersonalizedMatches() {
     </div>
   )
 }
-```
+\`\`\`
 
-```typescript
+\`\`\`typescript
 // app/dashboard/components/TransparentMetrics.tsx
 
 'use client'
@@ -917,7 +917,7 @@ export function TransparentMetrics() {
     </div>
   )
 }
-```
+\`\`\`
 
 ---
 

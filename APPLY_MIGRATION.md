@@ -9,7 +9,7 @@ The "See It In Action" demo requires a database table that doesn't exist yet.
 
 2. **Copy and paste this SQL:**
 
-```sql
+\`\`\`sql
 -- Track "See It In Action" email submissions for lead capture and rate limiting
 CREATE TABLE IF NOT EXISTS see_it_in_action_submissions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -37,14 +37,14 @@ CREATE INDEX IF NOT EXISTS idx_see_it_in_action_submitted ON see_it_in_action_su
 
 COMMENT ON TABLE see_it_in_action_submissions IS 'Tracks "See It In Action" demo email submissions for rate limiting and lead capture';
 COMMENT ON COLUMN see_it_in_action_submissions.submission_count IS 'Number of times this email has requested the demo (limit: 2)';
-```
+\`\`\`
 
 3. **Click "Run" (or press Cmd/Ctrl + Enter)**
 
 4. **Verify it worked:**
-   ```sql
+   \`\`\`sql
    SELECT * FROM see_it_in_action_submissions;
-   ```
+   \`\`\`
 
    Should return: "Success. No rows returned" (empty table)
 
